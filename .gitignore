@@ -1,12 +1,1 @@
-# global
-node_modules/
-dist/
-.env
-coverage/
-.DS_Store
-
-# sa backend folder
-/backend/node_modules/
-/backend/dist/
-/backend/.env
-/backend/coverage/
+node_modules
