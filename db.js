@@ -1,6 +1,6 @@
-const { Pool } = require('pg');
-const fs = require('fs');
-const path = require('path');
+const { Pool } = require("pg");
+const fs = require("fs");
+const path = require("path");
 
 const pool = new Pool({
   host: process.env.DB_HOST,
@@ -10,8 +10,8 @@ const pool = new Pool({
   password: process.env.DB_PASSWORD,
   ssl: {
     rejectUnauthorized: true,
-    ca: fs.readFileSync(path.join(__dirname, 'ca.pem')).toString(),
-  }
+    ca: fs.readFileSync(path.join(__dirname, "ca.pem")).toString(),
+  },
 });
 
 module.exports = {
