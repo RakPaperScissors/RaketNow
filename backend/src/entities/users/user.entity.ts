@@ -1,7 +1,7 @@
-import { timestamp } from 'rxjs';
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, TableInheritance } from 'typeorm';
 
 @Entity()
+@TableInheritance({ column: { type: 'varchar', name: 'type' } })
 export class Users {
     @PrimaryGeneratedColumn({ type: 'int', unsigned: true })
     uid: number;
