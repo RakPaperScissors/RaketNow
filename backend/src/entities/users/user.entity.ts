@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, TableInheritance } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, TableInheritance, OneToMany } from 'typeorm';
+import { Raket } from '../rakets/rakets.entity';
 
 @Entity()
 @TableInheritance({ column: { type: 'varchar', name: 'type' } })
@@ -35,4 +36,9 @@ export class Users {
 
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     deletedAt: Date;
+
+
+    // Connection to Raket entity
+    @OneToMany(() => Raket, raket => raket.user)
+    rakets: Raket[];
 }
