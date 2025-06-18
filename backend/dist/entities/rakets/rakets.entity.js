@@ -9,9 +9,16 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Raket = void 0;
+exports.Raket = exports.RaketStatus = void 0;
 const typeorm_1 = require("typeorm");
 const user_entity_1 = require("../users/user.entity");
+var RaketStatus;
+(function (RaketStatus) {
+    RaketStatus["OPEN"] = "open";
+    RaketStatus["IN_PROGRESS"] = "in_progress";
+    RaketStatus["COMPLETED"] = "completed";
+    RaketStatus["CANCELLED"] = "cancelled";
+})(RaketStatus || (exports.RaketStatus = RaketStatus = {}));
 let Raket = class Raket {
     racketId;
     user;
@@ -40,19 +47,19 @@ __decorate([
     __metadata("design:type", String)
 ], Raket.prototype, "description", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'enum', enum: ['open', 'in_progress', 'completed', 'cancelled'] }),
+    (0, typeorm_1.Column)({ type: 'enum', enum: RaketStatus }),
     __metadata("design:type", String)
 ], Raket.prototype, "status", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'float', precision: 5 }),
+    (0, typeorm_1.Column)({ type: 'float' }),
     __metadata("design:type", Number)
 ], Raket.prototype, "budget", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'timestamp' }),
+    (0, typeorm_1.Column)({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' }),
     __metadata("design:type", Date)
 ], Raket.prototype, "dateCreated", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'timestamp' }),
+    (0, typeorm_1.Column)({ type: 'timestamp', nullable: true }),
     __metadata("design:type", Date)
 ], Raket.prototype, "completedAt", void 0);
 exports.Raket = Raket = __decorate([

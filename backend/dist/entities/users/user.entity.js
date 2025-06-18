@@ -68,7 +68,7 @@ __decorate([
     __metadata("design:type", Date)
 ], Users.prototype, "createdAt", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' }),
+    (0, typeorm_1.Column)({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', nullable: true }),
     __metadata("design:type", Date)
 ], Users.prototype, "deletedAt", void 0);
 __decorate([

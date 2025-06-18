@@ -1,5 +1,11 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 import { Users } from '../users/user.entity';
+export enum RaketStatus {
+    OPEN = 'open',
+    IN_PROGRESS = 'in_progress',
+    COMPLETED = 'completed',
+    CANCELLED = 'cancelled',
+}
 
 @Entity()
 export class Raket {
@@ -15,19 +21,15 @@ export class Raket {
     @Column({ type: 'varchar', length: 500 })
     description: string;
 
-    @Column({ type: 'enum', enum: ['open', 'in_progress', 'completed', 'cancelled'] })
-    status: string;
+    @Column({ type: 'enum', enum: RaketStatus })
+    status: RaketStatus;
 
-    @Column({ type: 'float', precision: 5 })
+    @Column({ type: 'float' }) // Remove precision for float
     budget: number;
 
-    // Not sure yet on how to handle this --
-    //@Column()
-    //acceptedRaketistaId: number;
-
-    @Column({ type: 'timestamp' })
+    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     dateCreated: Date;
 
-    @Column({ type: 'timestamp' })
+    @Column({ type: 'timestamp', nullable: true })
     completedAt: Date;
 }

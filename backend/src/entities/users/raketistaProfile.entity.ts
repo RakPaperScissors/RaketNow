@@ -1,11 +1,8 @@
-import { ChildEntity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { ChildEntity, Column } from "typeorm";
 import { Users } from "./user.entity";
 
 @ChildEntity()
 export class RaketistaProfile extends Users {
-    @PrimaryGeneratedColumn({ type: 'int', unsigned: true })
-    raketistaId: number;
-
     @Column({ type: 'varchar', length: 255 })
     bio: string;
 

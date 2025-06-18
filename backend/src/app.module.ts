@@ -3,6 +3,10 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { Users } from './entities/users/user.entity';
+import { RaketistaProfile } from './entities/users/raketistaProfile.entity'; 
+import { Organization } from './entities/users/organization.entity';
+import { Raket } from './entities/rakets/rakets.entity';
 
 @Module({
   imports: [
@@ -14,6 +18,7 @@ import { AppService } from './app.service';
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
+      entities: [Users, RaketistaProfile, Organization, Raket],
       ssl:
         process.env.NODE_ENV === 'production'
           ? { rejectUnauthorized: false }

@@ -13,15 +13,10 @@ exports.Organization = void 0;
 const typeorm_1 = require("typeorm");
 const user_entity_1 = require("./user.entity");
 let Organization = class Organization extends user_entity_1.Users {
-    org_id;
     org_name;
     is_verified;
 };
 exports.Organization = Organization;
-__decorate([
-    (0, typeorm_1.PrimaryGeneratedColumn)({ type: 'int', unsigned: true }),
-    __metadata("design:type", Number)
-], Organization.prototype, "org_id", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: 'varchar', length: 255 }),
     __metadata("design:type", String)

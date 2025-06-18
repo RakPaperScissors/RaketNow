@@ -13,7 +13,6 @@ exports.RaketistaProfile = void 0;
 const typeorm_1 = require("typeorm");
 const user_entity_1 = require("./user.entity");
 let RaketistaProfile = class RaketistaProfile extends user_entity_1.Users {
-    raketistaId;
     bio;
     isVerified;
     aveResponseTime;
@@ -21,10 +20,6 @@ let RaketistaProfile = class RaketistaProfile extends user_entity_1.Users {
     autoReplyMessage;
 };
 exports.RaketistaProfile = RaketistaProfile;
-__decorate([
-    (0, typeorm_1.PrimaryGeneratedColumn)({ type: 'int', unsigned: true }),
-    __metadata("design:type", Number)
-], RaketistaProfile.prototype, "raketistaId", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: 'varchar', length: 255 }),
     __metadata("design:type", String)
