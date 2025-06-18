@@ -7,7 +7,7 @@ export class RaketistaProfile extends Users {
     bio: string;
 
     @Column({ type: 'boolean' })
-    isVerified: boolean;
+    isRaketistaVerified: boolean;
 
     @Column()
     aveResponseTime: number;
