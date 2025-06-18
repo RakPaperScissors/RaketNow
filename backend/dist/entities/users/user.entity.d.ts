@@ -1,10 +1,15 @@
 import { Raket } from '../rakets/rakets.entity';
+export declare enum userRole {
+    CLIENT = "client",
+    RAKETISTA = "raketista",
+    ORGANIZATION = "organization"
+}
 export declare class Users {
     uid: number;
     email: string;
     password: string;
     name: string;
-    role: boolean;
+    role: userRole;
     authProvider: string;
     providerId: string;
     profilePicture: string;

@@ -13,18 +13,18 @@ exports.Organization = void 0;
 const typeorm_1 = require("typeorm");
 const user_entity_1 = require("./user.entity");
 let Organization = class Organization extends user_entity_1.Users {
-    org_name;
-    is_verified;
+    orgName;
+    isOrgVerified;
 };
 exports.Organization = Organization;
 __decorate([
     (0, typeorm_1.Column)({ type: 'varchar', length: 255 }),
     __metadata("design:type", String)
-], Organization.prototype, "org_name", void 0);
+], Organization.prototype, "orgName", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: 'boolean' }),
     __metadata("design:type", Boolean)
-], Organization.prototype, "is_verified", void 0);
+], Organization.prototype, "isOrgVerified", void 0);
 exports.Organization = Organization = __decorate([
     (0, typeorm_1.ChildEntity)()
 ], Organization);

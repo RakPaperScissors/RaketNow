@@ -14,7 +14,7 @@ const typeorm_1 = require("typeorm");
 const user_entity_1 = require("./user.entity");
 let RaketistaProfile = class RaketistaProfile extends user_entity_1.Users {
     bio;
-    isVerified;
+    isRaketistaVerified;
     aveResponseTime;
     isAutoReplyEnabled;
     autoReplyMessage;
@@ -27,7 +27,7 @@ __decorate([
 __decorate([
     (0, typeorm_1.Column)({ type: 'boolean' }),
     __metadata("design:type", Boolean)
-], RaketistaProfile.prototype, "isVerified", void 0);
+], RaketistaProfile.prototype, "isRaketistaVerified", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", Number)

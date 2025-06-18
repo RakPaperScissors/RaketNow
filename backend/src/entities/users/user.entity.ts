@@ -1,5 +1,10 @@
 import { Entity, PrimaryGeneratedColumn, Column, TableInheritance, OneToMany } from 'typeorm';
 import { Raket } from '../rakets/rakets.entity';
+export enum userRole {
+    CLIENT = 'client',
+    RAKETISTA = 'raketista',
+    ORGANIZATION = 'organization',
+}
 
 @Entity()
 @TableInheritance({ column: { type: 'varchar', name: 'type' } })
@@ -16,19 +21,19 @@ export class Users {
     @Column({ type: 'varchar', length: 255, nullable: true })
     name: string;
 
-    @Column({ type: 'boolean'})
-    role: boolean;
+    @Column({ type: 'enum', enum: userRole})
+    role: userRole;
 
     @Column({ type: 'varchar', length: 50, nullable: true})
     authProvider: string;
 
-    @Column({ type: 'varchar'})
+    @Column({ type: 'varchar', nullable: true })
     providerId: string;
 
     @Column({ type: 'varchar', length: 255, nullable: true })
     profilePicture: string;
 
-    @Column({ type: 'timestamp' })
+    @Column({ type: 'timestamp', nullable: true })
     lastActive: Date;
 
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })

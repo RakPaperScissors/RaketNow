@@ -9,9 +9,15 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Users = void 0;
+exports.Users = exports.userRole = void 0;
 const typeorm_1 = require("typeorm");
 const rakets_entity_1 = require("../rakets/rakets.entity");
+var userRole;
+(function (userRole) {
+    userRole["CLIENT"] = "client";
+    userRole["RAKETISTA"] = "raketista";
+    userRole["ORGANIZATION"] = "organization";
+})(userRole || (exports.userRole = userRole = {}));
 let Users = class Users {
     uid;
     email;
@@ -44,15 +50,15 @@ __decorate([
     __metadata("design:type", String)
 ], Users.prototype, "name", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'boolean' }),
-    __metadata("design:type", Boolean)
+    (0, typeorm_1.Column)({ type: 'enum', enum: userRole }),
+    __metadata("design:type", String)
 ], Users.prototype, "role", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: 'varchar', length: 50, nullable: true }),
     __metadata("design:type", String)
 ], Users.prototype, "authProvider", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'varchar' }),
+    (0, typeorm_1.Column)({ type: 'varchar', nullable: true }),
     __metadata("design:type", String)
 ], Users.prototype, "providerId", void 0);
 __decorate([
@@ -60,7 +66,7 @@ __decorate([
     __metadata("design:type", String)
 ], Users.prototype, "profilePicture", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'timestamp' }),
+    (0, typeorm_1.Column)({ type: 'timestamp', nullable: true }),
     __metadata("design:type", Date)
 ], Users.prototype, "lastActive", void 0);
 __decorate([

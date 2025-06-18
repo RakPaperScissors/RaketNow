@@ -4,8 +4,8 @@ import { Users } from './user.entity';
 @ChildEntity()
 export class Organization extends Users {
     @Column({ type: 'varchar', length: 255 })
-    org_name: string;
+    orgName: string;
 
     @Column({ type: 'boolean' })
-    is_verified: boolean;
+    isOrgVerified: boolean;
 }
