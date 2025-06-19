@@ -1,19 +1,17 @@
-# 📘 Project Title
+# 📘 RaketNow
 
-_A short description or tagline for your project._
+_RacketNow is a platform that connects job seekers with short-term jobs, freelance gigs, part-time hustles, or what is called in the Filipino slang as "rakets"._
 
 ## 📂 Table of Contents
 
 - [About](#about)
 - [Features](#features)
-- [Demo](#demo)
 - [Installation](#installation)
-- [Usage](#usage)
+<!-- - [Usage](#usage) -->
 - [Technologies Used](#technologies-used)
-- [Project Structure](#project-structure)
-- [Contributing](#contributing)
-- [License](#license)
-- [Contact](#contact)
+<!-- - [Project Structure](#project-structure) -->
+- [Developers](#developers)
+
 
 ---
 
@@ -36,20 +34,32 @@ List of key features:
 
 ---
 
-## 📺 Demo
-
-> _Optional section. Include screenshots or a link to a live demo._
-
-![Screenshot](link-to-screenshot.png)
-
-🔗 [Live Demo](https://your-demo-link.com)
-
----
 
 ## 🛠️ Installation
 
 Clone the repository:
 
 ```bash
-git clone https://github.com/yourusername/your-repo.git
-cd your-repo
+git clone https://github.com/RakPaperScissors/RaketNow.git
+cd RaketNow
+```
+
+---
+
+## 💻 Technologies Used
+
+💻 Language: HTML / CSS / JavaScript / TypeScript / C++ / Python / etc.
+
+⚙️ Framework: React / NestJS / NodeJs / TypeORM
+
+🗃️ Database: PostgreSQL 
+
+---
+
+## 👥 Developers 
+
+- [ Joseph Francis Buhayan ] (https://github.com/JosephBuhayan)
+- [ Xander Jay Cagang ] (https://github.com/Code-DER)
+- [ Jhaye Marie Gonzales ] (https://github.com/jhayegnzls)
+- [ Liarrah Daniya Lambayao ] (https://github.com/ldlambayao)
+- [ Krystel Mikylla Perez ] (https://github.com/krystellar) 
