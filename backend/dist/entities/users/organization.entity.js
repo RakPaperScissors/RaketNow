@@ -18,7 +18,7 @@ let Organization = class Organization extends user_entity_1.Users {
 };
 exports.Organization = Organization;
 __decorate([
-    (0, typeorm_1.Column)({ type: 'varchar', length: 255 }),
+    (0, typeorm_1.Column)({ type: 'varchar', length: 255, nullable: true, unique: true }),
     __metadata("design:type", String)
 ], Organization.prototype, "orgName", void 0);
 __decorate([

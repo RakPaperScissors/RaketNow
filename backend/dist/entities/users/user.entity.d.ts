@@ -7,14 +7,14 @@ export declare enum userRole {
 export declare class Users {
     uid: number;
     email: string;
-    password: string;
+    password?: string;
     name: string;
     role: userRole;
-    authProvider: string;
+    authProvider: 'local' | 'google' | 'facebook';
     providerId: string;
     profilePicture: string;
-    lastActive: Date;
+    lastActive?: Date;
     createdAt: Date;
-    deletedAt: Date;
+    deletedAt?: Date;
     rakets: Raket[];
 }

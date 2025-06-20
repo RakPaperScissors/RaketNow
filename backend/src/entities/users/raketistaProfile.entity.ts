@@ -4,20 +4,20 @@ import {Skills} from "../raketistaProfile/skills.entity";
 
 @ChildEntity()
 export class RaketistaProfile extends Users {
-    @Column({ type: 'varchar', length: 255 })
+    @Column({ type: 'varchar', length: 255, nullable: true })
     bio: string;
 
     @Column({ type: 'boolean' })
     isRaketistaVerified: boolean;
 
-    @Column()
+    @Column({ type: 'int', default: 0})
     aveResponseTime: number;
 
-    @Column({ type: 'boolean' })
+    @Column({ default: false })
     isAutoReplyEnabled: boolean;
 
     @Column({ type: 'varchar', length: 500, nullable: true })
-    autoReplyMessage: string;
+    autoReplyMessage?: string;
 
     // raketistaSkills joint table
     @ManyToMany(()=> Skills, skills => skills.raketistas)

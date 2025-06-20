@@ -5,6 +5,6 @@ export declare class RaketistaProfile extends Users {
     isRaketistaVerified: boolean;
     aveResponseTime: number;
     isAutoReplyEnabled: boolean;
-    autoReplyMessage: string;
+    autoReplyMessage?: string;
     skills: Skills[];
 }

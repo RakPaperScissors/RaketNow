@@ -23,7 +23,7 @@ let RaketistaProfile = class RaketistaProfile extends user_entity_1.Users {
 };
 exports.RaketistaProfile = RaketistaProfile;
 __decorate([
-    (0, typeorm_1.Column)({ type: 'varchar', length: 255 }),
+    (0, typeorm_1.Column)({ type: 'varchar', length: 255, nullable: true }),
     __metadata("design:type", String)
 ], RaketistaProfile.prototype, "bio", void 0);
 __decorate([
@@ -31,11 +31,11 @@ __decorate([
     __metadata("design:type", Boolean)
 ], RaketistaProfile.prototype, "isRaketistaVerified", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ type: 'int', default: 0 }),
     __metadata("design:type", Number)
 ], RaketistaProfile.prototype, "aveResponseTime", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'boolean' }),
+    (0, typeorm_1.Column)({ default: false }),
     __metadata("design:type", Boolean)
 ], RaketistaProfile.prototype, "isAutoReplyEnabled", void 0);
 __decorate([

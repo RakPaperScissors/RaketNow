@@ -38,15 +38,15 @@ __decorate([
     __metadata("design:type", Number)
 ], Users.prototype, "uid", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'varchar', length: 255 }),
+    (0, typeorm_1.Column)({ type: 'varchar', length: 255, unique: true }),
     __metadata("design:type", String)
 ], Users.prototype, "email", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'varchar', length: 255 }),
+    (0, typeorm_1.Column)({ type: 'varchar', length: 255, nullable: true }),
     __metadata("design:type", String)
 ], Users.prototype, "password", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'varchar', length: 255, nullable: true }),
+    (0, typeorm_1.Column)({ type: 'varchar', length: 255, nullable: false }),
     __metadata("design:type", String)
 ], Users.prototype, "name", void 0);
 __decorate([
@@ -54,11 +54,11 @@ __decorate([
     __metadata("design:type", String)
 ], Users.prototype, "role", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'varchar', length: 50, nullable: true }),
+    (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], Users.prototype, "authProvider", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'varchar', nullable: true }),
+    (0, typeorm_1.Column)({ type: 'varchar', nullable: false, unique: true }),
     __metadata("design:type", String)
 ], Users.prototype, "providerId", void 0);
 __decorate([
@@ -70,11 +70,11 @@ __decorate([
     __metadata("design:type", Date)
 ], Users.prototype, "lastActive", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' }),
+    (0, typeorm_1.CreateDateColumn)(),
     __metadata("design:type", Date)
 ], Users.prototype, "createdAt", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', nullable: true }),
+    (0, typeorm_1.Column)({ type: 'timestamp', nullable: true }),
     __metadata("design:type", Date)
 ], Users.prototype, "deletedAt", void 0);
 __decorate([
