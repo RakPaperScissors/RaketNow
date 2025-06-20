@@ -12,6 +12,8 @@ import { Raket } from './entities/rakets/rakets.entity';
 import {Certification} from './entities/raketistaProfile/certifications.entity';
 import {JobHistory} from './entities/raketistaProfile/jobHistory.entity';
 import {Skills} from './entities/raketistaProfile/skills.entity';
+import { Review } from './entities/rakets/reviews.entity';
+import { RaketApplication } from './entities/rakets/raketApplications.entity';
 
 @Module({
   imports: [
@@ -23,7 +25,7 @@ import {Skills} from './entities/raketistaProfile/skills.entity';
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [Users, RaketistaProfile, Organization, Raket, Certification, JobHistory, Skills],
+      entities: [Users, RaketistaProfile, Organization, Raket, Certification, JobHistory, Skills, Review, RaketApplication],
       ssl:
         process.env.NODE_ENV === 'production'
           ? { rejectUnauthorized: false }

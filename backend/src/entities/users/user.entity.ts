@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, TableInheritance, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, TableInheritance, OneToMany, ManyToMany, ManyToOne } from 'typeorm';
 import { Raket } from '../rakets/rakets.entity';
 export enum userRole {
     CLIENT = 'client',
