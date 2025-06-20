@@ -42,7 +42,6 @@ export class Users {
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', nullable: true })
     deletedAt: Date;
 
-
     // Connection to Raket entity
     @OneToMany(() => Raket, raket => raket.user)
     rakets: Raket[];

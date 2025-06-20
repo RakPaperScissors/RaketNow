@@ -16,6 +16,9 @@ const user_entity_1 = require("./entities/users/user.entity");
 const raketistaProfile_entity_1 = require("./entities/users/raketistaProfile.entity");
 const organization_entity_1 = require("./entities/users/organization.entity");
 const rakets_entity_1 = require("./entities/rakets/rakets.entity");
+const certifications_entity_1 = require("./entities/raketistaProfile/certifications.entity");
+const jobHistory_entity_1 = require("./entities/raketistaProfile/jobHistory.entity");
+const skills_entity_1 = require("./entities/raketistaProfile/skills.entity");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -30,7 +33,7 @@ exports.AppModule = AppModule = __decorate([
                 username: process.env.DB_USER,
                 password: process.env.DB_PASSWORD,
                 database: process.env.DB_DATABASE,
-                entities: [user_entity_1.Users, raketistaProfile_entity_1.RaketistaProfile, organization_entity_1.Organization, rakets_entity_1.Raket],
+                entities: [user_entity_1.Users, raketistaProfile_entity_1.RaketistaProfile, organization_entity_1.Organization, rakets_entity_1.Raket, certifications_entity_1.Certification, jobHistory_entity_1.JobHistory, skills_entity_1.Skills],
                 ssl: process.env.NODE_ENV === 'production'
                     ? { rejectUnauthorized: false }
                     : false,

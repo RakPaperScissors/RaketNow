@@ -8,6 +8,11 @@ import { RaketistaProfile } from './entities/users/raketistaProfile.entity';
 import { Organization } from './entities/users/organization.entity';
 import { Raket } from './entities/rakets/rakets.entity';
 
+//raketistaProfile folder
+import {Certification} from './entities/raketistaProfile/certifications.entity';
+import {JobHistory} from './entities/raketistaProfile/jobHistory.entity';
+import {Skills} from './entities/raketistaProfile/skills.entity';
+
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -18,7 +23,7 @@ import { Raket } from './entities/rakets/rakets.entity';
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [Users, RaketistaProfile, Organization, Raket],
+      entities: [Users, RaketistaProfile, Organization, Raket, Certification, JobHistory, Skills],
       ssl:
         process.env.NODE_ENV === 'production'
           ? { rejectUnauthorized: false }
