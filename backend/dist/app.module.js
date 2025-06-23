@@ -12,15 +12,8 @@ const config_1 = require("@nestjs/config");
 const typeorm_1 = require("@nestjs/typeorm");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
-const user_entity_1 = require("./entities/users/user.entity");
-const raketistaProfile_entity_1 = require("./entities/users/raketistaProfile.entity");
-const organization_entity_1 = require("./entities/users/organization.entity");
-const rakets_entity_1 = require("./entities/rakets/rakets.entity");
-const certifications_entity_1 = require("./entities/raketistaProfile/certifications.entity");
-const jobHistory_entity_1 = require("./entities/raketistaProfile/jobHistory.entity");
-const skills_entity_1 = require("./entities/raketistaProfile/skills.entity");
-const reviews_entity_1 = require("./entities/rakets/reviews.entity");
-const raketApplications_entity_1 = require("./entities/rakets/raketApplications.entity");
+const user_module_1 = require("./entities/user/user.module");
+const user_entity_1 = require("./entities/user/entities/user.entity");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -35,13 +28,14 @@ exports.AppModule = AppModule = __decorate([
                 username: process.env.DB_USER,
                 password: process.env.DB_PASSWORD,
                 database: process.env.DB_DATABASE,
-                entities: [user_entity_1.Users, raketistaProfile_entity_1.RaketistaProfile, organization_entity_1.Organization, rakets_entity_1.Raket, certifications_entity_1.Certification, jobHistory_entity_1.JobHistory, skills_entity_1.Skills, reviews_entity_1.Review, raketApplications_entity_1.RaketApplication],
+                entities: [user_entity_1.Users],
                 ssl: process.env.NODE_ENV === 'production'
                     ? { rejectUnauthorized: false }
                     : false,
                 autoLoadEntities: true,
                 synchronize: true,
             }),
+            user_module_1.UserModule
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

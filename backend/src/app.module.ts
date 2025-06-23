@@ -3,17 +3,9 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { Users } from './entities/users/user.entity';
-import { RaketistaProfile } from './entities/users/raketistaProfile.entity'; 
-import { Organization } from './entities/users/organization.entity';
-import { Raket } from './entities/rakets/rakets.entity';
+import { UserModule } from './entities/user/user.module';
+import { Users } from './entities/user/entities/user.entity';
 
-//raketistaProfile folder
-import {Certification} from './entities/raketistaProfile/certifications.entity';
-import {JobHistory} from './entities/raketistaProfile/jobHistory.entity';
-import {Skills} from './entities/raketistaProfile/skills.entity';
-import { Review } from './entities/rakets/reviews.entity';
-import { RaketApplication } from './entities/rakets/raketApplications.entity';
 
 @Module({
   imports: [
@@ -25,7 +17,7 @@ import { RaketApplication } from './entities/rakets/raketApplications.entity';
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [Users, RaketistaProfile, Organization, Raket, Certification, JobHistory, Skills, Review, RaketApplication],
+      entities: [Users],
       ssl:
         process.env.NODE_ENV === 'production'
           ? { rejectUnauthorized: false }
@@ -33,6 +25,7 @@ import { RaketApplication } from './entities/rakets/raketApplications.entity';
       autoLoadEntities: true,
       synchronize: true, // do not use if not on dev-mode
     }),
+    UserModule
   ],
   controllers: [AppController],
   providers: [AppService],
