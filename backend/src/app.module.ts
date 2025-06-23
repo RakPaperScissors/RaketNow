@@ -5,6 +5,10 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './entities/user/user.module';
 import { Users } from './entities/user/entities/user.entity';
+import { OrganizationModule } from './entities/organization/organization.module';
+import { RaketistaModule } from './entities/raketista/raketista.module';
+import { Organization } from './entities/organization/entities/organization.entity';
+import { Raketista } from './entities/raketista/entities/raketista.entity';
 
 
 @Module({
@@ -17,7 +21,7 @@ import { Users } from './entities/user/entities/user.entity';
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [Users],
+      entities: [Users, Organization, Raketista],
       ssl:
         process.env.NODE_ENV === 'production'
           ? { rejectUnauthorized: false }
@@ -25,7 +29,9 @@ import { Users } from './entities/user/entities/user.entity';
       autoLoadEntities: true,
       synchronize: true, // do not use if not on dev-mode
     }),
-    UserModule
+    UserModule,
+    OrganizationModule,
+    RaketistaModule
   ],
   controllers: [AppController],
   providers: [AppService],

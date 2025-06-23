@@ -14,6 +14,10 @@ const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
 const user_module_1 = require("./entities/user/user.module");
 const user_entity_1 = require("./entities/user/entities/user.entity");
+const organization_module_1 = require("./entities/organization/organization.module");
+const raketista_module_1 = require("./entities/raketista/raketista.module");
+const organization_entity_1 = require("./entities/organization/entities/organization.entity");
+const raketista_entity_1 = require("./entities/raketista/entities/raketista.entity");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -28,14 +32,16 @@ exports.AppModule = AppModule = __decorate([
                 username: process.env.DB_USER,
                 password: process.env.DB_PASSWORD,
                 database: process.env.DB_DATABASE,
-                entities: [user_entity_1.Users],
+                entities: [user_entity_1.Users, organization_entity_1.Organization, raketista_entity_1.Raketista],
                 ssl: process.env.NODE_ENV === 'production'
                     ? { rejectUnauthorized: false }
                     : false,
                 autoLoadEntities: true,
                 synchronize: true,
             }),
-            user_module_1.UserModule
+            user_module_1.UserModule,
+            organization_module_1.OrganizationModule,
+            raketista_module_1.RaketistaModule
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],
