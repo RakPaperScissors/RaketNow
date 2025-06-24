@@ -7,6 +7,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  // CRUD operations for USER entity
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.createUser(createUserDto);
@@ -30,5 +31,11 @@ export class UserController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.userService.remove(+id);
+  }
+
+  // Search and Filter functions
+  @Get('search/name/:name')
+  searchByName(@Param('name') name: string) {
+    return this.userService.searchByName(name);
   }
 }

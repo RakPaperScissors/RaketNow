@@ -49,6 +49,9 @@ let UserService = class UserService {
             return await this.users.delete(uid);
         }
     }
+    async searchByName(name) {
+        return await this.users.find({ where: { name: (0, typeorm_1.ILike)(`%${name}%`) } });
+    }
 };
 exports.UserService = UserService;
 exports.UserService = UserService = __decorate([

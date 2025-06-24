@@ -10,4 +10,5 @@ export declare class UserService {
     findOne(uid: number): Promise<Users | null>;
     patch(uid: number, updateUserDto: UpdateUserDto): Promise<Users>;
     remove(uid: number): Promise<import("typeorm").DeleteResult>;
+    searchByName(name: string): Promise<Users[]>;
 }
