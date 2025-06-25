@@ -4,6 +4,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { Users } from './entities/user.entity';
 import { ILike, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { userRole } from './entities/user.entity';
 
 @Injectable()
 export class UserService {
@@ -60,6 +61,9 @@ export class UserService {
     return await this.users.find({ where: { email: ILike(`%${email}%`) } });
   }
   // 3. Filter by role
+  async filterByRole(role: userRole) {
+    return await this.users.find({ where: { role } });
+  }
   // 4. Filter by skills
 
   // User profile and role management

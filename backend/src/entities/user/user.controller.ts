@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { userRole } from './entities/user.entity';
 
 @Controller('user')
 export class UserController {
@@ -42,5 +43,10 @@ export class UserController {
   @Get('search/email/:email')
   searchByEmail(@Param('email') email: string) {
     return this.userService.searchByEmail(email);
+  }
+
+  @Get('search/role/:role')
+  filterByRole(@Param('role') role: userRole) {
+    return this.userService.filterByRole(role);
   }
 }
