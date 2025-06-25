@@ -56,6 +56,9 @@ export class UserService {
     return await this.users.find({ where: { name: ILike(`%${name}%`) } });
   }
   // 2. Search by email
+  async searchByEmail(email: string) {
+    return await this.users.find({ where: { email: ILike(`%${email}%`) } });
+  }
   // 3. Filter by role
   // 4. Filter by skills
 

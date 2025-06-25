@@ -38,4 +38,9 @@ export class UserController {
   searchByName(@Param('name') name: string) {
     return this.userService.searchByName(name);
   }
+
+  @Get('search/email/:email')
+  searchByEmail(@Param('email') email: string) {
+    return this.userService.searchByEmail(email);
+  }
 }
