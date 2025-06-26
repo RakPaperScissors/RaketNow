@@ -1,9 +1,13 @@
-import { useState } from 'react'
+import Header from './components/Header';
+import Footer from './components/Footer';
 
 function App() {
   
   return (
-    <div className="text-3xl font-bold text-blue-500">Hello Tailwind!</div>
+    <>
+      <Header/>
+      <Footer/>
+    </>
   )
 }
 
