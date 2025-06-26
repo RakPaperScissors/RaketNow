@@ -4,9 +4,9 @@ import { UpdateOrganizationDto } from './dto/update-organization.dto';
 export declare class OrganizationController {
     private readonly organizationService;
     constructor(organizationService: OrganizationService);
-    create(createOrganizationDto: CreateOrganizationDto): string;
-    findAll(): string;
-    findOne(id: string): string;
-    update(id: string, updateOrganizationDto: UpdateOrganizationDto): string;
-    remove(id: string): string;
+    create(createOrganizationDto: CreateOrganizationDto): Promise<import("./entities/organization.entity").Organization>;
+    findAll(): Promise<import("./entities/organization.entity").Organization[]>;
+    findOne(id: string): Promise<import("./entities/organization.entity").Organization | null>;
+    update(id: string, updateOrganizationDto: UpdateOrganizationDto): Promise<import("./entities/organization.entity").Organization>;
+    remove(id: string): Promise<import("typeorm").DeleteResult>;
 }

@@ -9,7 +9,7 @@ export class OrganizationController {
 
   @Post()
   create(@Body() createOrganizationDto: CreateOrganizationDto) {
-    return this.organizationService.create(createOrganizationDto);
+    return this.organizationService.createOrg(createOrganizationDto);
   }
 
   @Get()
@@ -24,7 +24,7 @@ export class OrganizationController {
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateOrganizationDto: UpdateOrganizationDto) {
-    return this.organizationService.update(+id, updateOrganizationDto);
+    return this.organizationService.patch(+id, updateOrganizationDto);
   }
 
   @Delete(':id')

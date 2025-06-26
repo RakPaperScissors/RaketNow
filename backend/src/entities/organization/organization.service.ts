@@ -1,26 +1,54 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateOrganizationDto } from './dto/create-organization.dto';
 import { UpdateOrganizationDto } from './dto/update-organization.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Organization } from './entities/organization.entity';
+import { userRole } from '../user/entities/user.entity';
 
 @Injectable()
 export class OrganizationService {
-  create(createOrganizationDto: CreateOrganizationDto) {
-    return 'This action adds a new organization';
+  constructor(
+    @InjectRepository(Organization)
+    private readonly organizations: Repository<Organization>) {}
+
+  async createOrg(createOrganizationDto: CreateOrganizationDto) {
+    const organization = this.organizations.create({
+      ...createOrganizationDto, 
+      role: userRole.ORGANIZATION,
+    });
+
+    return await this.organizations.save(organization);
   }
 
-  findAll() {
-    return `This action returns all organization`;
+  async findAll() {
+    return await this.organizations.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} organization`;
+  async findOne(uid: number) {
+    return await this.organizations.findOne({where: { uid, role: userRole.ORGANIZATION } });
   }
 
-  update(id: number, updateOrganizationDto: UpdateOrganizationDto) {
-    return `This action updates a #${id} organization`;
+  async patch(uid: number, updateOrganizationDto: UpdateOrganizationDto) {
+    const findOrg = await this.findOne(uid);
+
+    if(!findOrg) {
+      throw new Error(`Organization with uid ${uid} not found`);
+    }
+    
+    Object.assign(findOrg, updateOrganizationDto);
+    return await this.organizations.save(findOrg);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} organization`;
+  async remove(uid: number) {
+    const findOrg = await this.findOne(uid);
+
+    if(!findOrg) {
+      throw new NotFoundException();
+    }
+    else {
+      return await this.organizations.delete(uid);
+    }
+    
   }
 }

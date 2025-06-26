@@ -12,70 +12,70 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.OrganizationController = void 0;
+exports.RaketsController = void 0;
 const common_1 = require("@nestjs/common");
-const organization_service_1 = require("./organization.service");
-const create_organization_dto_1 = require("./dto/create-organization.dto");
-const update_organization_dto_1 = require("./dto/update-organization.dto");
-let OrganizationController = class OrganizationController {
-    organizationService;
-    constructor(organizationService) {
-        this.organizationService = organizationService;
+const rakets_service_1 = require("./rakets.service");
+const create_raket_dto_1 = require("./dto/create-raket.dto");
+const update_raket_dto_1 = require("./dto/update-raket.dto");
+let RaketsController = class RaketsController {
+    raketsService;
+    constructor(raketsService) {
+        this.raketsService = raketsService;
     }
-    create(createOrganizationDto) {
-        return this.organizationService.createOrg(createOrganizationDto);
+    create(createRaketDto) {
+        return this.raketsService.create(createRaketDto);
     }
     findAll() {
-        return this.organizationService.findAll();
+        return this.raketsService.findAll();
     }
     findOne(id) {
-        return this.organizationService.findOne(+id);
+        return this.raketsService.findOne(+id);
     }
-    update(id, updateOrganizationDto) {
-        return this.organizationService.patch(+id, updateOrganizationDto);
+    update(id, updateRaketDto) {
+        return this.raketsService.update(+id, updateRaketDto);
     }
     remove(id) {
-        return this.organizationService.remove(+id);
+        return this.raketsService.remove(+id);
     }
 };
-exports.OrganizationController = OrganizationController;
+exports.RaketsController = RaketsController;
 __decorate([
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_organization_dto_1.CreateOrganizationDto]),
+    __metadata("design:paramtypes", [create_raket_dto_1.CreateRaketDto]),
     __metadata("design:returntype", void 0)
-], OrganizationController.prototype, "create", null);
+], RaketsController.prototype, "create", null);
 __decorate([
     (0, common_1.Get)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
-], OrganizationController.prototype, "findAll", null);
+], RaketsController.prototype, "findAll", null);
 __decorate([
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
-], OrganizationController.prototype, "findOne", null);
+], RaketsController.prototype, "findOne", null);
 __decorate([
     (0, common_1.Patch)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, update_organization_dto_1.UpdateOrganizationDto]),
+    __metadata("design:paramtypes", [String, update_raket_dto_1.UpdateRaketDto]),
     __metadata("design:returntype", void 0)
-], OrganizationController.prototype, "update", null);
+], RaketsController.prototype, "update", null);
 __decorate([
     (0, common_1.Delete)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
-], OrganizationController.prototype, "remove", null);
-exports.OrganizationController = OrganizationController = __decorate([
-    (0, common_1.Controller)('organization'),
-    __metadata("design:paramtypes", [organization_service_1.OrganizationService])
-], OrganizationController);
-//# sourceMappingURL=organization.controller.js.map
+], RaketsController.prototype, "remove", null);
+exports.RaketsController = RaketsController = __decorate([
+    (0, common_1.Controller)('rakets'),
+    __metadata("design:paramtypes", [rakets_service_1.RaketsService])
+], RaketsController);
+//# sourceMappingURL=rakets.controller.js.map
