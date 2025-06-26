@@ -1,4 +1,4 @@
-import logo from '../assets/images/raketnow-white-logo.png';
+import logo from '../assets/images/raketnow-blue-logo.png';
 
 function Header() {
   return (
