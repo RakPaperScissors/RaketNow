@@ -17,6 +17,7 @@ const common_1 = require("@nestjs/common");
 const user_service_1 = require("./user.service");
 const create_user_dto_1 = require("./dto/create-user.dto");
 const update_user_dto_1 = require("./dto/update-user.dto");
+const user_entity_1 = require("./entities/user.entity");
 let UserController = class UserController {
     userService;
     constructor(userService) {
@@ -39,6 +40,12 @@ let UserController = class UserController {
     }
     searchByName(name) {
         return this.userService.searchByName(name);
+    }
+    searchByEmail(email) {
+        return this.userService.searchByEmail(email);
+    }
+    filterByRole(role) {
+        return this.userService.filterByRole(role);
     }
 };
 exports.UserController = UserController;
@@ -84,6 +91,20 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], UserController.prototype, "searchByName", null);
+__decorate([
+    (0, common_1.Get)('search/email/:email'),
+    __param(0, (0, common_1.Param)('email')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], UserController.prototype, "searchByEmail", null);
+__decorate([
+    (0, common_1.Get)('search/role/:role'),
+    __param(0, (0, common_1.Param)('role')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], UserController.prototype, "filterByRole", null);
 exports.UserController = UserController = __decorate([
     (0, common_1.Controller)('user'),
     __metadata("design:paramtypes", [user_service_1.UserService])

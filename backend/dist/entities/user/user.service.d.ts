@@ -2,6 +2,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Users } from './entities/user.entity';
 import { Repository } from 'typeorm';
+import { userRole } from './entities/user.entity';
 export declare class UserService {
     private readonly users;
     constructor(users: Repository<Users>);
@@ -11,4 +12,6 @@ export declare class UserService {
     patch(uid: number, updateUserDto: UpdateUserDto): Promise<Users>;
     remove(uid: number): Promise<import("typeorm").DeleteResult>;
     searchByName(name: string): Promise<Users[]>;
+    searchByEmail(email: string): Promise<Users[]>;
+    filterByRole(role: userRole): Promise<Users[]>;
 }

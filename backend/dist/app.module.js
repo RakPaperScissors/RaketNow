@@ -18,6 +18,7 @@ const organization_module_1 = require("./entities/organization/organization.modu
 const raketista_module_1 = require("./entities/raketista/raketista.module");
 const organization_entity_1 = require("./entities/organization/entities/organization.entity");
 const raketista_entity_1 = require("./entities/raketista/entities/raketista.entity");
+const auth_module_1 = require("./auth/auth.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -41,7 +42,8 @@ exports.AppModule = AppModule = __decorate([
             }),
             user_module_1.UserModule,
             organization_module_1.OrganizationModule,
-            raketista_module_1.RaketistaModule
+            raketista_module_1.RaketistaModule,
+            auth_module_1.AuthModule
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

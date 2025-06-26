@@ -1,7 +1,8 @@
 export declare enum userRole {
     CLIENT = "client",
     RAKETISTA = "raketista",
-    ORGANIZATION = "organization"
+    ORGANIZATION = "organization",
+    ADMIN = "admin"
 }
 export declare class Users {
     uid: number;

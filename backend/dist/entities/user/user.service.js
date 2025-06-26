@@ -52,6 +52,12 @@ let UserService = class UserService {
     async searchByName(name) {
         return await this.users.find({ where: { name: (0, typeorm_1.ILike)(`%${name}%`) } });
     }
+    async searchByEmail(email) {
+        return await this.users.find({ where: { email: (0, typeorm_1.ILike)(`%${email}%`) } });
+    }
+    async filterByRole(role) {
+        return await this.users.find({ where: { role } });
+    }
 };
 exports.UserService = UserService;
 exports.UserService = UserService = __decorate([

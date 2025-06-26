@@ -16,6 +16,7 @@ var userRole;
     userRole["CLIENT"] = "client";
     userRole["RAKETISTA"] = "raketista";
     userRole["ORGANIZATION"] = "organization";
+    userRole["ADMIN"] = "admin";
 })(userRole || (exports.userRole = userRole = {}));
 let Users = class Users {
     uid;
@@ -48,7 +49,11 @@ __decorate([
     __metadata("design:type", String)
 ], Users.prototype, "name", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'enum', enum: userRole }),
+    (0, typeorm_1.Column)({
+        type: 'enum',
+        enum: userRole,
+        default: userRole.CLIENT,
+    }),
     __metadata("design:type", String)
 ], Users.prototype, "role", void 0);
 __decorate([
