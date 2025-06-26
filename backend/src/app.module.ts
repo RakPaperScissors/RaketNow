@@ -10,6 +10,7 @@ import { RaketistaModule } from './entities/raketista/raketista.module';
 import { Organization } from './entities/organization/entities/organization.entity';
 import { Raketista } from './entities/raketista/entities/raketista.entity';
 import { AuthModule } from './auth/auth.module';
+import { RaketsModule } from './entities/rakets/rakets.module';
 
 
 @Module({
@@ -33,7 +34,8 @@ import { AuthModule } from './auth/auth.module';
     UserModule,
     OrganizationModule,
     RaketistaModule,
-    AuthModule
+    AuthModule,
+    RaketsModule
   ],
   controllers: [AppController],
   providers: [AppService],
