@@ -53,6 +53,9 @@ let OrganizationService = class OrganizationService {
             return await this.organizations.delete(uid);
         }
     }
+    async searchByOrgName(orgName) {
+        return await this.organizations.find({ where: { orgName: (0, typeorm_2.ILike)(`%${orgName}`) } });
+    }
 };
 exports.OrganizationService = OrganizationService;
 exports.OrganizationService = OrganizationService = __decorate([

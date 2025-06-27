@@ -7,6 +7,7 @@ import { UpdateRaketistaDto } from './dto/update-raketista.dto';
 export class RaketistaController {
   constructor(private readonly raketistaService: RaketistaService) {}
 
+  // CRUD operations for RAKETISTA user
   @Post()
   create(@Body() createRaketistaDto: CreateRaketistaDto) {
     return this.raketistaService.create(createRaketistaDto);

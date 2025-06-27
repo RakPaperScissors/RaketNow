@@ -1,26 +1,58 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateRaketistaDto } from './dto/create-raketista.dto';
 import { UpdateRaketistaDto } from './dto/update-raketista.dto';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Raketista } from './entities/raketista.entity';
+import { userRole } from '../user/entities/user.entity';
+import { NotFoundError } from 'rxjs';
 
 @Injectable()
 export class RaketistaService {
-  create(createRaketistaDto: CreateRaketistaDto) {
-    return 'This action adds a new raketista';
+  constructor(
+    @InjectRepository(Raketista)
+    private readonly raketistas: Repository<Raketista>) {}
+
+
+  async create(createRaketistaDto: CreateRaketistaDto) {
+    const raketista = this.raketistas.create({
+      ...createRaketistaDto,
+      role: userRole.RAKETISTA,
+    });
+
+    return await this.raketistas.save(raketista);
   }
 
-  findAll() {
-    return `This action returns all raketista`;
+  async findAll() {
+    return await this.raketistas.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} raketista`;
+  async findOne(uid: number) {
+    return await this.raketistas.findOne({where: { uid, role: userRole.RAKETISTA}});
   }
 
-  update(id: number, updateRaketistaDto: UpdateRaketistaDto) {
-    return `This action updates a #${id} raketista`;
+  async update(uid: number, updateRaketistaDto: UpdateRaketistaDto) {
+    const findRaketista = await this.findOne(uid);
+
+    if(!findRaketista) {
+      throw new Error(`Raketista with uid ${uid} not found`);
+    }
+
+    Object.assign(findRaketista, updateRaketistaDto);
+    return await this.raketistas.save(findRaketista);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} raketista`;
+  async remove(uid: number) {
+    const findRaketista = await this.findOne(uid);
+
+    if(!findRaketista) {
+      throw new NotFoundException();
+    }
+    else {
+      return await this.raketistas.delete(uid);
+    }
   }
+
+
+  
 }

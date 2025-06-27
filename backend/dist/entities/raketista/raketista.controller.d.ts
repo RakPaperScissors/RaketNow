@@ -4,9 +4,9 @@ import { UpdateRaketistaDto } from './dto/update-raketista.dto';
 export declare class RaketistaController {
     private readonly raketistaService;
     constructor(raketistaService: RaketistaService);
-    create(createRaketistaDto: CreateRaketistaDto): string;
-    findAll(): string;
-    findOne(id: string): string;
-    update(id: string, updateRaketistaDto: UpdateRaketistaDto): string;
-    remove(id: string): string;
+    create(createRaketistaDto: CreateRaketistaDto): Promise<import("./entities/raketista.entity").Raketista>;
+    findAll(): Promise<import("./entities/raketista.entity").Raketista[]>;
+    findOne(id: string): Promise<import("./entities/raketista.entity").Raketista | null>;
+    update(id: string, updateRaketistaDto: UpdateRaketistaDto): Promise<import("./entities/raketista.entity").Raketista>;
+    remove(id: string): Promise<import("typeorm").DeleteResult>;
 }

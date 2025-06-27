@@ -31,4 +31,11 @@ export class OrganizationController {
   remove(@Param('id') id: string) {
     return this.organizationService.remove(+id);
   }
+
+
+  // Search and Filter functions
+  @Get('search/orgName/:orgName')
+  searchByOrgName(@Param('orgName') orgName: string) {
+    return this.organizationService.searchByOrgName(orgName);
+  }
 }

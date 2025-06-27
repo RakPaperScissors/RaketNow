@@ -37,6 +37,9 @@ let OrganizationController = class OrganizationController {
     remove(id) {
         return this.organizationService.remove(+id);
     }
+    searchByOrgName(orgName) {
+        return this.organizationService.searchByOrgName(orgName);
+    }
 };
 exports.OrganizationController = OrganizationController;
 __decorate([
@@ -74,6 +77,13 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], OrganizationController.prototype, "remove", null);
+__decorate([
+    (0, common_1.Get)('search/orgName/:orgName'),
+    __param(0, (0, common_1.Param)('orgName')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], OrganizationController.prototype, "searchByOrgName", null);
 exports.OrganizationController = OrganizationController = __decorate([
     (0, common_1.Controller)('organization'),
     __metadata("design:paramtypes", [organization_service_1.OrganizationService])

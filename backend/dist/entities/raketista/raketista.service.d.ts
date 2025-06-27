@@ -1,9 +1,13 @@
 import { CreateRaketistaDto } from './dto/create-raketista.dto';
 import { UpdateRaketistaDto } from './dto/update-raketista.dto';
+import { Repository } from 'typeorm';
+import { Raketista } from './entities/raketista.entity';
 export declare class RaketistaService {
-    create(createRaketistaDto: CreateRaketistaDto): string;
-    findAll(): string;
-    findOne(id: number): string;
-    update(id: number, updateRaketistaDto: UpdateRaketistaDto): string;
-    remove(id: number): string;
+    private readonly raketistas;
+    constructor(raketistas: Repository<Raketista>);
+    create(createRaketistaDto: CreateRaketistaDto): Promise<Raketista>;
+    findAll(): Promise<Raketista[]>;
+    findOne(uid: number): Promise<Raketista | null>;
+    update(uid: number, updateRaketistaDto: UpdateRaketistaDto): Promise<Raketista>;
+    remove(uid: number): Promise<import("typeorm").DeleteResult>;
 }

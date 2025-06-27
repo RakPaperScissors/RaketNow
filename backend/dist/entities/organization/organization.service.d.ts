@@ -10,4 +10,5 @@ export declare class OrganizationService {
     findOne(uid: number): Promise<Organization | null>;
     patch(uid: number, updateOrganizationDto: UpdateOrganizationDto): Promise<Organization>;
     remove(uid: number): Promise<import("typeorm").DeleteResult>;
+    searchByOrgName(orgName: string): Promise<Organization[]>;
 }

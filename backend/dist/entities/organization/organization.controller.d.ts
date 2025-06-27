@@ -9,4 +9,5 @@ export declare class OrganizationController {
     findOne(id: string): Promise<import("./entities/organization.entity").Organization | null>;
     update(id: string, updateOrganizationDto: UpdateOrganizationDto): Promise<import("./entities/organization.entity").Organization>;
     remove(id: string): Promise<import("typeorm").DeleteResult>;
+    searchByOrgName(orgName: string): Promise<import("./entities/organization.entity").Organization[]>;
 }

@@ -10,13 +10,17 @@ exports.RaketistaModule = void 0;
 const common_1 = require("@nestjs/common");
 const raketista_service_1 = require("./raketista.service");
 const raketista_controller_1 = require("./raketista.controller");
+const typeorm_1 = require("@nestjs/typeorm");
+const raketista_entity_1 = require("./entities/raketista.entity");
 let RaketistaModule = class RaketistaModule {
 };
 exports.RaketistaModule = RaketistaModule;
 exports.RaketistaModule = RaketistaModule = __decorate([
     (0, common_1.Module)({
+        imports: [typeorm_1.TypeOrmModule.forFeature([raketista_entity_1.Raketista])],
         controllers: [raketista_controller_1.RaketistaController],
         providers: [raketista_service_1.RaketistaService],
+        exports: [raketista_service_1.RaketistaService],
     })
 ], RaketistaModule);
 //# sourceMappingURL=raketista.module.js.map

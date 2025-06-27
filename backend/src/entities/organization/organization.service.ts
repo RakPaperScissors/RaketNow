@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateOrganizationDto } from './dto/create-organization.dto';
 import { UpdateOrganizationDto } from './dto/update-organization.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { Organization } from './entities/organization.entity';
 import { userRole } from '../user/entities/user.entity';
 
@@ -12,6 +12,7 @@ export class OrganizationService {
     @InjectRepository(Organization)
     private readonly organizations: Repository<Organization>) {}
 
+  // Basic CRUD Functions for Orgs
   async createOrg(createOrganizationDto: CreateOrganizationDto) {
     const organization = this.organizations.create({
       ...createOrganizationDto, 
@@ -48,7 +49,10 @@ export class OrganizationService {
     }
     else {
       return await this.organizations.delete(uid);
-    }
-    
+    } 
+  }
+
+  async searchByOrgName(orgName: string) {
+    return await this.organizations.find({ where: { orgName: ILike(`%${orgName}`)} });
   }
 }
