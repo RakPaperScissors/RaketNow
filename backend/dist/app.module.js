@@ -20,6 +20,9 @@ const organization_entity_1 = require("./entities/organization/entities/organiza
 const raketista_entity_1 = require("./entities/raketista/entities/raketista.entity");
 const auth_module_1 = require("./auth/auth.module");
 const rakets_module_1 = require("./entities/rakets/rakets.module");
+const raket_entity_1 = require("./entities/rakets/entities/raket.entity");
+const raket_pictures_module_1 = require("./entities/raket-pictures/raket-pictures.module");
+const raket_picture_entity_1 = require("./entities/raket-pictures/entities/raket-picture.entity");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -34,7 +37,7 @@ exports.AppModule = AppModule = __decorate([
                 username: process.env.DB_USER,
                 password: process.env.DB_PASSWORD,
                 database: process.env.DB_DATABASE,
-                entities: [user_entity_1.Users, organization_entity_1.Organization, raketista_entity_1.Raketista],
+                entities: [user_entity_1.Users, organization_entity_1.Organization, raketista_entity_1.Raketista, raket_entity_1.Raket, raket_picture_entity_1.RaketPictures],
                 ssl: process.env.NODE_ENV === 'production'
                     ? { rejectUnauthorized: false }
                     : false,
@@ -45,7 +48,8 @@ exports.AppModule = AppModule = __decorate([
             organization_module_1.OrganizationModule,
             raketista_module_1.RaketistaModule,
             auth_module_1.AuthModule,
-            rakets_module_1.RaketsModule
+            rakets_module_1.RaketsModule,
+            raket_pictures_module_1.RaketPicturesModule
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

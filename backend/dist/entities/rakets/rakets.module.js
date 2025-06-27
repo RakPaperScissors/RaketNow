@@ -10,11 +10,15 @@ exports.RaketsModule = void 0;
 const common_1 = require("@nestjs/common");
 const rakets_service_1 = require("./rakets.service");
 const rakets_controller_1 = require("./rakets.controller");
+const typeorm_1 = require("@nestjs/typeorm");
+const raket_entity_1 = require("./entities/raket.entity");
+const user_entity_1 = require("../user/entities/user.entity");
 let RaketsModule = class RaketsModule {
 };
 exports.RaketsModule = RaketsModule;
 exports.RaketsModule = RaketsModule = __decorate([
     (0, common_1.Module)({
+        imports: [typeorm_1.TypeOrmModule.forFeature([raket_entity_1.Raket, user_entity_1.Users])],
         controllers: [rakets_controller_1.RaketsController],
         providers: [rakets_service_1.RaketsService],
     })

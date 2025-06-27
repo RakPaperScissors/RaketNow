@@ -11,6 +11,9 @@ import { Organization } from './entities/organization/entities/organization.enti
 import { Raketista } from './entities/raketista/entities/raketista.entity';
 import { AuthModule } from './auth/auth.module';
 import { RaketsModule } from './entities/rakets/rakets.module';
+import { Raket } from './entities/rakets/entities/raket.entity';
+import { RaketPicturesModule } from './entities/raket-pictures/raket-pictures.module';
+import { RaketPictures } from './entities/raket-pictures/entities/raket-picture.entity';
 
 
 @Module({
@@ -23,7 +26,7 @@ import { RaketsModule } from './entities/rakets/rakets.module';
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [Users, Organization, Raketista],
+      entities: [Users, Organization, Raketista, Raket, RaketPictures],
       ssl:
         process.env.NODE_ENV === 'production'
           ? { rejectUnauthorized: false }
@@ -35,7 +38,8 @@ import { RaketsModule } from './entities/rakets/rakets.module';
     OrganizationModule,
     RaketistaModule,
     AuthModule,
-    RaketsModule
+    RaketsModule,
+    RaketPicturesModule
   ],
   controllers: [AppController],
   providers: [AppService],

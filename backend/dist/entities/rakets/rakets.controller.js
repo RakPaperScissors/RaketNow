@@ -32,7 +32,7 @@ let RaketsController = class RaketsController {
         return this.raketsService.findOne(+id);
     }
     update(id, updateRaketDto) {
-        return this.raketsService.update(+id, updateRaketDto);
+        return this.raketsService.patch(+id, updateRaketDto);
     }
     remove(id) {
         return this.raketsService.remove(+id);

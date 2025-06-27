@@ -24,7 +24,7 @@ export class RaketsController {
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateRaketDto: UpdateRaketDto) {
-    return this.raketsService.update(+id, updateRaketDto);
+    return this.raketsService.patch(+id, updateRaketDto);
   }
 
   @Delete(':id')
