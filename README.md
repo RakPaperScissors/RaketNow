@@ -70,8 +70,10 @@ cd RaketNow
 
 ## 👥 Developers 
 
-| Joseph Francis Buhayan | https://github.com/JosephBuhayan |
-| Xander Jay Cagang | https://github.com/Code-DER |
-| Jhaye Marie Gonzales | https://github.com/jhayegnzls |
-| Liarrah Daniya Lambayao | https://github.com/ldlambayao |
-| Krystel Mikylla Perez | https://github.com/krystellar |
+|           Name          |          GitHub Profile          |
+|-------------------------|----------------------------------|
+| Joseph Francis Buhayan  | https://github.com/JosephBuhayan |
+| Xander Jay Cagang       | https://github.com/Code-DER      |
+| Jhaye Marie Gonzales    | https://github.com/jhayegnzls    |
+| Liarrah Daniya Lambayao | https://github.com/ldlambayao    |
+| Krystel Mikylla Perez   | https://github.com/krystellar    |
