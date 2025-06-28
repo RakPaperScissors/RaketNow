@@ -1,15 +1,29 @@
-import Header from './components/Header';
-import Footer from './components/Footer';
-import CardList from './components/CardList';
+import Footer from "./components/Footer";
+import {
+  Route,
+  createBrowserRouter,
+  createRoutesFromElements,
+  RouterProvider,
+} from "react-router-dom";
+import RootLayout from "./layout/RootLayout";
+import Home from "./pages/Home";
+import About from "./pages/About";
+import Login from "./pages/Login";
 
 function App() {
+  const router = createBrowserRouter(
+    createRoutesFromElements(
+      <Route path="/" element={<RootLayout />}>
+        <Route index element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/login" element={<Login />} />
+      </Route>
+    )
+  );
+
   return (
     <>
-      <Header />
-
-      <main className="py-10 px-4 bg-gray-50 min-h-[80vh]">
-        <CardList />
-      </main>
+      <RouterProvider router={router} />
 
       <Footer />
     </>
