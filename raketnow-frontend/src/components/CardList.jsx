@@ -29,15 +29,16 @@ const categories = [
 
 const CardList = () => {
   return (
-    <div className="px-4 py-6">
-      <h1 className="text-2xl font-semibold text-center text-gray-800 mb-4">
+    <div className="px-4 pt-1 pb-6">
+      <h1 className="text-2xl font-semibold text-center text-[#0C2C57] mb-4">
         Featured Services
       </h1>
-    <div className="flex space-x-4 overflow-x-auto px-4 py-6 scrollbar-hide">
-      {categories.map((cat, index) => (
-        <CategoryCard key={index} {...cat} isActive={index === 0} />
-      ))}
-    </div>
+
+      <div className="flex space-x-4 overflow-x-auto scrollbar-hide px-1 py-4">
+        {categories.map((cat, index) => (
+          <CategoryCard key={index} {...cat} />
+        ))}
+      </div>
     </div>
   );
 };

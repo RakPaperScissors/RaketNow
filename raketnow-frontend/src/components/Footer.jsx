@@ -18,13 +18,13 @@ function Footer() {
                     <div className="flex flex-wrap sm:flex-nowrap space-x-4">
                         <a
                             href="/signup"
-                            className="whitespace-nowrap bg-[#FF7C2B] text-[#0C2C57] font-semibold text-sm px-6 py-2 rounded-full hover:bg-gray-200 transition"
+                            className="whitespace-nowrap bg-[#FF7C2B] text-[#0C2C57] font-semibold text-sm px-6 py-2 rounded-xl hover:bg-gray-200 transition"
                         >
                             Be a Raketista
                         </a>
                         <a
                             href="/login"
-                            className="whitespace-nowrap border border-white text-white font-semibold text-sm px-6 py-2 rounded-full hover:bg-white hover:text-[#0C2C57] transition"
+                            className="whitespace-nowrap border border-white text-white font-semibold text-sm px-6 py-2 rounded-xl hover:bg-white hover:text-[#0C2C57] transition"
                         >
                             Match with a Raketista
                         </a>
