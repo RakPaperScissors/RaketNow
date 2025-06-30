@@ -10,4 +10,5 @@ export declare class RaketistaService {
     findOne(uid: number): Promise<Raketista | null>;
     update(uid: number, updateRaketistaDto: UpdateRaketistaDto): Promise<Raketista>;
     remove(uid: number): Promise<import("typeorm").DeleteResult>;
+    searchByRaketistaName(name: string): Promise<Raketista[]>;
 }

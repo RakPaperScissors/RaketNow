@@ -9,4 +9,5 @@ export declare class RaketistaController {
     findOne(id: string): Promise<import("./entities/raketista.entity").Raketista | null>;
     update(id: string, updateRaketistaDto: UpdateRaketistaDto): Promise<import("./entities/raketista.entity").Raketista>;
     remove(id: string): Promise<import("typeorm").DeleteResult>;
+    searchByRaketistaName(name: string): Promise<import("./entities/raketista.entity").Raketista[]>;
 }

@@ -53,6 +53,9 @@ let RaketistaService = class RaketistaService {
             return await this.raketistas.delete(uid);
         }
     }
+    async searchByRaketistaName(name) {
+        return await this.raketistas.find({ where: { role: user_entity_1.userRole.RAKETISTA, name: (0, typeorm_1.ILike)(`%${name}%`) } });
+    }
 };
 exports.RaketistaService = RaketistaService;
 exports.RaketistaService = RaketistaService = __decorate([

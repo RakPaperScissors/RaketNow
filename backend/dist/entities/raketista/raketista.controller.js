@@ -37,6 +37,9 @@ let RaketistaController = class RaketistaController {
     remove(id) {
         return this.raketistaService.remove(+id);
     }
+    searchByRaketistaName(name) {
+        return this.raketistaService.searchByRaketistaName(name);
+    }
 };
 exports.RaketistaController = RaketistaController;
 __decorate([
@@ -74,6 +77,13 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], RaketistaController.prototype, "remove", null);
+__decorate([
+    (0, common_1.Get)('search/raketistaName/:name'),
+    __param(0, (0, common_1.Param)('name')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], RaketistaController.prototype, "searchByRaketistaName", null);
 exports.RaketistaController = RaketistaController = __decorate([
     (0, common_1.Controller)('raketista'),
     __metadata("design:paramtypes", [raketista_service_1.RaketistaService])

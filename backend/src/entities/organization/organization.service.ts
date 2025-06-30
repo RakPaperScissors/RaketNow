@@ -53,6 +53,6 @@ export class OrganizationService {
   }
 
   async searchByOrgName(orgName: string) {
-    return await this.organizations.find({ where: { orgName: ILike(`%${orgName}`)} });
+    return await this.organizations.find({ where: { orgName: ILike(`%${orgName}%`)} });
   }
 }

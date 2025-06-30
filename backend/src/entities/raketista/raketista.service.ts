@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateRaketistaDto } from './dto/create-raketista.dto';
 import { UpdateRaketistaDto } from './dto/update-raketista.dto';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Raketista } from './entities/raketista.entity';
 import { userRole } from '../user/entities/user.entity';
@@ -53,6 +53,8 @@ export class RaketistaService {
     }
   }
 
-
+  async searchByRaketistaName(name: string) {
+    return await this.raketistas.find({ where: { role: userRole.RAKETISTA, name: ILike(`%${name}%`) } });
+  }
   
 }

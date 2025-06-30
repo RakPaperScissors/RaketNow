@@ -32,4 +32,9 @@ export class RaketistaController {
   remove(@Param('id') id: string) {
     return this.raketistaService.remove(+id);
   }
+
+  @Get('search/raketistaName/:name')
+  searchByRaketistaName(@Param('name') name: string) {
+    return this.raketistaService.searchByRaketistaName(name);
+  }
 }

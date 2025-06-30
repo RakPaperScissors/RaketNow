@@ -54,7 +54,7 @@ let OrganizationService = class OrganizationService {
         }
     }
     async searchByOrgName(orgName) {
-        return await this.organizations.find({ where: { orgName: (0, typeorm_2.ILike)(`%${orgName}`) } });
+        return await this.organizations.find({ where: { orgName: (0, typeorm_2.ILike)(`%${orgName}%`) } });
     }
 };
 exports.OrganizationService = OrganizationService;
