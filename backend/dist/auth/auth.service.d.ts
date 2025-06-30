@@ -10,4 +10,7 @@ export declare class AuthService {
         access_token: string;
     }>;
     getProfile(uid: number): Promise<Users>;
+    changePassword(uid: number, oldPassword: string, newPassword: string): Promise<{
+        message: string;
+    }>;
 }

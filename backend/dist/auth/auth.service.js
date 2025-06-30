@@ -50,6 +50,20 @@ let AuthService = class AuthService {
         }
         return user;
     }
+    async changePassword(uid, oldPassword, newPassword) {
+        const user = await this.usersRepo.findOne({ where: { uid } });
+        if (!user) {
+            throw new common_1.NotFoundException('User not found');
+        }
+        const isMatch = await bcrypt.compare(oldPassword, user.password);
+        if (!isMatch) {
+            throw new common_1.BadRequestException('Old password is incorrect');
+        }
+        const hashed = await bcrypt.hash(newPassword, 10);
+        user.password = hashed;
+        await this.usersRepo.save(user);
+        return { message: 'Password updated successfully' };
+    }
 };
 exports.AuthService = AuthService;
 exports.AuthService = AuthService = __decorate([
