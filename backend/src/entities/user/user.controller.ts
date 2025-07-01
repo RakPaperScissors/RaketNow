@@ -60,4 +60,9 @@ export class UserController {
   changeRole(@Param('uid') uid: number, @Body('role') role: userRole) {
     return this.userService.changeRole(uid, role);
   }
+
+  @Patch('update-profile-pic/:uid')
+  updateProfilePicture(@Param('uid') uid: number, @Body('profilePicture') profilePicture: string) {
+    return this.userService.updateProfilePicture(uid, profilePicture);
+  }
 }

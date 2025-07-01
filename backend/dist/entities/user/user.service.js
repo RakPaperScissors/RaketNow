@@ -58,6 +58,14 @@ let UserService = class UserService {
     async filterByRole(role) {
         return await this.users.find({ where: { role } });
     }
+    async updateProfilePicture(uid, profilePicture) {
+        const findUser = await this.findOne(uid);
+        if (!findUser) {
+            throw new common_1.NotFoundException('User not found');
+        }
+        findUser.profilePicture = profilePicture;
+        return await this.users.save(findUser);
+    }
     async changeRole(uid, role) {
         const findUser = await this.findOne(uid);
         if (!findUser) {
