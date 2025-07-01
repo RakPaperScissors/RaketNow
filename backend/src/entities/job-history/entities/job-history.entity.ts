@@ -2,7 +2,8 @@ import {Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToOne, JoinColumn}
 import { Users } from './../../user/entities/user.entity';
 import {Raket} from "./../../rakets/entities/raket.entity";
 export enum jobHistoryType {
-    // types of job history here
+    RAKET = 'Raket',
+    WORK_EXPERIENCE = 'Work Experience'
 }
 @Entity()
 export class JobHistory {

@@ -7,6 +7,7 @@ import { UpdateJobHistoryDto } from './dto/update-job-history.dto';
 export class JobHistoryController {
   constructor(private readonly jobHistoryService: JobHistoryService) {}
 
+  // add history sa list, automatic if the raket is done, manual add if work experience
   @Post()
   create(@Body() createJobHistoryDto: CreateJobHistoryDto) {
     return this.jobHistoryService.create(createJobHistoryDto);
