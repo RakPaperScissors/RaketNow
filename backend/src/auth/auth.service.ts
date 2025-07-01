@@ -4,6 +4,7 @@ import * as bcrypt from 'bcryptjs';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { userRole, Users } from 'src/entities/user/entities/user.entity';
+import { profile } from 'console';
 
 @Injectable()
 export class AuthService {
@@ -41,10 +42,10 @@ export class AuthService {
         if (!user) {
             throw new UnauthorizedException('User not found');
         }
-        // Optionally, return only selected fields:
-        // const { password, ...profile } = user;
-        // return profile;
-        return user;
+
+        // Exclude some fields from the GET profile
+        const {password, providerId, authProvider, deletedAt, ...profile} = user;
+        return profile;
     }
 
     async changePassword(uid: number, oldPassword: string, newPassword: string) {
@@ -64,4 +65,6 @@ export class AuthService {
 
         return { message: 'Password updated successfully'};
     }
+
+    
 }

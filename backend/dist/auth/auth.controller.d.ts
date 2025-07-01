@@ -15,7 +15,15 @@ export declare class AuthController {
     }): Promise<{
         access_token: string;
     }>;
-    getProfile(req: any): Promise<import("src/entities/user/entities/user.entity").Users>;
+    getProfile(req: any): Promise<{
+        uid: number;
+        email: string;
+        name: string;
+        role: userRole;
+        profilePicture: string;
+        lastActive: Date;
+        createdAt: Date;
+    }>;
     changePassword(req: any, body: {
         oldPassword: string;
         newPassword: string;

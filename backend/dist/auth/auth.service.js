@@ -48,7 +48,8 @@ let AuthService = class AuthService {
         if (!user) {
             throw new common_1.UnauthorizedException('User not found');
         }
-        return user;
+        const { password, providerId, authProvider, deletedAt, ...profile } = user;
+        return profile;
     }
     async changePassword(uid, oldPassword, newPassword) {
         const user = await this.usersRepo.findOne({ where: { uid } });
