@@ -55,4 +55,9 @@ export class UserController {
   filterByRole(@Param('role') role: userRole) {
     return this.userService.filterByRole(role);
   }
+
+  @Patch('change-role/:uid')
+  changeRole(@Param('uid') uid: number, @Body('role') role: userRole) {
+    return this.userService.changeRole(uid, role);
+  }
 }

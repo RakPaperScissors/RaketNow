@@ -70,4 +70,13 @@ export class UserService {
   // 1. Get current user profile
   // 2. Update profile picture or bio
   // 3. Set or Change role (admin only)
+  async changeRole(uid:number, role: userRole) {
+    const findUser = await this.findOne(uid);
+
+    if(!findUser) {
+      throw new NotFoundException('User not found');
+    }
+    findUser.role = role;
+    return await this.users.save(findUser);
+  }
 }

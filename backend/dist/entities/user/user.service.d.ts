@@ -14,4 +14,5 @@ export declare class UserService {
     searchByName(name: string): Promise<Users[]>;
     searchByEmail(email: string): Promise<Users[]>;
     filterByRole(role: userRole): Promise<Users[]>;
+    changeRole(uid: number, role: userRole): Promise<Users>;
 }
