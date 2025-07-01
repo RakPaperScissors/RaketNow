@@ -14,7 +14,9 @@ import { RaketsModule } from './entities/rakets/rakets.module';
 import { Raket } from './entities/rakets/entities/raket.entity';
 import { RaketPicturesModule } from './entities/raket-pictures/raket-pictures.module';
 import { RaketPictures } from './entities/raket-pictures/entities/raket-picture.entity';
-
+import { SkillsModule } from './entities/skills/skills.module';
+import { CertificationModule } from './entities/certification/certification.module';
+import { JobHistoryModule } from './entities/job-history/job-history.module';
 
 @Module({
   imports: [
@@ -39,7 +41,10 @@ import { RaketPictures } from './entities/raket-pictures/entities/raket-picture.
     RaketistaModule,
     AuthModule,
     RaketsModule,
-    RaketPicturesModule
+    RaketPicturesModule,
+    SkillsModule,
+    CertificationModule,
+    JobHistoryModule
   ],
   controllers: [AppController],
   providers: [AppService],
