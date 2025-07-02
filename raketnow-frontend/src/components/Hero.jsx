@@ -1,4 +1,4 @@
-import Mockup from '../assets/images/raketnow-mockup.png';
+import Mockup from "../assets/images/raketnow-mockup.png";
 
 function Hero() {
   return (
@@ -10,7 +10,8 @@ function Hero() {
         {/* Left: Text Section */}
         <div className="w-full md:w-1/2">
           <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight text-[#0C2C57] mb-10">
-            where your next <span className="text-[#FF7C2B]">raket</span> starts with us.
+            where your next <span className="text-[#FF7C2B]">raket</span> starts
+            with us.
           </h1>
           <p className="text-lg md:text-xl text-[#0C2C57] mb-10 max-w-2xl">
             matching rakets with opportunities, all in one platform.
@@ -24,7 +25,7 @@ function Hero() {
             </a>
             <a
               href="/login"
-              className="bg-[#0C2C57] text-white font-semibold text-sm px-6 py-3 rounded-xl hover:bg-[#576e8b] transition"
+              className="bg-[#0C2C57] text-white font-semibold text-sm px-6 py-3 rounded-xl hover:bg-[#576e8b] hover:text-[#FF7C2B] transition"
             >
               Match with a Raketista
             </a>
