@@ -24,10 +24,7 @@ let OrganizationService = class OrganizationService {
         this.organizations = organizations;
     }
     async createOrg(createOrganizationDto) {
-        const organization = this.organizations.create({
-            ...createOrganizationDto,
-            role: user_entity_1.userRole.ORGANIZATION,
-        });
+        const organization = this.organizations.create({ ...createOrganizationDto, role: user_entity_1.userRole.ORGANIZATION });
         return await this.organizations.save(organization);
     }
     async findAll() {
@@ -47,7 +44,7 @@ let OrganizationService = class OrganizationService {
     async remove(uid) {
         const findOrg = await this.findOne(uid);
         if (!findOrg) {
-            throw new common_1.NotFoundException();
+            throw new common_1.NotFoundException('Organization not found');
         }
         else {
             return await this.organizations.delete(uid);

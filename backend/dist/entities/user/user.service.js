@@ -35,7 +35,7 @@ let UserService = class UserService {
     async patch(uid, updateUserDto) {
         const findUser = await this.findOne(uid);
         if (!findUser) {
-            throw new common_1.NotFoundException();
+            throw new common_1.NotFoundException('User not found');
         }
         Object.assign(findUser, updateUserDto);
         return await this.users.save(findUser);
@@ -43,7 +43,7 @@ let UserService = class UserService {
     async remove(uid) {
         const findUser = await this.findOne(uid);
         if (!findUser) {
-            throw new common_1.NotFoundException();
+            throw new common_1.NotFoundException('User not found');
         }
         else {
             return await this.users.delete(uid);

@@ -24,10 +24,7 @@ let RaketistaService = class RaketistaService {
         this.raketistas = raketistas;
     }
     async create(createRaketistaDto) {
-        const raketista = this.raketistas.create({
-            ...createRaketistaDto,
-            role: user_entity_1.userRole.RAKETISTA,
-        });
+        const raketista = this.raketistas.create({ ...createRaketistaDto, role: user_entity_1.userRole.RAKETISTA });
         return await this.raketistas.save(raketista);
     }
     async findAll() {
@@ -39,7 +36,7 @@ let RaketistaService = class RaketistaService {
     async update(uid, updateRaketistaDto) {
         const findRaketista = await this.findOne(uid);
         if (!findRaketista) {
-            throw new Error(`Raketista with uid ${uid} not found`);
+            throw new common_1.NotFoundException(`Raketista with uid ${uid} not found`);
         }
         Object.assign(findRaketista, updateRaketistaDto);
         return await this.raketistas.save(findRaketista);
@@ -47,7 +44,7 @@ let RaketistaService = class RaketistaService {
     async remove(uid) {
         const findRaketista = await this.findOne(uid);
         if (!findRaketista) {
-            throw new common_1.NotFoundException();
+            throw new common_1.NotFoundException('Raketista not found');
         }
         else {
             return await this.raketistas.delete(uid);
