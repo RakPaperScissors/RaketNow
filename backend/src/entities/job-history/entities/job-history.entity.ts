@@ -1,10 +1,6 @@
 import {Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToOne, JoinColumn} from 'typeorm';
 import { Users } from './../../user/entities/user.entity';
 import {Raket} from "./../../rakets/entities/raket.entity";
-export enum jobHistoryType {
-    RAKET = 'Raket',
-    WORK_EXPERIENCE = 'Work Experience'
-}
 @Entity()
 export class JobHistory {
     @PrimaryGeneratedColumn()
@@ -16,8 +12,8 @@ export class JobHistory {
     @Column({type: 'varchar', length: 100, nullable: false})
     description: string;
 
-    @Column({type: 'enum', enum: jobHistoryType, nullable: false})
-    historyType: jobHistoryType;
+    @Column({ type: 'enum', enum: ['Raket', 'Work_Experience'], nullable: false })
+    historyType: 'Raket' | 'Work_Experience';
 
     @Column({type: 'date', nullable: false})
     jobDate: Date;
@@ -25,7 +21,7 @@ export class JobHistory {
     //foreign key to raket table
     @OneToOne(() => Raket, raket => raket.raketId, {onDelete: 'CASCADE'})
     @JoinColumn({name: "raketId", referencedColumnName: "raketId"})
-    raketId : Raket;
+    raket : Raket;
 
     // foreign key to users table
     @ManyToOne(()=> Users, user=> user.uid, {onDelete: 'CASCADE'})
