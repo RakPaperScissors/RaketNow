@@ -1,45 +1,81 @@
 import logo from "../assets/images/raketnow-blue-logo.png";
-import { UserRound } from "lucide-react";
-import { Search } from "lucide-react";
+import {
+  UserRound,
+  Search,
+  Menu,
+  X,
+  ChevronDown,
+  ChevronUp,
+} from "lucide-react";
 import { NavLink } from "react-router-dom";
+import { useState } from "react";
 
 function Header() {
+  const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isDropdownOpen, setDropdownOpen] = useState(false);
+
+  const categories = [
+    "Maintenance & Repair",
+    "Tech & Electronics",
+    "Personal & Home Care",
+    "Events & Entertainment",
+    "Food & Beverage",
+    "Education & Tutoring",
+    "Graphic & Digital Design",
+  ];
+
   return (
     <header className="shadow-md bg-white">
-      <nav className="flex items-center justify-between px-6 py-4 max-w-screen-xl mx-auto">
+      <nav className="max-w-screen-xl mx-auto px-6 py-4 flex items-center justify-between">
+        {/* Logo */}
         <div className="flex items-center gap-6">
           <img
             src={logo}
             alt="raketNow"
             className="h-12 w-auto object-contain"
           />
-
-          {/* Search bar*/}
-          <div className="relative w-[310px]">
-            <input
-              type="text"
-              placeholder="What service are you looking for today?"
-              className="pl-3 pr-10 py-2 rounded-md border border-gray-300 text-gray-500 text-sm placeholder:text-xs placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-orange-400 w-full"
-            />
-            <div className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400">
-              <Search size={20} />
-            </div>
-          </div>
         </div>
 
-        {/* Removed some links sa navbar kasi parang walang sense yang dalawa ahsdjhjasda */}
+        {/* Desktop Navbarrr */}
+        <ul className="hidden md:flex items-center gap-8 text-[1rem] font-medium text-blue-900 relative">
+          <li className="relative">
+            <button
+              onClick={() => setDropdownOpen(!isDropdownOpen)}
+              className="flex items-center gap-1 hover:text-orange-500"
+            >
+              Categories{" "}
+              {isDropdownOpen ? (
+                <ChevronUp size={18} />
+              ) : (
+                <ChevronDown size={18} />
+              )}
+            </button>
 
-        <ul className="flex items-center gap-8 text-[1rem] font-medium text-blue-900">
-          <li>
-            <NavLink to="/">Categories</NavLink>
+            {isDropdownOpen && (
+              <ul className="absolute top-full left-0 mt-2 w-64 bg-white shadow-md rounded-md z-10">
+                {categories.map((category) => (
+                  <li
+                    key={category}
+                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm"
+                  >
+                    {category}
+                  </li>
+                ))}
+              </ul>
+            )}
           </li>
 
           <li>
-            <NavLink to="about">About Us</NavLink>
+            <NavLink to="/about" className="hover:text-orange-500">
+              About Us
+            </NavLink>
           </li>
 
           <li>
-            <NavLink to="login" className="flex items-center gap-1">
+            <NavLink
+              to="/login"
+              className="flex items-center gap-1 hover:text-orange-500"
+            >
               <UserRound size={19} />
               Login
             </NavLink>
@@ -47,14 +83,83 @@ function Header() {
 
           <li>
             <NavLink
-              to="/"
+              to="/signup"
               className="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600"
             >
               Sign Up
             </NavLink>
           </li>
         </ul>
+
+        {/* MOBILE RESPONSIVENESS KINEME */}
+
+        {/* Mobile menu toggle */}
+        <button
+          className="md:hidden text-blue-900"
+          onClick={() => setMobileMenuOpen(!isMobileMenuOpen)}
+        >
+          {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
       </nav>
+
+      {/* Mobile Nav Menu */}
+      {isMobileMenuOpen && (
+        <div className="md:hidden px-6 pb-4 flex flex-col items-center">
+          <ul className="flex flex-col gap-4 text-blue-900 font-medium">
+            <li>
+              <button
+                onClick={() => setDropdownOpen(!isDropdownOpen)}
+                className="flex items-center gap-1 hover:text-orange-500 w-full text-left"
+              >
+                Categories{" "}
+                {isDropdownOpen ? (
+                  <ChevronUp size={18} />
+                ) : (
+                  <ChevronDown size={18} />
+                )}
+              </button>
+
+              {isDropdownOpen && (
+                <ul className="mt-2 bg-white border rounded-md shadow-sm">
+                  {categories.map((category) => (
+                    <li
+                      key={category}
+                      className="px-4 py-2 hover:bg-gray-100 text-sm"
+                    >
+                      {category}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+
+            <li>
+              <NavLink to="/about" className="hover:text-orange-500">
+                About Us
+              </NavLink>
+            </li>
+
+            <li>
+              <NavLink
+                to="/login"
+                className="flex items-center gap-1 hover:text-orange-500"
+              >
+                <UserRound size={19} />
+                Login
+              </NavLink>
+            </li>
+
+            <li>
+              <NavLink
+                to="/"
+                className="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600 inline-block"
+              >
+                Sign Up
+              </NavLink>
+            </li>
+          </ul>
+        </div>
+      )}
     </header>
   );
 }
