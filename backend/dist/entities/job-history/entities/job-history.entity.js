@@ -9,22 +9,17 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.JobHistory = exports.jobHistoryType = void 0;
+exports.JobHistory = void 0;
 const typeorm_1 = require("typeorm");
 const user_entity_1 = require("./../../user/entities/user.entity");
 const raket_entity_1 = require("./../../rakets/entities/raket.entity");
-var jobHistoryType;
-(function (jobHistoryType) {
-    jobHistoryType["RAKET"] = "Raket";
-    jobHistoryType["WORK_EXPERIENCE"] = "Work Experience";
-})(jobHistoryType || (exports.jobHistoryType = jobHistoryType = {}));
 let JobHistory = class JobHistory {
     jobId;
     title;
     description;
     historyType;
     jobDate;
-    raketId;
+    raket;
     raketistaId;
 };
 exports.JobHistory = JobHistory;
@@ -41,7 +36,7 @@ __decorate([
     __metadata("design:type", String)
 ], JobHistory.prototype, "description", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'enum', enum: jobHistoryType, nullable: false }),
+    (0, typeorm_1.Column)({ type: 'enum', enum: ['Raket', 'Work_Experience'], nullable: false }),
     __metadata("design:type", String)
 ], JobHistory.prototype, "historyType", void 0);
 __decorate([
@@ -52,7 +47,7 @@ __decorate([
     (0, typeorm_1.OneToOne)(() => raket_entity_1.Raket, raket => raket.raketId, { onDelete: 'CASCADE' }),
     (0, typeorm_1.JoinColumn)({ name: "raketId", referencedColumnName: "raketId" }),
     __metadata("design:type", raket_entity_1.Raket)
-], JobHistory.prototype, "raketId", void 0);
+], JobHistory.prototype, "raket", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => user_entity_1.Users, user => user.uid, { onDelete: 'CASCADE' }),
     (0, typeorm_1.JoinColumn)({ name: "raketistiaId", referencedColumnName: "uid" }),

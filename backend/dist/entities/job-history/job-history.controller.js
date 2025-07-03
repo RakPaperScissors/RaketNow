@@ -34,6 +34,12 @@ let JobHistoryController = class JobHistoryController {
     update(id, updateJobHistoryDto) {
         return this.jobHistoryService.update(+id, updateJobHistoryDto);
     }
+    updateTitle(id, value) {
+        return this.jobHistoryService.updateField(+id, 'title', value);
+    }
+    updateDescription(id, value) {
+        return this.jobHistoryService.updateField(+id, 'description', value);
+    }
     remove(id) {
         return this.jobHistoryService.remove(+id);
     }
@@ -67,6 +73,22 @@ __decorate([
     __metadata("design:paramtypes", [String, update_job_history_dto_1.UpdateJobHistoryDto]),
     __metadata("design:returntype", void 0)
 ], JobHistoryController.prototype, "update", null);
+__decorate([
+    (0, common_1.Patch)(':id/title'),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Body)('value')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:returntype", void 0)
+], JobHistoryController.prototype, "updateTitle", null);
+__decorate([
+    (0, common_1.Patch)(':id/description'),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Body)('value')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:returntype", void 0)
+], JobHistoryController.prototype, "updateDescription", null);
 __decorate([
     (0, common_1.Delete)(':id'),
     __param(0, (0, common_1.Param)('id')),

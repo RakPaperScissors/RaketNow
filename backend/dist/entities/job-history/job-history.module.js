@@ -10,11 +10,16 @@ exports.JobHistoryModule = void 0;
 const common_1 = require("@nestjs/common");
 const job_history_service_1 = require("./job-history.service");
 const job_history_controller_1 = require("./job-history.controller");
+const typeorm_1 = require("@nestjs/typeorm");
+const job_history_entity_1 = require("./entities/job-history.entity");
+const raket_entity_1 = require("../rakets/entities/raket.entity");
+const user_entity_1 = require("../user/entities/user.entity");
 let JobHistoryModule = class JobHistoryModule {
 };
 exports.JobHistoryModule = JobHistoryModule;
 exports.JobHistoryModule = JobHistoryModule = __decorate([
     (0, common_1.Module)({
+        imports: [typeorm_1.TypeOrmModule.forFeature([job_history_entity_1.JobHistory, raket_entity_1.Raket, user_entity_1.Users])],
         controllers: [job_history_controller_1.JobHistoryController],
         providers: [job_history_service_1.JobHistoryService],
     })
