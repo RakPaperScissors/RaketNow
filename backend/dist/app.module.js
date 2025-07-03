@@ -12,10 +12,20 @@ const config_1 = require("@nestjs/config");
 const typeorm_1 = require("@nestjs/typeorm");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
-const user_entity_1 = require("./entities/users/user.entity");
-const raketistaProfile_entity_1 = require("./entities/users/raketistaProfile.entity");
-const organization_entity_1 = require("./entities/users/organization.entity");
-const rakets_entity_1 = require("./entities/rakets/rakets.entity");
+const user_module_1 = require("./entities/user/user.module");
+const user_entity_1 = require("./entities/user/entities/user.entity");
+const organization_module_1 = require("./entities/organization/organization.module");
+const raketista_module_1 = require("./entities/raketista/raketista.module");
+const organization_entity_1 = require("./entities/organization/entities/organization.entity");
+const raketista_entity_1 = require("./entities/raketista/entities/raketista.entity");
+const auth_module_1 = require("./auth/auth.module");
+const rakets_module_1 = require("./entities/rakets/rakets.module");
+const raket_entity_1 = require("./entities/rakets/entities/raket.entity");
+const raket_pictures_module_1 = require("./entities/raket-pictures/raket-pictures.module");
+const raket_picture_entity_1 = require("./entities/raket-pictures/entities/raket-picture.entity");
+const skills_module_1 = require("./entities/skills/skills.module");
+const certification_module_1 = require("./entities/certification/certification.module");
+const job_history_module_1 = require("./entities/job-history/job-history.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -30,13 +40,22 @@ exports.AppModule = AppModule = __decorate([
                 username: process.env.DB_USER,
                 password: process.env.DB_PASSWORD,
                 database: process.env.DB_DATABASE,
-                entities: [user_entity_1.Users, raketistaProfile_entity_1.RaketistaProfile, organization_entity_1.Organization, rakets_entity_1.Raket],
+                entities: [user_entity_1.Users, organization_entity_1.Organization, raketista_entity_1.Raketista, raket_entity_1.Raket, raket_picture_entity_1.RaketPictures],
                 ssl: process.env.NODE_ENV === 'production'
                     ? { rejectUnauthorized: false }
                     : false,
                 autoLoadEntities: true,
                 synchronize: true,
             }),
+            user_module_1.UserModule,
+            organization_module_1.OrganizationModule,
+            raketista_module_1.RaketistaModule,
+            auth_module_1.AuthModule,
+            rakets_module_1.RaketsModule,
+            raket_pictures_module_1.RaketPicturesModule,
+            skills_module_1.SkillsModule,
+            certification_module_1.CertificationModule,
+            job_history_module_1.JobHistoryModule
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],
