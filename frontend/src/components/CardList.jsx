@@ -15,42 +15,43 @@ import {
 } from 'lucide-react';
 
 const categories = [
-  { icon: Hammer, label: 'Home Repairs & Maintenance' },
-  { icon: MonitorSmartphone, label: 'Tech & Electronics Support' },
-  { icon: Heart, label: 'Personal & Home Care' },
-  { icon: PartyPopper, label: 'Events & Entertainment' },
-  { icon: Utensils, label: 'Food & Beverage' },
-  { icon: GraduationCap, label: 'Education & Tutoring' },
-  { icon: Paintbrush, label: 'Graphic & Digital Design' },
-  { icon: Briefcase, label: 'Business & Professional Services' },
-  { icon: Car, label: 'Automotive Services' },
-  { icon: Truck, label: 'Moving & Delivery Services' },
+  { icon: Hammer, label: 'Home Repairs & Maintenance', link: '' },
+  { icon: MonitorSmartphone, label: 'Tech & Electronics Support', link: '' },
+  { icon: Heart, label: 'Personal & Home Care', link: '' },
+  { icon: PartyPopper, label: 'Events & Entertainment', link: '' },
+  { icon: Utensils, label: 'Food & Beverage', link: '' },
+  { icon: GraduationCap, label: 'Education & Tutoring', link: '' },
+  { icon: Paintbrush, label: 'Graphic & Digital Design', link: '' },
+  { icon: Briefcase, label: 'Business & Professional Services', link: '' },
+  { icon: Car, label: 'Automotive Services', link: '' },
+  { icon: Truck, label: 'Moving & Delivery Services', link: '' },
 ];
 
 const CardList = () => {
   const [expanded, setExpanded] = useState(false);
-
   const visibleCategories = expanded ? categories : categories.slice(0, 4);
 
   return (
     <div className="px-4 pt-6 pb-10 bg-[#F9FAFB]">
-      <h1 className="text-2xl font-semibold text-center text-[#0C2C57] mt-2 sm:mt-4 md:mt-6 lg:mt-4 mb-6">
+      <h1 className="text-2xl sm:text-3xl font-semibold text-center text-[#0C2C57] mt-2 sm:mt-4 md:mt-6 lg:mt-4 mb-6">
         Featured Services
       </h1>
 
-
-      <div className="hidden lg:flex space-x-4 overflow-x-auto scrollbar-hide px-1 py-4 justify-center">
+      {/* Desktop */}
+      <div className="hidden lg:grid lg:grid-cols-5 lg:gap-x-3 lg:gap-y-8 lg:px-10 lg:py-6 lg:place-items-center">
         {categories.map((cat, index) => (
           <CategoryCard key={index} {...cat} />
         ))}
       </div>
 
+      {/* Mobile */}
       <div className="flex flex-wrap justify-center gap-x-4 gap-y-6 lg:hidden">
         {visibleCategories.map((cat, index) => (
           <CategoryCard key={index} {...cat} />
         ))}
       </div>
 
+      {/* Toggle button for mobile */}
       <div className="mt-6 text-center lg:hidden">
         <button
           onClick={() => setExpanded(!expanded)}
@@ -59,7 +60,6 @@ const CardList = () => {
           {expanded ? 'See Less' : 'See More'}
         </button>
       </div>
-
     </div>
   );
 };
