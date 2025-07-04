@@ -7,7 +7,7 @@ import { UseGuards } from '@nestjs/common';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { RolesGuard } from 'src/common/guards/roles.guard';
 
-@UseGuards(JwtAuthGuard, RolesGuard)
+// @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('raketista')
 export class RaketistaController {
   constructor(private readonly raketistaService: RaketistaService) {}

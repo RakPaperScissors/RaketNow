@@ -11,12 +11,16 @@ import About from "./pages/About";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 
+// Imports for API calls
+import Users from "./pages/test_api_pages/Users";
+
 function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route path="/" element={<RootLayout />}>
         <Route index element={<Home />} />
         <Route path="/about" element={<About />} />
+        <Route path="/users" element={<Users />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
       </Route>
@@ -26,7 +30,6 @@ function App() {
   return (
     <>
       <RouterProvider router={router} />
-
       <Footer />
     </>
   );
