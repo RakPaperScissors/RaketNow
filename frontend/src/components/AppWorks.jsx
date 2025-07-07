@@ -44,7 +44,7 @@ const steps = [
 ];
 
 const AppWorks = () => (
-  <section className="bg-[#F9FAFB] px-4 py-12">
+  <section className="bg-[#FFFFFF] px-4 py-12">
     <h2 className="text-2xl sm:text-3xl font-semibold text-center text-[#0C2C57] mb-10">
       How it Works
     </h2>
