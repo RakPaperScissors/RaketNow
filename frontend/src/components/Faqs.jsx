@@ -37,7 +37,7 @@ const FAQSection = () => {
     };
 
     return (
-        <section className="w-full bg-[#F9FAFB]">
+        <section className="w-full bg-[#F9FAFB] py-24 ">
             <div className="max-w-[1600px] mx-auto px-4 sm:px-6 md:px-10 lg:px-16 xl:px-20 py-12 text-[#0C2C57]">
                 <div className="flex flex-col-reverse lg:flex-row-reverse lg:justify-between gap-10">
                     {/* Dropdowns */}
@@ -45,7 +45,7 @@ const FAQSection = () => {
                         {faqs.map((faq, index) => (
                             <div
                                 key={index}
-                                className={`rounded-xl p-3.5 shadow-sm transition-all duration-300 bg-white`}
+                                className={`rounded-xl p-3.5 border border-gray-200 transition-all duration-300 bg-white`}
                             >
                                 <button
                                     onClick={() => toggle(index)}
@@ -68,30 +68,33 @@ const FAQSection = () => {
                         ))}
                     </div>
 
-                    {/* Text */}
-                    <div className="flex-1">
-                        <p className="text-sm font-semibold text-[#FF7C2B] mb-2">Frequently Asked Questions</p>
-                        <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-                            frequently asked <span className="text-[#FF7C2B]">RaketNow</span> questions
-                        </h2>
-                        <p className="text-base text-gray-500 mb-8">
-                            Check out some common questions and answers about RaketNow.
-                        </p>
+                    {/* Text Section */}
+                    <div className="flex-1 relative rounded-xl overflow-hidden px-6 py-8">
+                        {/* subtle gradient bg */}
+                        <div className="absolute -inset-4 z-0 rounded-xl bg-[radial-gradient(circle_at_center,_#fff4edc0,_#f9fafb)]" />
 
-                        <a
-                            href="/faqs"
-                            className="inline-block border-1 border-[#0C2C57] text-[#0C2C57] font-semibold px-5 py-2.5 rounded-full text-sm hover:bg-[#0C2C57] hover:text-white active:scale-95 transition-colors duration-300"
-                        >
-                            View Full FAQs
-                        </a>
+                        <div className="relative z-10">
+                            <p className="text-sm font-semibold text-[#FF7C2B] mb-2">Frequently Asked Questions</p>
+                            <h2 className="text-3xl sm:text-4xl font-bold mb-4 text-[#0C2C57]">
+                                frequently asked <span className="text-[#FF7C2B]">RaketNow</span> questions
+                            </h2>
+                            <p className="text-base text-[#0C2C57] mb-6">
+                                Check out some common questions and answers about RaketNow.
+                            </p>
+
+                            <a
+                                href="/faqs"
+                                className="inline-block border border-[#0C2C57] text-[#0C2C57] font-semibold px-5 py-2.5 rounded-full text-sm hover:bg-[#0C2C57] hover:text-white active:scale-95 transition-colors duration-300"
+                            >
+                                View Full FAQs
+                            </a>
+                        </div>
                     </div>
-
-
 
                 </div>
             </div>
         </section>
     );
-};
+}
 
 export default FAQSection;
