@@ -32,7 +32,7 @@ const CardList = () => {
   const visibleCategories = expanded ? categories : categories.slice(0, 4);
 
   return (
-    <div className="px-4 pt-6 pb-10 bg-[#F9FAFB]">
+    <div className="px-4 py-20 bg-[#F9FAFB]">
       <h1 className="text-2xl sm:text-3xl font-semibold text-center text-[#0C2C57] mt-2 sm:mt-4 md:mt-6 lg:mt-4 mb-6">
         Featured Services
       </h1>
