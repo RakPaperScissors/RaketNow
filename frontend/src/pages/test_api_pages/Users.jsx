@@ -7,7 +7,6 @@ function Users() {
     const [Clients, setClients] = useState([])
     const [Raketistas, setRaketistas] = useState([])
     const [Organizations, setOrganizations] = useState([])
-
     useEffect(() => {
         fetchUsers().then(setUsers).catch(console.error);
         fetchUsersByRole('client').then(setClients).catch(console.error);

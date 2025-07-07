@@ -27,7 +27,10 @@ let UserController = class UserController {
     create(createUserDto) {
         return this.userService.createUser(createUserDto);
     }
-    findAll() {
+    findAll(role) {
+        if (role) {
+            return this.userService.filterByRole(role);
+        }
         return this.userService.findAll();
     }
     findOne(id) {
@@ -67,8 +70,9 @@ __decorate([
 __decorate([
     (0, roles_decorator_1.Roles)('admin'),
     (0, common_1.Get)(),
+    __param(0, (0, common_1.Query)('role')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], UserController.prototype, "findAll", null);
 __decorate([

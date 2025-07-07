@@ -8,11 +8,13 @@ import {
 import RootLayout from "./layout/RootLayout";
 import Home from "./pages/Home";
 import About from "./pages/About";
-import Login from "./pages/Login";
+// import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 
 // Imports for API calls
 import Users from "./pages/test_api_pages/Users";
+import Login from "./pages/test_api_pages/Login";
+import Profile from "./pages/test_api_pages/Profile"
 
 function App() {
   const router = createBrowserRouter(
@@ -22,6 +24,7 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/users" element={<Users />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="/signup" element={<Signup />} />
       </Route>
     )

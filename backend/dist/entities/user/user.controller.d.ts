@@ -6,7 +6,7 @@ export declare class UserController {
     private readonly userService;
     constructor(userService: UserService);
     create(createUserDto: CreateUserDto): Promise<import("./entities/user.entity").Users>;
-    findAll(): Promise<import("./entities/user.entity").Users[]>;
+    findAll(role?: userRole): Promise<import("./entities/user.entity").Users[]>;
     findOne(id: string): Promise<import("./entities/user.entity").Users | null>;
     update(id: string, updateUserDto: UpdateUserDto): Promise<import("./entities/user.entity").Users>;
     remove(id: string): Promise<import("typeorm").DeleteResult>;
