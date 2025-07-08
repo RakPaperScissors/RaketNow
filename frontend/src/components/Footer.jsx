@@ -13,7 +13,7 @@ function Footer() {
     };
 
     return (
-        <footer className="bg-[#0C2C57] text-sm text-white">
+        <footer className="bg-[#0C2C57] text-sm text-white ">
             <div className="max-w-7xl mx-auto px-6 py-16 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-10">
                 <div className="flex flex-col items-start space-y-4">
                     <img src={logo} alt="RaketNow Logo" className="h-20 w-auto" />
@@ -36,16 +36,17 @@ function Footer() {
                             className={`space-y-3 text-gray-300 ${open.categories ? 'block' : 'hidden'
                                 } md:block`}
                         >
-                            <li><a href="#">Home Repairs & Maintenance</a></li>
-                            <li><a href="#">Tech & Electronics Support</a></li>
-                            <li><a href="#">Personal & Home Care</a></li>
-                            <li><a href="#">Events & Entertainment</a></li>
-                            <li><a href="#">Food & Beverage</a></li>
-                            <li><a href="#">Education & Tutoring</a></li>
-                            <li><a href="#">Graphic & Digital Design</a></li>
-                            <li><a href="#">Business & Professional Services</a></li>
-                            <li><a href="#">Automotive Services</a></li>
-                            <li><a href="#">Moving & Delivery Services</a></li>
+                            
+                            <li><a href="#"className="hover:text-white transition-colors duration-200" >Home Repairs & Maintenance</a></li>
+                            <li><a href="#"className="hover:text-white transition-colors duration-200">Tech & Electronics Support</a></li>
+                            <li><a href="#"className="hover:text-white transition-colors duration-200">Personal & Home Care</a></li>
+                            <li><a href="#"className="hover:text-white transition-colors duration-200">Events & Entertainment</a></li>
+                            <li><a href="#"className="hover:text-white transition-colors duration-200">Food & Beverage</a></li>
+                            <li><a href="#"className="hover:text-white transition-colors duration-200">Education & Tutoring</a></li>
+                            <li><a href="#"className="hover:text-white transition-colors duration-200">Graphic & Digital Design</a></li>
+                            <li><a href="#"className="hover:text-white transition-colors duration-200">Business & Professional Services</a></li>
+                            <li><a href="#"className="hover:text-white transition-colors duration-200">Automotive Services</a></li>
+                            <li><a href="#"className="hover:text-white transition-colors duration-200">Moving & Delivery Services</a></li>
                         </ul>
                     </div>
 
@@ -62,12 +63,12 @@ function Footer() {
                             className={`space-y-2 text-gray-300 ${open.support ? 'block' : 'hidden'
                                 } md:block`}
                         >
-                            <li><a href="#">Help Center</a></li>
-                            <li><a href="#">FAQs</a></li>
-                            <li><a href="#">Terms of Service</a></li>
-                            <li><a href="#">Privacy Policy</a></li>
-                            <li><a href="#">Data Privacy</a></li>
-                            <li><a href="#">Report a Problem</a></li>
+                            <li><a href=""className="hover:text-white transition-colors duration-200">Help Center</a></li>
+                            <li><a href="/Faqs"className="hover:text-white transition-colors duration-200">FAQs</a></li>
+                            <li><a href="#"className="hover:text-white transition-colors duration-200">Terms of Service</a></li>
+                            <li><a href="#"className="hover:text-white transition-colors duration-200">Privacy Policy</a></li>
+                            <li><a href="#"className="hover:text-white transition-colors duration-200">Data Privacy</a></li>
+                            <li><a href="#"className="hover:text-white transition-colors duration-200">Report a Problem</a></li>
                         </ul>
                     </div>
 
