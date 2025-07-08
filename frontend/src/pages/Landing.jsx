@@ -3,7 +3,7 @@ import CardList from "../components/CardList";
 import Hero from "../components/Hero";
 import AdBanner from "../components/AdBanner";
 
-function Home() {
+function Landing() {
   return (
     <div>
       <Hero />
@@ -17,4 +17,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default Landing;

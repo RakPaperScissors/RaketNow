@@ -18,7 +18,7 @@ function Login() {
             if (result.ok && data.access_token) {
                 localStorage.setItem("access_token", data.access_token);
                 setMessage("Login successful.");
-                window.location.href = "/profile";
+                window.location.href = "/home";
             } else {
                 setMessage(data.message || "Login failed.");
             }
