@@ -1,3 +1,4 @@
+import { format } from "date-fns";
 import { useEffect, useState } from "react";
 
 function Profile() {
@@ -36,6 +37,7 @@ function Profile() {
             <p><strong>Name:</strong> {user.name}</p>
             <p><strong>Email:</strong> {user.email}</p>
             <p><strong>Role:</strong> {user.role}</p>
+            <p>Joined {user.createdAt ? format(new Date(user.createdAt), "MMMM yyyy") : ""}</p>
         </div>
     )
 }
