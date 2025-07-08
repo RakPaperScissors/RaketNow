@@ -83,7 +83,7 @@ const FAQSection = () => {
                             </p>
 
                             <a
-                                href="/faqs"
+                                href="/Faqs"
                                 className="inline-block border border-[#0C2C57] text-[#0C2C57] font-semibold px-5 py-2.5 rounded-full text-sm hover:bg-[#0C2C57] hover:text-white active:scale-95 transition-colors duration-300"
                             >
                                 View Full FAQs
