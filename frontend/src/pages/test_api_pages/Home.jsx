@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { format, formatDistanceToNow } from "date-fns";
+import { Link } from "react-router-dom";
 
 function Home() {
     const [user, setUser] = useState(null);
@@ -140,7 +141,8 @@ function Home() {
                         <p>Posted by: {raket.user?.name} ({raket.user?.email})</p>
                         <span style={{ color: '#888', fontSize: '0.9em' }}>
                             Posted {raket.dateCreated ? formatDistanceToNow(new Date(raket.dateCreated), { addSuffix: true}) : ""}
-                        </span>
+                        </span><br/>
+                        <Link to={`/raket/${raket.raketId}`} style={{ background: 'blue' }}>See more</Link>
                     </div>
                 ))
                 : filteredFeed.map((raketista) => (

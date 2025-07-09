@@ -17,6 +17,7 @@ import Login from "./pages/test_api_pages/Login";
 import Home from "./pages/test_api_pages/Home";
 import Profile from "./pages/test_api_pages/Profile";
 import Rakets from "./pages/test_api_pages/Rakets";
+import Raket from "./pages/test_api_pages/Raket";
 
 function App() {
   const router = createBrowserRouter(
@@ -27,6 +28,7 @@ function App() {
         <Route path="/users" element={<Users />} />
         <Route path="/login" element={<Login />} />
         <Route path="/home" element={<Home />} />
+        <Route path="/raket/:id" element={<Raket />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/rakets" element={<Rakets />} />
         <Route path="/signup" element={<Signup />} />
