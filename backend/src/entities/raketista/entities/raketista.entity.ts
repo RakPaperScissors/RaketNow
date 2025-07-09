@@ -1,6 +1,6 @@
-import { ChildEntity, Column, ManyToMany,JoinTable } from "typeorm";
+import { ChildEntity, Column, OneToMany } from "typeorm";
 import { Users } from "./../../user/entities/user.entity";
-// import {Skills} from "../raketistaProfile/skills.entity";
+import {RaketistaSkill} from "./../../raketista-skill/entities/raketista-skill.entity";
 
 @ChildEntity()
 export class Raketista extends Users {
@@ -20,17 +20,6 @@ export class Raketista extends Users {
     autoReplyMessage?: string;
 
     // raketistaSkills joint table
-    // @ManyToMany(()=> Skills, skills => skills.raketistas)
-    // @JoinTable({
-    //     name: 'raketistaSkills',
-    //     joinColumn:{
-    //         name: 'raketistaId',
-    //         referencedColumnName: 'uid',
-    //     },
-    //     inverseJoinColumn: {
-    //         name: 'skill_Id',
-    //         referencedColumnName: 'skill_Id',
-    //     } 
-    // })
-    // skills: Skills[];
+    @OneToMany(() => RaketistaSkill, raketistaSkill => raketistaSkill.raketista)
+    raketistaSkills: RaketistaSkill[];
 }

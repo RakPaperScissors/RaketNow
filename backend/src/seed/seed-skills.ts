@@ -81,7 +81,6 @@ const predefinedSkills = [
   { skill_Id: 77, skillName: 'Office Relocation', category: 'Moving & Delivery Services' },
   { skill_Id: 78, skillName: 'Vehicle Rental', category: 'Moving & Delivery Services' },
   { skill_Id: 79, skillName: 'Motorcycle Courier', category: 'Moving & Delivery Services' },
-  { skill_Id: 80, skillName: '', category: '' },
 ];
 
 async function seedSkills() {

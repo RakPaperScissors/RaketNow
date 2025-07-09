@@ -12,7 +12,8 @@ export const AppDataSource = new DataSource({
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
   entities: [Skills],
-  synchronize: false,
+  synchronize: true, // set false later
+  ssl: { rejectUnauthorized: false }, // set true later
 });
 
 // run npx ts-node src/seed/seed-skills.ts to initialize

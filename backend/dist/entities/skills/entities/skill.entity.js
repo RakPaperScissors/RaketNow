@@ -11,10 +11,12 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Skills = void 0;
 const typeorm_1 = require("typeorm");
+const raketista_skill_entity_1 = require("./../../raketista-skill/entities/raketista-skill.entity");
 let Skills = class Skills {
     skill_Id;
     skillName;
     category;
+    raketistaSkills;
 };
 exports.Skills = Skills;
 __decorate([
@@ -29,6 +31,10 @@ __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], Skills.prototype, "category", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => raketista_skill_entity_1.RaketistaSkill, raketistaSkill => raketistaSkill.skill),
+    __metadata("design:type", Array)
+], Skills.prototype, "raketistaSkills", void 0);
 exports.Skills = Skills = __decorate([
     (0, typeorm_1.Entity)()
 ], Skills);
