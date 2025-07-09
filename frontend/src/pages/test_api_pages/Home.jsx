@@ -149,6 +149,7 @@ function Home() {
                     <div key={raketista.uid} style={{ border: '1px solid #ccc', margin: 8, padding: 8 }}>
                         <strong>{raketista.name}</strong>
                         <p>Email: {raketista.email}</p>
+                        <p>{raketista.bio}</p>
                     </div>
                 ))
                 }

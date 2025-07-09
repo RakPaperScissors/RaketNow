@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { formatDistanceToNow } from "date-fns";
 
 function Raket() {
     const { id } = useParams();
@@ -32,11 +33,19 @@ function Raket() {
 
     return (
         <div>
-            <h2>{raket.title}</h2>
+            <div>
+            <h2><strong>{raket.title}</strong></h2>
             <p>{raket.description}</p>
             <p>Budget: Php {raket.budget}</p>
             <p>Posted by: {raket.user?.name} ({raket.user?.email})</p>
-            <p>Posted at: </p>
+            <p>Posted {raket.dateCreated ? formatDistanceToNow(new Date(raket.dateCreated), { addSuffix: true}) : ""}</p>
+            </div>
+            <div>
+                <h2><strong>About Me</strong></h2>
+                <h2>Name: {raket.user?.name}</h2>
+                <h3>Email: {raket.user?.name}</h3>
+                <p>{raket.user?.bio}</p>
+            </div>
         </div>
     );
 }
