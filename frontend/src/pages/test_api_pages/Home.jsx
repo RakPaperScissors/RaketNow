@@ -73,6 +73,54 @@ function Home() {
                 {user.role === "raketista" ? "Available Rakets" : "Raketistas"}
             </h2>
 
+            {(user.role === "client" || user.role === "organization") && (
+                <form
+                    onSubmit={async (e) => {
+                        e.preventDefault();
+                        setMessage("");
+                        try {
+                            const response = await fetch("http://localhost:3000/rakets", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    Authorization: `Bearer ${accessToken}`,
+                                },
+                                body: JSON.stringify({
+                                    title: e.target.title.value,
+                                    description: e.target.description.value,
+                                    budget: e.target.budget.value,
+                                }),
+                            })
+                            if (response.ok) {
+                                setMessage("Raket posted!");
+                                e.target.reset();
+                                // Refresh feed
+                                fetch("http://localhost:3000/rakets", {
+                                    headers: {Authorization: `Bearer ${accessToken}`},
+                                })
+                                .then((r) => r.json())
+                                .then(setFeed);
+                            } else {
+                                const data = await response.json();
+                                setMessage(data.message || "Failed to post raket.");
+                            }
+                        } catch {
+                            setMessage("An error occured while posting raket. Please try again.");
+                        }
+                    }}
+                    style={{ margin: "24px 0", padding: 16, border: "1px solid #ccc", borderRadius: 8 }}
+                >
+                    <h3>Post a Raket</h3>
+                    <input name="title" placeholder="Title" required style={{ width: "100%", marginBottom: 8, padding: 8}} />
+                    <textarea name="description" placeholder="Description" required style={{ width: "100%", marginBottom: 8, padding: 8 }} /> 
+                    <input name="budget" type="number" placeholder="Budget" required style={{ width: "100%", marginBottom: 8, padding: 8 }} />
+                    <button type="submit" style={{ padding: 8, background: "#0C2C57", color: "#fff", border: "none", borderRadius: 4 }}>
+                        Post    
+                    </button>               
+                    
+                    </form>
+            )}
+
             {/* Search Bar */}
             <input 
                 type="text"
@@ -81,13 +129,12 @@ function Home() {
                 onChange={e => setSearch(e.target.value)}
                 style={{ margin: "12px 0", padding: 8, width: "100%", maxWidth: 400, border: "1px solid $ccc" }}
             />
-
             <div>
                 {filteredFeed.length === 0 && <p>No items to show.</p>}
                 {user.role === "raketista" ?
                 filteredFeed.map((raket) => (
                     <div key={raket.raketId} style={{ border: '1px solid #ccc', margin: 8, padding: 8 }}>
-                        <h3>{raket.title}</h3>
+                        <h3><strong>{raket.title}</strong></h3>
                         <p>{raket.description}</p>
                         <p>Budget: Php {raket.budget}</p>
                         <p>Posted by: {raket.user?.name} ({raket.user?.email})</p>
