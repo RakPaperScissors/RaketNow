@@ -23,25 +23,26 @@ const StepCard = ({ icon: Icon, label, description }) => (
 const steps = [
   {
     icon: UserRoundSearch,
-    label: 'Post Your Raket',
-    description: 'Share your gig, service, or skillset and get noticed.',
+    label: 'Post a Raket',
+    description: 'Describe the task or service you need help with.',
   },
   {
     icon: MessageCircleMore,
-    label: 'Connect with Potential Clients',
-    description: 'Connect with interested clients and discuss your offer.',
+    label: 'Receive & Review Offers',
+    description: 'Browse proposals from interested Raketistas and choose who best fits your needs.',
   },
   {
     icon: CalendarCheck,
-    label: 'Get Hired and Earn',
-    description: 'Accept the job, do your best, and get paid fast.',
+    label: 'Hire & Collaborate',
+    description: 'Hire your chosen Raketista, align on expectations, and get the job done smoothly.',
   },
   {
     icon: CircleCheckBig,
-    label: 'Raket Successfully and Build Your Rep',
-    description: 'Finish strong and get reviewed to unlock more gigs.',
+    label: 'Rate & Build Your Cred',
+    description: 'Give feedback after the job and help the raketista grow their reputation on the RaketNow community.',
   },
 ];
+
 
 const AppWorks = () => (
   <section className="bg-[#FFFFFF] mt-6 px-4 py-12 ">
