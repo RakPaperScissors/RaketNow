@@ -12,12 +12,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Raketista = void 0;
 const typeorm_1 = require("typeorm");
 const user_entity_1 = require("./../../user/entities/user.entity");
+const raketista_skill_entity_1 = require("./../../raketista-skill/entities/raketista-skill.entity");
 let Raketista = class Raketista extends user_entity_1.Users {
     bio;
     isRaketistaVerified;
     aveResponseTime;
     isAutoReplyEnabled;
     autoReplyMessage;
+    raketistaSkills;
 };
 exports.Raketista = Raketista;
 __decorate([
@@ -40,6 +42,10 @@ __decorate([
     (0, typeorm_1.Column)({ type: 'varchar', length: 500, nullable: true }),
     __metadata("design:type", String)
 ], Raketista.prototype, "autoReplyMessage", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => raketista_skill_entity_1.RaketistaSkill, raketistaSkill => raketistaSkill.raketista),
+    __metadata("design:type", Array)
+], Raketista.prototype, "raketistaSkills", void 0);
 exports.Raketista = Raketista = __decorate([
     (0, typeorm_1.ChildEntity)()
 ], Raketista);

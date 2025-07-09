@@ -15,8 +15,11 @@ import { Raket } from './entities/rakets/entities/raket.entity';
 import { RaketPicturesModule } from './entities/raket-pictures/raket-pictures.module';
 import { RaketPictures } from './entities/raket-pictures/entities/raket-picture.entity';
 import { SkillsModule } from './entities/skills/skills.module';
+import { Skills } from './entities/skills/entities/skill.entity';
 import { CertificationModule } from './entities/certification/certification.module';
 import { JobHistoryModule } from './entities/job-history/job-history.module';
+import { RaketistaSkillModule } from './entities/raketista-skill/raketista-skill.module';
+import { RaketistaSkill } from './entities/raketista-skill/entities/raketista-skill.entity';
 
 @Module({
   imports: [
@@ -28,7 +31,7 @@ import { JobHistoryModule } from './entities/job-history/job-history.module';
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [Users, Organization, Raketista, Raket, RaketPictures],
+      entities: [Users, Organization, Raketista, Raket, RaketPictures, RaketistaSkill, Skills],
       ssl:
         process.env.NODE_ENV === 'production'
           ? { rejectUnauthorized: false }
@@ -44,7 +47,8 @@ import { JobHistoryModule } from './entities/job-history/job-history.module';
     RaketPicturesModule,
     SkillsModule,
     CertificationModule,
-    JobHistoryModule
+    JobHistoryModule,
+    RaketistaSkillModule
   ],
   controllers: [AppController],
   providers: [AppService],
