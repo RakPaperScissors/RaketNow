@@ -43,7 +43,7 @@ function Raket() {
             <div>
                 <h2><strong>About Me</strong></h2>
                 <h2>Name: {raket.user?.name}</h2>
-                <h3>Email: {raket.user?.name}</h3>
+                <h3>Email: {raket.user?.email}</h3>
                 <p>{raket.user?.bio}</p>
             </div>
         </div>

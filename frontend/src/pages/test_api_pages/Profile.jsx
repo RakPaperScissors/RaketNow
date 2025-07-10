@@ -2,7 +2,7 @@ import { format } from "date-fns";
 import { useEffect, useState } from "react";
 
 function Profile() {
-    const [user, setUser] = useState("");
+    const [user, setUser] = useState(null);
     const [message, setMessage] = useState("");
     const [editing, setEditing] = useState(false);
     const [bio, setBio] = useState("");
@@ -32,7 +32,7 @@ function Profile() {
         const accessToken = localStorage.getItem("access_token");
         setMessage("");
         try {
-            const response = await fetch("http://localhost:3000/user/bio", {
+            const response = await fetch(`http://localhost:3000/raketista/${user.uid}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
