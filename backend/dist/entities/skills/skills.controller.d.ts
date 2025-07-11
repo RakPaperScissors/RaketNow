@@ -4,9 +4,9 @@ import { UpdateSkillDto } from './dto/update-skill.dto';
 export declare class SkillsController {
     private readonly skillsService;
     constructor(skillsService: SkillsService);
-    create(createSkillDto: CreateSkillDto): string;
-    findAll(): string;
-    findOne(id: string): string;
-    update(id: string, updateSkillDto: UpdateSkillDto): string;
-    remove(id: string): string;
+    create(createSkillDto: CreateSkillDto): Promise<import("./entities/skill.entity").Skills>;
+    findAll(): Promise<import("./entities/skill.entity").Skills[]>;
+    findOne(id: string): Promise<import("./entities/skill.entity").Skills>;
+    update(id: string, updateSkillDto: UpdateSkillDto): Promise<import("./entities/skill.entity").Skills>;
+    remove(id: string): Promise<void>;
 }

@@ -4,9 +4,13 @@ import { UpdateRaketistaSkillDto } from './dto/update-raketista-skill.dto';
 export declare class RaketistaSkillController {
     private readonly raketistaSkillService;
     constructor(raketistaSkillService: RaketistaSkillService);
-    create(createRaketistaSkillDto: CreateRaketistaSkillDto): string;
-    findAll(): string;
-    findOne(id: string): string;
-    update(id: string, updateRaketistaSkillDto: UpdateRaketistaSkillDto): string;
-    remove(id: string): string;
+    create(createRaketistaSkillDto: CreateRaketistaSkillDto): Promise<import("./entities/raketista-skill.entity").RaketistaSkill | {
+        message: string;
+    }>;
+    findAll(): Promise<import("./entities/raketista-skill.entity").RaketistaSkill[]>;
+    findOne(id: string): Promise<import("./entities/raketista-skill.entity").RaketistaSkill>;
+    update(id: string, updateRaketistaSkillDto: UpdateRaketistaSkillDto): Promise<import("./entities/raketista-skill.entity").RaketistaSkill>;
+    remove(id: string): Promise<{
+        message: string;
+    }>;
 }

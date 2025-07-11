@@ -10,11 +10,16 @@ exports.RaketistaSkillModule = void 0;
 const common_1 = require("@nestjs/common");
 const raketista_skill_service_1 = require("./raketista-skill.service");
 const raketista_skill_controller_1 = require("./raketista-skill.controller");
+const typeorm_1 = require("@nestjs/typeorm");
+const raketista_skill_entity_1 = require("./entities/raketista-skill.entity");
+const raketista_entity_1 = require("../raketista/entities/raketista.entity");
+const skill_entity_1 = require("../skills/entities/skill.entity");
 let RaketistaSkillModule = class RaketistaSkillModule {
 };
 exports.RaketistaSkillModule = RaketistaSkillModule;
 exports.RaketistaSkillModule = RaketistaSkillModule = __decorate([
     (0, common_1.Module)({
+        imports: [typeorm_1.TypeOrmModule.forFeature([raketista_skill_entity_1.RaketistaSkill, raketista_entity_1.Raketista, skill_entity_1.Skills])],
         controllers: [raketista_skill_controller_1.RaketistaSkillController],
         providers: [raketista_skill_service_1.RaketistaSkillService],
     })
