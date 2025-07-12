@@ -33,7 +33,8 @@ import { RaketistaSkill } from './entities/raketista-skill/entities/raketista-sk
       database: process.env.DB_DATABASE,
       entities: [Users, Organization, Raketista, Raket, RaketPictures, RaketistaSkill, Skills],
       ssl:
-        process.env.NODE_ENV === 'production'
+        process.env.DB_SSL === 'true'
+        // process.env.NODE_ENV === 'production'
           ? { rejectUnauthorized: false }
           : false,
       autoLoadEntities: true,

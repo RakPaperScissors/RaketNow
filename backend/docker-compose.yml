@@ -1,0 +1,19 @@
+services:
+  backend_dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - NODE_ENV=DEVELOPMENT
+      - DB_HOST=raketnow-2354.postgresql.b.osc-fr1.scalingo-dbs.com
+      - DB_PORT=34815
+      - DB_USER=raketnow_2354
+      - DB_PASSWORD=9dRbRHT64HJWnzWDecHrStXxwf0QC1BL3lcpmUzEdUIS3WE32udVyl5iTrY1_Vmb
+      - DB_DATABASE=raketnow_2354
+      - DB_SSL=true
+    volumes:
+      - ./src:/app/src
+  
