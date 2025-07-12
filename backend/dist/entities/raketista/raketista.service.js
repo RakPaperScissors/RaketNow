@@ -31,7 +31,10 @@ let RaketistaService = class RaketistaService {
         return await this.raketistas.find();
     }
     async findOne(uid) {
-        return await this.raketistas.findOne({ where: { uid, role: user_entity_1.userRole.RAKETISTA } });
+        return await this.raketistas.findOne({
+            where: { uid, role: user_entity_1.userRole.RAKETISTA },
+            relations: ['raketistaSkills', 'raketistaSkills.skill']
+        });
     }
     async update(uid, updateRaketistaDto) {
         const findRaketista = await this.findOne(uid);

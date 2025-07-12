@@ -99,6 +99,20 @@ function Profile() {
                     <p style={{ whiteSpace: "pre-line"}}>{user.bio || "No bio."}</p>
                 )}
             </div>
+            {user.role === "raketista" && (    
+                <div style={{ marginTop: 16 }}>
+                    <strong>Skills:</strong>
+                    {user.raketistaSkills?.length > 0 ? (
+                        <ul style={{ marginTop: 8 }}>
+                            {user.raketistaSkills.map((rs, index) => (
+                                <li key={index}>{rs.skill.skillName} <span style={{ color: "#888" }}>({rs.skill.category})</span></li>
+                            ))}
+                        </ul>
+                    ) : ( 
+                        <p>No skills assigned yet.</p>
+                    )}
+                </div>
+            )}
         </div>
     )
 }
