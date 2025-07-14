@@ -150,6 +150,15 @@ function Home() {
                         <strong>{raketista.name}</strong>
                         <p>Email: {raketista.email}</p>
                         <p>{raketista.bio}</p>
+                        {raketista.raketistaSkills?.length > 0 ? (
+                            <ul style={{ marginTop: 8 }}>
+                                {raketista.raketistaSkills.map((rs, index) => (
+                                    <li key={index}>{rs.skill.skillName} <span style={{ color: "#888" }}>({rs.skill.category})</span></li>
+                                ))}
+                            </ul>
+                        ) : ( 
+                            <p>No skills.</p>
+                        )}
                     </div>
                 ))
                 }

@@ -6,6 +6,8 @@ function Profile() {
     const [message, setMessage] = useState("");
     const [editing, setEditing] = useState(false);
     const [bio, setBio] = useState("");
+    const [allSkills, setAllSkills] = useState([]);
+    const [selectedSkillId, setSelectedSkillId] = useState("");
 
     useEffect(() => {
         const accessToken = localStorage.getItem("access_token");
@@ -26,6 +28,12 @@ function Profile() {
             setBio(data.bio || "");
         })
         .catch(() => setMessage("Failed to fetch profile."));
+
+        // Fetch all skills
+        fetch('http://localhost:3000/skills')
+            .then(response => response.json())
+            .then(data => setAllSkills(data))
+            .catch(() => setMessage("Failed to load skills."));
     }, []);
 
     const handleBioSave = async () => {
@@ -52,6 +60,57 @@ function Profile() {
             setMessage("An error occurred while updating bio.");
         }
     }
+
+    const handleAddSkill = async () => {
+        const accessToken = localStorage.getItem('access_token');
+        try {
+            const response = await fetch('http://localhost:3000/raketista-skill', {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${accessToken}`,
+                },
+                body: JSON.stringify({
+                    raketistaId: user.uid,
+                    skillId: parseInt(selectedSkillId),
+                }),
+            });
+            if (response.ok) {
+                const addedSkill = allSkills.find(skill => skill.skill_Id === parseInt(selectedSkillId));
+                setUser(prev => ({
+                    ...prev,
+                    skills: [...(prev.skills || []), addedSkill],
+                }));
+                setSelectedSkillId("");
+            } else {
+                setMessage("Failed to add skill.");
+            }
+        } catch {
+            setMessage("Error adding skill. Please try again.");
+        }
+    };
+
+    const handleDeleteSkill = async (raketistaSkillId) => {
+        const accessToken = localStorage.getItem('access_token');
+        try {
+            const response = await fetch(`http://localhost:3000/raketista-skill/${raketistaSkillId}`, {
+                method: 'DELETE',
+                headers: {
+                    "Authorization": `Bearer ${accessToken}`,
+                }
+            });
+            if (response.ok) {
+                setUser(prev => ({
+                    ...prev,
+                    raketistaSkills: prev.raketistaSkills.filter(skill => skill.id !== raketistaSkillId)
+                }));
+            } else {
+                setMessage("Failed to delete skill.");
+            }
+        } catch {
+            setMessage("Error deleting skill.");
+        }
+    };
 
 
     if (message) return <div>{message}</div>;
@@ -105,12 +164,35 @@ function Profile() {
                     {user.raketistaSkills?.length > 0 ? (
                         <ul style={{ marginTop: 8 }}>
                             {user.raketistaSkills.map((rs, index) => (
-                                <li key={index}>{rs.skill.skillName} <span style={{ color: "#888" }}>({rs.skill.category})</span></li>
+                                <li key={index}>
+                                    {rs.skill.skillName} <span style={{ color: "#888" }}>({rs.skill.category})</span>
+                                    <button style={{ marginLeft: 8, backgroundColor: "red" }} onClick={() => handleDeleteSkill(rs.id)}>
+                                        Remove
+                                    </button>
+                                </li>
                             ))}
                         </ul>
                     ) : ( 
                         <p>No skills assigned yet.</p>
                     )}
+
+                    <div style={{ marginTop: 16 }}>
+                        <select
+                            value={selectedSkillId}
+                            onChange={(e) => setSelectedSkillId(e.target.value)}
+                            style={{ width: "100%"}}
+                        >
+                            <option value="">-- Select Skill to Add --</option>
+                            {allSkills.map(skill => (
+                                <option key={skill.skill_Id} value={skill.skill_Id}>
+                                    {skill.skillName} ({skill.category})
+                                </option>
+                            ))}
+                        </select>
+                        <button disabled={!selectedSkillId} onClick={handleAddSkill} style={{ marginLeft: 8, backgroundColor: "green"}}>
+                            Add
+                        </button>
+                    </div>
                 </div>
             )}
         </div>
