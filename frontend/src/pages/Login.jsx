@@ -1,104 +1,79 @@
-import React from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import EmailInput from "../components/EmailInput";
+import PasswordInput from "../components/PasswordInput";
+import LoginButton from "../components/LoginButton";
+import GoogleLoginButton from "../components/GoogleLoginButton";
+import logo from "../assets/images/raketnow-logo.png";
 
-// @components
-import {
-  Card,
-  Input,
-  Button,
-  CardBody,
-  CardHeader,
-  Typography,
-} from "@material-tailwind/react";
+function Login() {
+  const navigate = useNavigate();
 
-function Login1() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+
+    // Replace if connected na with the backend peeps HSAJHDAHDSA
+    // if (email === "test@example.com" && password === "password") {
+    //   navigate("/home"); // Redirect to home on successful login
+    // } else {
+    //   alert("Invalid email or password");
+    // }
+  };
+
   return (
-    <section className="px-8">
-      <div className="container mx-auto h-screen grid place-items-center">
-        <Card
-          shadow={false}
-          className="md:px-24 md:py-14 py-8 border border-gray-300"
-        >
-          <CardHeader shadow={false} floated={false} className="text-center">
-            <Typography
-              variant="h1"
-              color="blue-gray"
-              className="mb-4 !text-3xl lg:text-4xl"
-            >
-              Web3 Login Simplified
-            </Typography>
-            <Typography className="!text-gray-600 text-[18px] font-normal md:max-w-sm">
-              Enjoy quick and secure access to your accounts on various Web3
-              platforms.
-            </Typography>
-          </CardHeader>
-          <CardBody>
-            <form action="#" className="flex flex-col gap-4 md:mt-12">
-              <div>
-                <label htmlFor="email">
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="block font-medium mb-2"
-                  >
-                    Your Email
-                  </Typography>
-                </label>
-                <Input
-                  id="email"
-                  color="gray"
-                  size="lg"
-                  type="email"
-                  name="email"
-                  placeholder="name@mail.com"
-                  className="w-full placeholder:opacity-100 focus:border-t-primary border-t-blue-gray-200"
-                  labelProps={{
-                    className: "hidden",
-                  }}
-                />
-              </div>
-              <Button size="lg" color="gray" fullWidth>
-                continue
-              </Button>
-              <Button
-                variant="outlined"
-                size="lg"
-                className="flex h-12 border-blue-gray-200 items-center justify-center gap-2"
-                fullWidth
-              >
-                <img
-                  src={`https://www.material-tailwind.com/logos/logo-google.png`}
-                  alt="google"
-                  className="h-6 w-6"
-                />{" "}
-                sign in with google
-              </Button>
-              <Button
-                variant="outlined"
-                size="lg"
-                className="flex h-12 border-blue-gray-200 items-center justify-center gap-2"
-                fullWidth
-              >
-                Wallet Authentication
-              </Button>
-              <Typography
-                variant="small"
-                className="text-center mx-auto max-w-[19rem] !font-medium !text-gray-600"
-              >
-                Upon signing in, you consent to abide by our{" "}
-                <a href="#" className="text-gray-900">
-                  Terms of Service
-                </a>{" "}
-                &{" "}
-                <a href="#" className="text-gray-900">
-                  Privacy Policy.
-                </a>
-              </Typography>
-            </form>
-          </CardBody>
-        </Card>
+    <section className="bg-gray-50 min-h-screen flex items-center justify-center">
+      <div className="bg-gray-100 rounded-2xl shadow-lg w-full max-w-md p-8">
+        <div className="flex justify-center mb-1">
+          <img
+            src={logo}
+            alt="RaketNow Logo"
+            className="h-12 md:h-14 w-auto object-contain"
+          />
+        </div>
+        <h2 className="font-bold text-2xl text-[#FF7C2B] text-center">Login</h2>
+        <p className="text-xs mt-2 text-[#000000] text-center">
+          If you are already a member, easily log in
+        </p>
+
+        <form className="flex flex-col gap-4" onSubmit={handleLogin}>
+          <EmailInput
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <PasswordInput
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <LoginButton />
+        </form>
+
+        <div className="mt-6 grid grid-cols-3 items-center text-gray-400">
+          <hr className="border-gray-400" />
+          <p className="text-center text-sm">OR</p>
+          <hr className="border-gray-400" />
+        </div>
+
+        <GoogleLoginButton />
+
+        <div className="mt-5 text-xs border-b border-[#002D74] py-4 text-[#002D74] text-center">
+          <a href="#">Forgot your password?</a>
+        </div>
+
+        <div className="mt-3 text-xs flex justify-between items-center text-[#002D74]">
+          <p>Don't have an account?</p>
+          <button
+            onClick={() => navigate("/signup")}
+            className="py-2 px-4 bg-white border rounded-xl hover:scale-105 duration-300"
+          >
+            Register
+          </button>
+        </div>
       </div>
     </section>
   );
 }
 
-export default Login1;
+export default Login;
