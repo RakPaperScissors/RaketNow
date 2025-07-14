@@ -46,7 +46,7 @@ exports.AppModule = AppModule = __decorate([
                 entities: [user_entity_1.Users, organization_entity_1.Organization, raketista_entity_1.Raketista, raket_entity_1.Raket, raket_picture_entity_1.RaketPictures, raketista_skill_entity_1.RaketistaSkill, skill_entity_1.Skills],
                 ssl: process.env.NODE_ENV === 'production'
                     ? { rejectUnauthorized: false }
-                    : false,
+                    : process.env.DB_SSL === 'true',
                 autoLoadEntities: true,
                 synchronize: true,
             }),

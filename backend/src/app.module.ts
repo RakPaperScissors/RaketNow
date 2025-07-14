@@ -32,11 +32,13 @@ import { RaketistaSkill } from './entities/raketista-skill/entities/raketista-sk
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
       entities: [Users, Organization, Raketista, Raket, RaketPictures, RaketistaSkill, Skills],
+      // ssl: process.env.DB_SSL === 'true'
+      // ? { rejectUnauthorized: false }
+      // : false,
       ssl:
-        process.env.DB_SSL === 'true'
-        // process.env.NODE_ENV === 'production'
-          ? { rejectUnauthorized: false }
-          : false,
+        process.env.NODE_ENV === 'production'
+          ? { rejectUnauthorized: false } 
+          : process.env.DB_SSL === 'true',
       autoLoadEntities: true,
       synchronize: true, // do not use if not on dev-mode
     }),
