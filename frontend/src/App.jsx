@@ -11,6 +11,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Landing from "./pages/Landing";
 import Faqs from "./pages/Faqs";
+import Home from "./pages/Home";
 
 function App() {
   const router = createBrowserRouter(
@@ -21,6 +22,9 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/Faqs" element={<Faqs />} />
+        {/* only when api is connected na */}
+        {/* <Route path="/home" element={isLoggedIn ? <Home /> : <Navigate to="/login" />} /> */}
+        <Route path="/home" element={<Home />} />
       </Route>
     )
   );

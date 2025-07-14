@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import EmailInput from "../components/EmailInput";
 import PasswordInput from "../components/PasswordInput";
 import LoginButton from "../components/LoginButton";
@@ -6,6 +7,22 @@ import GoogleLoginButton from "../components/GoogleLoginButton";
 import logo from "../assets/images/raketnow-logo.png";
 
 function Login() {
+  const navigate = useNavigate();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+
+    // Replace if connected na with the backend peeps HSAJHDAHDSA
+    // if (email === "test@example.com" && password === "password") {
+    //   navigate("/home"); // Redirect to home on successful login
+    // } else {
+    //   alert("Invalid email or password");
+    // }
+  };
+
   return (
     <section className="bg-gray-50 min-h-screen flex items-center justify-center">
       <div className="bg-gray-100 rounded-2xl shadow-lg w-full max-w-md p-8">
@@ -21,9 +38,15 @@ function Login() {
           If you are already a member, easily log in
         </p>
 
-        <form className="flex flex-col gap-4 mt-4">
-          <EmailInput />
-          <PasswordInput />
+        <form className="flex flex-col gap-4" onSubmit={handleLogin}>
+          <EmailInput
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <PasswordInput
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
           <LoginButton />
         </form>
 
@@ -41,7 +64,10 @@ function Login() {
 
         <div className="mt-3 text-xs flex justify-between items-center text-[#002D74]">
           <p>Don't have an account?</p>
-          <button className="py-2 px-4 bg-white border rounded-xl hover:scale-105 duration-300">
+          <button
+            onClick={() => navigate("/signup")}
+            className="py-2 px-4 bg-white border rounded-xl hover:scale-105 duration-300"
+          >
             Register
           </button>
         </div>

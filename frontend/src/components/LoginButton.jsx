@@ -2,7 +2,10 @@ import React from "react";
 
 function LoginButton() {
   return (
-    <button className="bg-[#002D74] rounded-xl text-white py-2 hover:scale-105 duration-300">
+    <button
+      type="submit"
+      className="w-full bg-[#0C2C57] text-white py-2 px-4 rounded-xl hover:scale-105 duration-300"
+    >
       Login
     </button>
   );

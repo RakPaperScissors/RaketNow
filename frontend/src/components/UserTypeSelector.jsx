@@ -8,7 +8,7 @@ function UserTypeSelector({ setUserType, onNext }) {
   };
 
   return (
-    <section className="bg-gray-50 min-h-screen flex items-center justify-center">
+    <section className="min-h-screen flex items-center justify-center">
       <div className="bg-gray-100 rounded-2xl shadow-lg w-full max-w-md p-8">
         <div className="flex justify-center mb-1">
           <img
