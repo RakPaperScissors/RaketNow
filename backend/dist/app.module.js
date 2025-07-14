@@ -29,6 +29,10 @@ const certification_module_1 = require("./entities/certification/certification.m
 const job_history_module_1 = require("./entities/job-history/job-history.module");
 const raketista_skill_module_1 = require("./entities/raketista-skill/raketista-skill.module");
 const raketista_skill_entity_1 = require("./entities/raketista-skill/entities/raketista-skill.entity");
+const messages_module_1 = require("./entities/messages/messages.module");
+const conversation_module_1 = require("./entities/conversation/conversation.module");
+const message_entity_1 = require("./entities/messages/entities/message.entity");
+const conversation_entity_1 = require("./entities/conversation/entities/conversation.entity");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -43,7 +47,7 @@ exports.AppModule = AppModule = __decorate([
                 username: process.env.DB_USER,
                 password: process.env.DB_PASSWORD,
                 database: process.env.DB_DATABASE,
-                entities: [user_entity_1.Users, organization_entity_1.Organization, raketista_entity_1.Raketista, raket_entity_1.Raket, raket_picture_entity_1.RaketPictures, raketista_skill_entity_1.RaketistaSkill, skill_entity_1.Skills],
+                entities: [user_entity_1.Users, organization_entity_1.Organization, raketista_entity_1.Raketista, raket_entity_1.Raket, raket_picture_entity_1.RaketPictures, raketista_skill_entity_1.RaketistaSkill, skill_entity_1.Skills, message_entity_1.Message, conversation_entity_1.Conversation],
                 ssl: process.env.NODE_ENV === 'production'
                     ? { rejectUnauthorized: false }
                     : process.env.DB_SSL === 'true',
@@ -59,7 +63,9 @@ exports.AppModule = AppModule = __decorate([
             skills_module_1.SkillsModule,
             certification_module_1.CertificationModule,
             job_history_module_1.JobHistoryModule,
-            raketista_skill_module_1.RaketistaSkillModule
+            raketista_skill_module_1.RaketistaSkillModule,
+            messages_module_1.MessagesModule,
+            conversation_module_1.ConversationModule
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

@@ -20,6 +20,10 @@ import { CertificationModule } from './entities/certification/certification.modu
 import { JobHistoryModule } from './entities/job-history/job-history.module';
 import { RaketistaSkillModule } from './entities/raketista-skill/raketista-skill.module';
 import { RaketistaSkill } from './entities/raketista-skill/entities/raketista-skill.entity';
+import { MessagesModule } from './entities/messages/messages.module';
+import { ConversationModule } from './entities/conversation/conversation.module';
+import { Message } from './entities/messages/entities/message.entity';
+import { Conversation } from './entities/conversation/entities/conversation.entity';
 
 @Module({
   imports: [
@@ -31,7 +35,7 @@ import { RaketistaSkill } from './entities/raketista-skill/entities/raketista-sk
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [Users, Organization, Raketista, Raket, RaketPictures, RaketistaSkill, Skills],
+      entities: [Users, Organization, Raketista, Raket, RaketPictures, RaketistaSkill, Skills, Message, Conversation],
       // ssl: process.env.DB_SSL === 'true'
       // ? { rejectUnauthorized: false }
       // : false,
@@ -51,7 +55,9 @@ import { RaketistaSkill } from './entities/raketista-skill/entities/raketista-sk
     SkillsModule,
     CertificationModule,
     JobHistoryModule,
-    RaketistaSkillModule
+    RaketistaSkillModule,
+    MessagesModule,
+    ConversationModule
   ],
   controllers: [AppController],
   providers: [AppService],
