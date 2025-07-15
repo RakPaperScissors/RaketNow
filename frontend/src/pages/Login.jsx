@@ -6,22 +6,25 @@ import LoginButton from "../components/LoginButton";
 import GoogleLoginButton from "../components/GoogleLoginButton";
 import logo from "../assets/images/raketnow-logo.png";
 
+import { useAuth } from "../hooks/useAuth";
+
 function Login() {
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const { email, password, setEmail, setPassword, handleLogin } = useAuth(); 
+  // const [email, setEmail] = useState("");
+  // const [password, setPassword] = useState("");
 
-  const handleLogin = (e) => {
-    e.preventDefault();
+  // const handleLogin = (e) => {
+  //   e.preventDefault();
 
-    // Replace if connected na with the backend peeps HSAJHDAHDSA
-    // if (email === "test@example.com" && password === "password") {
-    //   navigate("/home"); // Redirect to home on successful login
-    // } else {
-    //   alert("Invalid email or password");
-    // }
-  };
+  //   // Replace if connected na with the backend peeps HSAJHDAHDSA
+  //   // if (email === "test@example.com" && password === "password") {
+  //   //   navigate("/home"); // Redirect to home on successful login
+  //   // } else {
+  //   //   alert("Invalid email or password");
+  //   // }
+  // };
 
   return (
     <section className="bg-gray-50 min-h-screen flex items-center justify-center">
