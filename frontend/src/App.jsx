@@ -9,7 +9,7 @@ import RootLayout from "./layout/RootLayout";
 import Landing from "./pages/Landing";
 import About from "./pages/About";
 // import Login from "./pages/Login";
-import Signup from "./pages/Signup";
+// import Signup from "./pages/Signup";
 
 // Imports for API calls
 import Users from "./pages/test_api_pages/Users";
@@ -18,7 +18,7 @@ import Home from "./pages/test_api_pages/Home";
 import Profile from "./pages/test_api_pages/Profile";
 import Rakets from "./pages/test_api_pages/Rakets";
 import Raket from "./pages/test_api_pages/Raket";
-import Register from "./pages/test_api_pages/Register"
+import Signup from "./pages/test_api_pages/Signup";
 
 function App() {
   const router = createBrowserRouter(
@@ -27,7 +27,7 @@ function App() {
         <Route index element={<Landing />} />
         <Route path="/about" element={<About />} />
         <Route path="/users" element={<Users />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/home" element={<Home />} />
         <Route path="/raket/:id" element={<Raket />} />

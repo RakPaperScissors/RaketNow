@@ -1,116 +1,22 @@
 import { format } from "date-fns";
-import { useEffect, useState } from "react";
+import { useProfile } from "../../hooks/useProfile";
 
 function Profile() {
-    const [user, setUser] = useState(null);
-    const [message, setMessage] = useState("");
-    const [editing, setEditing] = useState(false);
-    const [bio, setBio] = useState("");
-    const [allSkills, setAllSkills] = useState([]);
-    const [selectedSkillId, setSelectedSkillId] = useState("");
-
-    useEffect(() => {
-        const accessToken = localStorage.getItem("access_token");
-        if(!accessToken) {
-            setMessage("You are not logged in.");
-            return;
-        }
-        fetch('http://localhost:3000/auth/me', {
-            method: "GET",
-            headers: { 
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${accessToken}`
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            setUser(data);
-            setBio(data.bio || "");
-        })
-        .catch(() => setMessage("Failed to fetch profile."));
-
-        // Fetch all skills
-        fetch('http://localhost:3000/skills')
-            .then(response => response.json())
-            .then(data => setAllSkills(data))
-            .catch(() => setMessage("Failed to load skills."));
-    }, []);
-
-    const handleBioSave = async () => {
-        const accessToken = localStorage.getItem("access_token");
-        setMessage("");
-        try {
-            const response = await fetch(`http://localhost:3000/raketista/${user.uid}`, {
-                method: "PATCH",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization:  `Bearer ${accessToken}`,
-                },
-                body: JSON.stringify({ bio }),
-            });
-            if (response.ok) {
-                setMessage("Bio updated!");
-                setEditing(false);
-                setUser({ ...user, bio });
-            } else {
-                const data = await response.json();
-                setMessage(data.message || "Failed to update bio.");
-            }
-        } catch {
-            setMessage("An error occurred while updating bio.");
-        }
-    }
-
-    const handleAddSkill = async () => {
-        const accessToken = localStorage.getItem('access_token');
-        try {
-            const response = await fetch('http://localhost:3000/raketista-skill', {
-                method: 'POST',
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${accessToken}`,
-                },
-                body: JSON.stringify({
-                    raketistaId: user.uid,
-                    skillId: parseInt(selectedSkillId),
-                }),
-            });
-            if (response.ok) {
-                const addedSkill = allSkills.find(skill => skill.skill_Id === parseInt(selectedSkillId));
-                setUser(prev => ({
-                    ...prev,
-                    skills: [...(prev.skills || []), addedSkill],
-                }));
-                setSelectedSkillId("");
-            } else {
-                setMessage("Failed to add skill.");
-            }
-        } catch {
-            setMessage("Error adding skill. Please try again.");
-        }
-    };
-
-    const handleDeleteSkill = async (raketistaSkillId) => {
-        const accessToken = localStorage.getItem('access_token');
-        try {
-            const response = await fetch(`http://localhost:3000/raketista-skill/${raketistaSkillId}`, {
-                method: 'DELETE',
-                headers: {
-                    "Authorization": `Bearer ${accessToken}`,
-                }
-            });
-            if (response.ok) {
-                setUser(prev => ({
-                    ...prev,
-                    raketistaSkills: prev.raketistaSkills.filter(skill => skill.id !== raketistaSkillId)
-                }));
-            } else {
-                setMessage("Failed to delete skill.");
-            }
-        } catch {
-            setMessage("Error deleting skill.");
-        }
-    };
+    const {
+        user,
+        bio,
+        editing,
+        message,
+        allSkills,
+        selectedSkillId,
+        setSelectedSkillId,
+        setEditing,
+        setBio,
+        handleBioSave,
+        handleAddSkill,
+        handleDeleteSkill,
+    } = useProfile();
+    
 
 
     if (message) return <div>{message}</div>;

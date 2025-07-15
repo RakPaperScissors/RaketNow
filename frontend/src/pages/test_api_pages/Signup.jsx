@@ -1,42 +1,7 @@
-import React, { useState } from "react";
+import { useSignUp } from "../../hooks/useSignUp";
 
-function Register() {
-    const [form, setForm] = useState({
-        email: "",
-        password: "",
-        name: "",
-        role: "client",
-        organizationName: "",
-    });
-    const [message, setMessage] = useState("");
-
-    const handleChange = (e) => {
-        setForm({ ...form, [e.target.name]: e.target.value });
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setMessage("");
-        const payload = { ...form };
-        if(form.role !== "organization") {
-            delete payload.organizationName;
-        }
-        try {
-            const res = await fetch("http://localhost:3000/auth/register", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(form),
-            });
-            const data = await res.json();
-            if (res.ok) {
-                setMessage("Registration successful! You can now log in.");
-            } else {
-                setMessage(data.message || "Registration failed.");
-            }
-        } catch {
-            setMessage("An error occured. Please try again.");
-        }
-    };
+function Signup() {
+    const { form, handleChange, handleSubmit, message } = useSignUp();
 
     return (
         <div style={{ maxWidth: 400, margin: "40px auto", border: "1px solid #ccc", padding: 24, borderRadius: 8 }}>
@@ -109,4 +74,4 @@ function Register() {
     );
 }
 
-export default Register;
+export default Signup;

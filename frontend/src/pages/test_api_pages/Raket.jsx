@@ -1,35 +1,13 @@
-import { useEffect, useState } from "react";
+import { useRaket } from "../../hooks/useRaket";
 import { useParams } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
 
 function Raket() {
     const { id } = useParams();
-    const [raket, setRaket] = useState([]);
-    const [message, setMessage] = useState("");
+    const { raket, loading, error } = useRaket(id);
 
-    useEffect(() => {
-        const accessToken = localStorage.getItem("access_token");
-        if (!accessToken) {
-            console.error("You are not logged in.");
-            return;
-        }
-
-        fetch(`http://localhost:3000/rakets/${id}`, {
-            headers: { Authorization: `Bearer ${accessToken}` },
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Not found");
-            }
-            return response.json();
-        })
-        .then(setRaket)
-        .catch(() => setMessage("Failed to fetch raket."));
-
-    }, [id])
-
-    if (message) return <div>{message}</div>;
-    if (!raket) return <div>Loading...</div>;
+    if (error) return <div>{error}</div>;
+    if (loading) return <div>Loading...</div>;
 
     return (
         <div>
