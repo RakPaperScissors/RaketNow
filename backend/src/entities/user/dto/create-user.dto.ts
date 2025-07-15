@@ -7,7 +7,9 @@ export class CreateUserDto {
 
     password: string
     
-    name:string
+    firstName: string;
+
+    lastName: string;
 
     role: userRole
 

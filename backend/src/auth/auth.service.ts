@@ -14,11 +14,11 @@ export class AuthService {
     ) {}
 
     // 1. AUTH FUNCTION - Register for new users
-    async register(email: string, password: string, name: string, role: userRole = userRole.CLIENT) {
+    async register(email: string, password: string, firstName: string, lastName: string, role: userRole = userRole.CLIENT) {
         // Hash the inputted password
         const hashed = await bcrypt.hash(password, 10);
         // Creates a new user with provided details
-        const user = this.usersRepo.create({ email, password: hashed, name, role });
+        const user = this.usersRepo.create({ email, password: hashed, firstName, lastName, role });
         // Saves the user to the database
         return await this.usersRepo.save(user);
     }

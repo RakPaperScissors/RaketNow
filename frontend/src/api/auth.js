@@ -23,7 +23,7 @@ export async function signUp(formData) {
     const response = await fetch ('http://localhost:3000/auth/register', {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ payload })
+        body: JSON.stringify(payload)
     });
 
     const data = await response.json();

@@ -19,7 +19,10 @@ export class Users {
     password: string;
 
     @Column({ type: 'varchar', length: 255, nullable: true })
-    name: string;
+    firstName: string;
+
+    @Column({ type: 'varchar', length: 255, nullable: true })
+    lastName: string;
 
     @Column({ type: 'enum', enum: userRole, default: userRole.CLIENT, })
     role: userRole;

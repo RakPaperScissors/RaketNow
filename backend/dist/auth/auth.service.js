@@ -26,9 +26,9 @@ let AuthService = class AuthService {
         this.usersRepo = usersRepo;
         this.jwtService = jwtService;
     }
-    async register(email, password, name, role = user_entity_1.userRole.CLIENT) {
+    async register(email, password, firstName, lastName, role = user_entity_1.userRole.CLIENT) {
         const hashed = await bcrypt.hash(password, 10);
-        const user = this.usersRepo.create({ email, password: hashed, name, role });
+        const user = this.usersRepo.create({ email, password: hashed, firstName, lastName, role });
         return await this.usersRepo.save(user);
     }
     async login(email, password) {

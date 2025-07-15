@@ -8,7 +8,8 @@ export declare class Users {
     uid: number;
     email: string;
     password: string;
-    name: string;
+    firstName: string;
+    lastName: string;
     role: userRole;
     authProvider: string;
     providerId: string;

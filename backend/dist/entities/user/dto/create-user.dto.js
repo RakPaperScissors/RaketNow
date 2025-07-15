@@ -14,7 +14,8 @@ const class_validator_1 = require("class-validator");
 class CreateUserDto {
     email;
     password;
-    name;
+    firstName;
+    lastName;
     role;
     authProvider;
     providerId;

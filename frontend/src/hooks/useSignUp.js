@@ -5,6 +5,7 @@ export function useSignUp() {
     const [form, setForm] = useState({
         email: "",
         password: "",
+        confirmPassword: "",
         name: "",
         role: "client",
         organizationName: "",
@@ -19,6 +20,10 @@ export function useSignUp() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setMessage("");
+        if (form.password !== form.confirmPassword) {
+            setMessage("Passwords do not match.");
+            return;
+        }
         try {
             await signUpApi(form);
             setMessage("registration successful!");
@@ -33,5 +38,6 @@ export function useSignUp() {
         message,
         handleChange,
         handleSubmit,
+        setForm,
     };
 }
