@@ -19,6 +19,8 @@ const bcrypt = require("bcryptjs");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const user_entity_1 = require("../entities/user/entities/user.entity");
+const raketista_entity_1 = require("../entities/raketista/entities/raketista.entity");
+const organization_entity_1 = require("../entities/organization/entities/organization.entity");
 let AuthService = class AuthService {
     usersRepo;
     jwtService;
@@ -26,9 +28,37 @@ let AuthService = class AuthService {
         this.usersRepo = usersRepo;
         this.jwtService = jwtService;
     }
-    async register(email, password, firstName, lastName, role = user_entity_1.userRole.CLIENT) {
+    async register(email, password, firstName, lastName, role = user_entity_1.userRole.CLIENT, organizationName) {
         const hashed = await bcrypt.hash(password, 10);
-        const user = this.usersRepo.create({ email, password: hashed, firstName, lastName, role });
+        let user;
+        if (role === user_entity_1.userRole.RAKETISTA) {
+            const raketista = new raketista_entity_1.Raketista();
+            raketista.email = email;
+            raketista.password = hashed;
+            raketista.firstName = firstName;
+            raketista.lastName = lastName;
+            raketista.role = role;
+            user = raketista;
+        }
+        else if (role === user_entity_1.userRole.ORGANIZATION) {
+            const org = new organization_entity_1.Organization();
+            org.email = email;
+            org.password = hashed;
+            org.firstName = firstName;
+            org.lastName = lastName;
+            org.role = role;
+            org.orgName = organizationName || '';
+            user = org;
+        }
+        else {
+            const client = new user_entity_1.Users();
+            client.email = email;
+            client.password = hashed;
+            client.firstName = firstName;
+            client.lastName = lastName;
+            client.role = role;
+            user = client;
+        }
         return await this.usersRepo.save(user);
     }
     async login(email, password) {

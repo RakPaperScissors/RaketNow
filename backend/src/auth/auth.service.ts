@@ -5,6 +5,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { userRole, Users } from 'src/entities/user/entities/user.entity';
 import { profile } from 'console';
+import { Raketista } from 'src/entities/raketista/entities/raketista.entity';
+import { Organization } from 'src/entities/organization/entities/organization.entity';
+
 
 @Injectable()
 export class AuthService {
@@ -14,11 +17,38 @@ export class AuthService {
     ) {}
 
     // 1. AUTH FUNCTION - Register for new users
-    async register(email: string, password: string, firstName: string, lastName: string, role: userRole = userRole.CLIENT) {
+    async register(email: string, password: string, firstName: string, lastName: string, role: userRole = userRole.CLIENT, organizationName?: string) {
         // Hash the inputted password
         const hashed = await bcrypt.hash(password, 10);
         // Creates a new user with provided details
-        const user = this.usersRepo.create({ email, password: hashed, firstName, lastName, role });
+        let user;
+
+        if (role === userRole.RAKETISTA) {
+            const raketista = new Raketista();
+            raketista.email = email;
+            raketista.password = hashed;
+            raketista.firstName = firstName;
+            raketista.lastName = lastName;
+            raketista.role = role;
+            user = raketista;
+        } else if (role === userRole.ORGANIZATION) {
+            const org = new Organization();
+            org.email = email;
+            org.password = hashed;
+            org.firstName = firstName;
+            org.lastName = lastName;
+            org.role = role;
+            org.orgName = organizationName || ''; // if applicable
+            user = org;
+        } else {
+            const client = new Users();
+            client.email = email;
+            client.password = hashed;
+            client.firstName = firstName;
+            client.lastName = lastName;
+            client.role = role;
+            user = client;
+        }
         // Saves the user to the database
         return await this.usersRepo.save(user);
     }

@@ -9,7 +9,7 @@ export declare class AuthController {
         firstName: string;
         lastName: string;
         role?: userRole;
-    }): Promise<import("src/entities/user/entities/user.entity").Users>;
+    }): Promise<any>;
     login(body: {
         email: string;
         password: string;
