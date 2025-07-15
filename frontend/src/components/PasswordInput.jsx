@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 
-function PasswordInput() {
+function PasswordInput({ value, onChange}) {
   const [showPassword, setShowPassword] = useState(false);
 
   const togglePassword = () => setShowPassword(!showPassword);
@@ -13,6 +13,8 @@ function PasswordInput() {
         type={showPassword ? "text" : "password"}
         name="password"
         placeholder="Password"
+        value={value}
+        onChange={onChange}
       />
       <div
         onClick={togglePassword}
