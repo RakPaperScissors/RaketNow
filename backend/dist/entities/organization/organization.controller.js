@@ -17,10 +17,7 @@ const common_1 = require("@nestjs/common");
 const organization_service_1 = require("./organization.service");
 const create_organization_dto_1 = require("./dto/create-organization.dto");
 const update_organization_dto_1 = require("./dto/update-organization.dto");
-const common_2 = require("@nestjs/common");
 const roles_decorator_1 = require("../../common/decorators/roles.decorator");
-const jwt_auth_guard_1 = require("../../auth/jwt-auth.guard");
-const roles_guard_1 = require("../../common/guards/roles.guard");
 let OrganizationController = class OrganizationController {
     organizationService;
     constructor(organizationService) {
@@ -95,7 +92,6 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], OrganizationController.prototype, "searchByOrgName", null);
 exports.OrganizationController = OrganizationController = __decorate([
-    (0, common_2.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
     (0, common_1.Controller)('organization'),
     __metadata("design:paramtypes", [organization_service_1.OrganizationService])
 ], OrganizationController);

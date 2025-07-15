@@ -18,7 +18,7 @@ export class Certification {
     @Column ({type: 'varchar', length: 100, nullable:true})
     issuingOrganization: string;
 
-    // foreign key to Users table (need rin ng inverse for Users table for the relationship)
+    // foreign key to Users table
     @ManyToOne(()=> Users, user => user.uid, {onDelete: 'CASCADE'})
     @JoinColumn({name: "raketistaId", referencedColumnName: "uid"})
     raketistaId : Users;

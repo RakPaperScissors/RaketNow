@@ -45,7 +45,10 @@ export class AuthService {
     // 3. AUTH FUNCTION - Get profile of logged in user
     async getProfile(uid: number) {
         // Find the user by uid
-        const user = await this.usersRepo.findOne({ where: { uid } });
+        const user = await this.usersRepo.findOne({
+            where: { uid },
+            relations: ['raketistaSkills', 'raketistaSkills.skill']
+        });
         if (!user) {
             // Throw an unauthorized exception if user is not found
             throw new UnauthorizedException('User not found');

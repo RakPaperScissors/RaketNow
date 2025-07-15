@@ -56,7 +56,10 @@ let UserService = class UserService {
         return await this.users.find({ where: { email: (0, typeorm_1.ILike)(`%${email}%`) } });
     }
     async filterByRole(role) {
-        return await this.users.find({ where: { role } });
+        return await this.users.find({
+            where: { role },
+            relations: ['raketistaSkills', 'raketistaSkills.skill']
+        });
     }
     async updateProfilePicture(uid, profilePicture) {
         const findUser = await this.findOne(uid);

@@ -1,5 +1,5 @@
-import {Entity, Column, PrimaryGeneratedColumn, ManyToMany} from 'typeorm';
-import {Raketista} from "./../../raketista/entities/raketista.entity";
+import {Entity, Column, PrimaryGeneratedColumn, OneToMany} from 'typeorm';
+import {RaketistaSkill} from "./../../raketista-skill/entities/raketista-skill.entity";
 
 @Entity()
 export class Skills {
@@ -12,6 +12,6 @@ export class Skills {
     @Column()
     category: string;
 
-    // @ManyToMany(() => Raketista, raketista => raketista.skills) // import skills.entity to raketista.entity
-    // raketistas: Raketista[];
+    @OneToMany(() => RaketistaSkill, raketistaSkill => raketistaSkill.skill)
+    raketistaSkills: RaketistaSkill[];
 }

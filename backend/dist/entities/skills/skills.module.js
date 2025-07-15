@@ -10,11 +10,14 @@ exports.SkillsModule = void 0;
 const common_1 = require("@nestjs/common");
 const skills_service_1 = require("./skills.service");
 const skills_controller_1 = require("./skills.controller");
+const typeorm_1 = require("@nestjs/typeorm");
+const skill_entity_1 = require("./entities/skill.entity");
 let SkillsModule = class SkillsModule {
 };
 exports.SkillsModule = SkillsModule;
 exports.SkillsModule = SkillsModule = __decorate([
     (0, common_1.Module)({
+        imports: [typeorm_1.TypeOrmModule.forFeature([skill_entity_1.Skills])],
         controllers: [skills_controller_1.SkillsController],
         providers: [skills_service_1.SkillsService],
     })

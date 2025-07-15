@@ -18,6 +18,7 @@ function App() {
     createRoutesFromElements(
       <Route path="/" element={<RootLayout />}>
         <Route index element={<Landing />} />
+        <Route index element={<Landing />} />
         <Route path="/about" element={<About />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
@@ -32,7 +33,6 @@ function App() {
   return (
     <>
       <RouterProvider router={router} />
-
       <Footer />
     </>
   );

@@ -6,4 +6,12 @@ import tsconfigPaths from "vite-tsconfig-paths";
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss(), tsconfigPaths()],
+  server: {
+    watch: {
+      usePolling: true,
+    },
+    host: true, // Here
+    strictPort: true,
+    port: 5173,
+  },
 });

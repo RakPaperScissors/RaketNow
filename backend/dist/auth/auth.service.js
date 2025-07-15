@@ -44,7 +44,10 @@ let AuthService = class AuthService {
         return { access_token: this.jwtService.sign(payload) };
     }
     async getProfile(uid) {
-        const user = await this.usersRepo.findOne({ where: { uid } });
+        const user = await this.usersRepo.findOne({
+            where: { uid },
+            relations: ['raketistaSkills', 'raketistaSkills.skill']
+        });
         if (!user) {
             throw new common_1.UnauthorizedException('User not found');
         }

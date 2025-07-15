@@ -72,7 +72,10 @@ export class UserService {
   // 3. Filter by role
   async filterByRole(role: userRole) {
     // Gets all users with specified role
-    return await this.users.find({ where: { role } });
+    return await this.users.find({ 
+      where: { role },
+      relations: ['raketistaSkills', 'raketistaSkills.skill']
+    });
   }
 
   // 4. Filter by skills

@@ -1,0 +1,13 @@
+services:
+  frontend_prod:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    ports:
+      - "5173:5173"
+    environment:
+      - PORT=5173
+      - NODE_ENV=production
+    volumes:
+      - ./src:/app/src
+  

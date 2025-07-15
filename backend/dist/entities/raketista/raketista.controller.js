@@ -17,10 +17,7 @@ const common_1 = require("@nestjs/common");
 const raketista_service_1 = require("./raketista.service");
 const create_raketista_dto_1 = require("./dto/create-raketista.dto");
 const update_raketista_dto_1 = require("./dto/update-raketista.dto");
-const jwt_auth_guard_1 = require("../../auth/jwt-auth.guard");
-const common_2 = require("@nestjs/common");
 const roles_decorator_1 = require("../../common/decorators/roles.decorator");
-const roles_guard_1 = require("../../common/guards/roles.guard");
 let RaketistaController = class RaketistaController {
     raketistaService;
     constructor(raketistaService) {
@@ -95,7 +92,6 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], RaketistaController.prototype, "searchByRaketistaName", null);
 exports.RaketistaController = RaketistaController = __decorate([
-    (0, common_2.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
     (0, common_1.Controller)('raketista'),
     __metadata("design:paramtypes", [raketista_service_1.RaketistaService])
 ], RaketistaController);

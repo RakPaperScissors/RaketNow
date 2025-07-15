@@ -29,7 +29,10 @@ export class RaketistaService {
 
   // 3. Find one raketista by uid
   async findOne(uid: number) {
-    return await this.raketistas.findOne({where: { uid, role: userRole.RAKETISTA}});
+    return await this.raketistas.findOne({
+      where: { uid, role: userRole.RAKETISTA},
+      relations: ['raketistaSkills', 'raketistaSkills.skill']
+    });
   }
 
   // 4. Update a raketista by uid
