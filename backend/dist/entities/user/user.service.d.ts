@@ -16,4 +16,5 @@ export declare class UserService {
     filterByRole(role: userRole): Promise<Users[]>;
     updateProfilePicture(uid: number, profilePicture: string): Promise<Users>;
     changeRole(uid: number, role: userRole): Promise<Users>;
+    addRole(uid: number, newRole: userRole): Promise<Users>;
 }

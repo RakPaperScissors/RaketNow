@@ -15,6 +15,7 @@ export declare class AuthService {
         firstName: string;
         lastName: string;
         role: userRole;
+        roles: userRole[];
         profilePicture: string;
         lastActive: Date;
         createdAt: Date;

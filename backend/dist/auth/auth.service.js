@@ -38,6 +38,7 @@ let AuthService = class AuthService {
             raketista.firstName = firstName;
             raketista.lastName = lastName;
             raketista.role = role;
+            raketista.roles = [raketista.role];
             user = raketista;
         }
         else if (role === user_entity_1.userRole.ORGANIZATION) {
@@ -47,6 +48,7 @@ let AuthService = class AuthService {
             org.firstName = firstName;
             org.lastName = lastName;
             org.role = role;
+            org.roles = [org.role];
             org.orgName = organizationName || '';
             user = org;
         }
@@ -57,6 +59,7 @@ let AuthService = class AuthService {
             client.firstName = firstName;
             client.lastName = lastName;
             client.role = role;
+            client.roles = [client.role];
             user = client;
         }
         return await this.usersRepo.save(user);

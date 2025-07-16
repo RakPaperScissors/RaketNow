@@ -15,4 +15,5 @@ export declare class UserController {
     filterByRole(role: userRole): Promise<import("./entities/user.entity").Users[]>;
     changeRole(uid: number, role: userRole): Promise<import("./entities/user.entity").Users>;
     updateProfilePicture(uid: number, profilePicture: string): Promise<import("./entities/user.entity").Users>;
+    addRole(id: number, newRole: userRole): Promise<import("./entities/user.entity").Users>;
 }

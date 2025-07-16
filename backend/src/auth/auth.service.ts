@@ -30,6 +30,7 @@ export class AuthService {
             raketista.firstName = firstName;
             raketista.lastName = lastName;
             raketista.role = role;
+            raketista.roles = [raketista.role];
             user = raketista;
         } else if (role === userRole.ORGANIZATION) {
             const org = new Organization();
@@ -38,6 +39,7 @@ export class AuthService {
             org.firstName = firstName;
             org.lastName = lastName;
             org.role = role;
+            org.roles = [org.role];
             org.orgName = organizationName || ''; // if applicable
             user = org;
         } else {
@@ -47,6 +49,7 @@ export class AuthService {
             client.firstName = firstName;
             client.lastName = lastName;
             client.role = role;
+            client.roles = [client.role];
             user = client;
         }
         // Saves the user to the database

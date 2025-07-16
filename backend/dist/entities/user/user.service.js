@@ -82,6 +82,17 @@ let UserService = class UserService {
         findUser.role = role;
         return await this.users.save(findUser);
     }
+    async addRole(uid, newRole) {
+        const user = await this.users.findOne({ where: { uid: uid } });
+        if (!user) {
+            throw new common_1.NotFoundException('User not found');
+        }
+        if (!user.roles.includes(newRole)) {
+            user.roles.push(newRole);
+            await this.users.save(user);
+        }
+        return user;
+    }
 };
 exports.UserService = UserService;
 exports.UserService = UserService = __decorate([

@@ -11,6 +11,7 @@ export declare class Users {
     firstName: string;
     lastName: string;
     role: userRole;
+    roles: userRole[];
     authProvider: string;
     providerId: string;
     profilePicture: string;

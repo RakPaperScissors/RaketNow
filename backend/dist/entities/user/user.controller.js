@@ -57,6 +57,9 @@ let UserController = class UserController {
     updateProfilePicture(uid, profilePicture) {
         return this.userService.updateProfilePicture(uid, profilePicture);
     }
+    async addRole(id, newRole) {
+        return this.userService.addRole(id, newRole);
+    }
 };
 exports.UserController = UserController;
 __decorate([
@@ -142,6 +145,14 @@ __decorate([
     __metadata("design:paramtypes", [Number, String]),
     __metadata("design:returntype", void 0)
 ], UserController.prototype, "updateProfilePicture", null);
+__decorate([
+    (0, common_1.Patch)(':id/add-role'),
+    __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
+    __param(1, (0, common_1.Body)('newRole')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, String]),
+    __metadata("design:returntype", Promise)
+], UserController.prototype, "addRole", null);
 exports.UserController = UserController = __decorate([
     (0, common_1.Controller)('user'),
     __metadata("design:paramtypes", [user_service_1.UserService])

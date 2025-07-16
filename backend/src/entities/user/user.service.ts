@@ -113,4 +113,18 @@ export class UserService {
     findUser.role = role;
     return await this.users.save(findUser);
   }
+
+  // 3. Add additional role
+  async addRole(uid: number, newRole: userRole) {
+    const user = await this.users.findOne({ where: { uid: uid} });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    if (!user.roles.includes(newRole)) {
+      user.roles.push(newRole);
+      await this.users.save(user);
+    }
+    return user;
+  }
 }
