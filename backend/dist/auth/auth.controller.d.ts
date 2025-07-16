@@ -6,9 +6,11 @@ export declare class AuthController {
     register(body: {
         email: string;
         password: string;
-        name: string;
+        firstName: string;
+        lastName: string;
         role?: userRole;
-    }): Promise<import("src/entities/user/entities/user.entity").Users>;
+        orgName?: string;
+    }): Promise<any>;
     login(body: {
         email: string;
         password: string;
@@ -18,7 +20,8 @@ export declare class AuthController {
     getProfile(req: any): Promise<{
         uid: number;
         email: string;
-        name: string;
+        firstName: string;
+        lastName: string;
         role: userRole;
         profilePicture: string;
         lastActive: Date;

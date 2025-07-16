@@ -4,7 +4,7 @@ import logo from "../assets/images/raketnow-logo.png";
 function UserTypeSelector({ setUserType, onNext }) {
   const handleSelect = (type) => {
     setUserType(type);
-    onNext();
+    onNext(type);
   };
 
   return (

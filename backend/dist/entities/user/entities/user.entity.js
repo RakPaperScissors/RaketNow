@@ -22,7 +22,8 @@ let Users = class Users {
     uid;
     email;
     password;
-    name;
+    firstName;
+    lastName;
     role;
     authProvider;
     providerId;
@@ -47,7 +48,11 @@ __decorate([
 __decorate([
     (0, typeorm_1.Column)({ type: 'varchar', length: 255, nullable: true }),
     __metadata("design:type", String)
-], Users.prototype, "name", void 0);
+], Users.prototype, "firstName", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'varchar', length: 255, nullable: true }),
+    __metadata("design:type", String)
+], Users.prototype, "lastName", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: 'enum', enum: userRole, default: userRole.CLIENT, }),
     __metadata("design:type", String)

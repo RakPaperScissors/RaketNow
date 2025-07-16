@@ -60,7 +60,12 @@ export class UserService {
   // 1. Search by name
   async searchByName(name: string) {
     // Finds user by name using ILike for incomplete search (only first name etc.)
-    return await this.users.find({ where: { name: ILike(`%${name}%`) } });
+    return await this.users.find({ 
+      where: [
+        { firstName: ILike(`%${name}%`) },
+        { lastName: ILike(`%${name}%`) }
+      ]
+    });
   }
 
   // 2. Search by email

@@ -17,13 +17,13 @@ export async function login(email, password) {
 export async function signUp(formData) {
     const payload = { ...formData };
     if (payload.role !== "organization") {
-        delete payload.organizationName;
+        delete payload.orgName;
     }
 
     const response = await fetch ('http://localhost:3000/auth/register', {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ payload })
+        body: JSON.stringify(payload)
     });
 
     const data = await response.json();

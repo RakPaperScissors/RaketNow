@@ -19,7 +19,8 @@ export declare class RaketsService {
         user: {
             uid: number;
             email: string;
-            name: string;
+            firtName: string;
+            lastName: string;
             lastActive: Date;
         };
         pictures: {
@@ -39,7 +40,8 @@ export declare class RaketsService {
         user: {
             uid: number;
             email: string;
-            name: string;
+            firstName: string;
+            lastName: string;
             lastActive: Date;
         };
         pictures: {
@@ -59,7 +61,8 @@ export declare class RaketsService {
         user: {
             uid: number;
             email: string;
-            name: string;
+            firstName: string;
+            lastName: string;
             lastActive: Date;
         };
         pictures: {

@@ -5,9 +5,10 @@ export function useSignUp() {
     const [form, setForm] = useState({
         email: "",
         password: "",
+        confirmPassword: "",
         name: "",
         role: "client",
-        organizationName: "",
+        orgName: "",
     });
 
     const [message, setMessage] = useState("");
@@ -16,9 +17,12 @@ export function useSignUp() {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const handleSubmit = async () => {
         setMessage("");
+        if (form.password !== form.confirmPassword) {
+            setMessage("Passwords do not match.");
+            return;
+        }
         try {
             await signUpApi(form);
             setMessage("registration successful!");
@@ -33,5 +37,6 @@ export function useSignUp() {
         message,
         handleChange,
         handleSubmit,
+        setForm,
     };
 }

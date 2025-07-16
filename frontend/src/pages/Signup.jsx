@@ -2,20 +2,33 @@ import React, { useState } from "react";
 import UserTypeSelector from "../components/UserTypeSelector";
 import UserInfoForm from "../components/UserInfoForm";
 
+import { useSignUp } from "../hooks/useSignUp";
+
 function Signup() {
+  const { form, setForm, handleChange, handleSubmit, message } = useSignUp();
+
   const [step, setStep] = useState(1);
   const [userType, setUserType] = useState(""); // raketista, client, or organization
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    orgName: "",
-  });
 
-  const nextStep = () => setStep((prev) => prev + 1);
-  const prevStep = () => setStep((prev) => prev - 1);
+  const nextStep = (selectedType) => {
+    setUserType(selectedType);
+    setForm((prev) => ({
+      ...prev,
+      role: selectedType,
+      organizationName: selectedType === "organization" ? prev.organizationName : "",
+    }));
+    setStep(2);
+  };
+  
+  const prevStep = () => setStep(1);
+
+  const handleFormDataChange = (e) => {
+    handleChange(e);
+  };
+
+  const handleUserInfoSubmit = () => {
+    handleSubmit();
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -25,13 +38,12 @@ function Signup() {
       {step === 2 && (
         <UserInfoForm
           userType={userType}
-          formData={formData}
-          setFormData={setFormData}
+          formData={form}
+          setFormData={setForm}
           onBack={prevStep}
-          onSubmit={() => {
-            console.log("Submit data:", { userType, ...formData });
-            // diri ang handle form submission
-          }}
+          onSubmit={handleUserInfoSubmit}
+          onChange={handleFormDataChange}
+          message={message}
         />
       )}
     </div>

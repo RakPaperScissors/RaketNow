@@ -41,7 +41,8 @@ export class RaketsService {
       user: {
         uid: raket.user.uid,
         email: raket.user.email,
-        name: raket.user.name,
+        firtName: raket.user.firstName,
+        lastName: raket.user.lastName,
         lastActive: raket.user.lastActive
       },
       pictures: raket.pictures.map(picture => ({
@@ -90,7 +91,8 @@ export class RaketsService {
       user: {
         uid: raket.user.uid,
         email: raket.user.email,
-        name: raket.user.name,
+        firstName: raket.user.firstName,
+        lastName: raket.user.lastName,
         lastActive: raket.user.lastActive,
       },
       pictures: raket.pictures.map(picture => ({

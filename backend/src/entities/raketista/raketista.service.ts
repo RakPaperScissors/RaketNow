@@ -64,7 +64,7 @@ export class RaketistaService {
   // 1. Search raketista by name
   async searchByRaketistaName(name: string) {
     // Searches for raketista by their name using ILike for incomplete inputs (part of name only)
-    return await this.raketistas.find({ where: { role: userRole.RAKETISTA, name: ILike(`%${name}%`) } });
+    return await this.raketistas.find({ where: { role: userRole.RAKETISTA, firstName: ILike(`%${name}%`), lastName: ILike(`%${name}%`) } });
   }
   
 }

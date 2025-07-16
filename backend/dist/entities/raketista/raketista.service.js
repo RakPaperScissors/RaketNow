@@ -54,7 +54,7 @@ let RaketistaService = class RaketistaService {
         }
     }
     async searchByRaketistaName(name) {
-        return await this.raketistas.find({ where: { role: user_entity_1.userRole.RAKETISTA, name: (0, typeorm_1.ILike)(`%${name}%`) } });
+        return await this.raketistas.find({ where: { role: user_entity_1.userRole.RAKETISTA, firstName: (0, typeorm_1.ILike)(`%${name}%`), lastName: (0, typeorm_1.ILike)(`%${name}%`) } });
     }
 };
 exports.RaketistaService = RaketistaService;

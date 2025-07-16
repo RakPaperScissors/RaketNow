@@ -9,8 +9,8 @@ export class AuthController {
 
     // POSTs new user
     @Post('register')
-    async register(@Body() body: { email: string; password: string; name: string; role?: userRole }) {
-        return this.authService.register(body.email, body.password, body.name, body.role);
+    async register(@Body() body: { email: string; password: string; firstName: string; lastName: string; role?: userRole, orgName?: string }) {
+        return this.authService.register(body.email, body.password, body.firstName, body.lastName, body.role, body.orgName);
     }
 
     // POSTs existing user
