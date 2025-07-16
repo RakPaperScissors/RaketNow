@@ -9,6 +9,7 @@ export declare class AuthController {
         firstName: string;
         lastName: string;
         role?: userRole;
+        orgName?: string;
     }): Promise<any>;
     login(body: {
         email: string;

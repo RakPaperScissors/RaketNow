@@ -8,7 +8,7 @@ export function useSignUp() {
         confirmPassword: "",
         name: "",
         role: "client",
-        organizationName: "",
+        orgName: "",
     });
 
     const [message, setMessage] = useState("");
@@ -17,8 +17,7 @@ export function useSignUp() {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const handleSubmit = async () => {
         setMessage("");
         if (form.password !== form.confirmPassword) {
             setMessage("Passwords do not match.");

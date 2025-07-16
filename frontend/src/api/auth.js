@@ -17,7 +17,7 @@ export async function login(email, password) {
 export async function signUp(formData) {
     const payload = { ...formData };
     if (payload.role !== "organization") {
-        delete payload.organizationName;
+        delete payload.orgName;
     }
 
     const response = await fetch ('http://localhost:3000/auth/register', {
