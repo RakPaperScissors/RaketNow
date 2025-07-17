@@ -33,6 +33,7 @@ const messages_module_1 = require("./entities/messages/messages.module");
 const conversation_module_1 = require("./entities/conversation/conversation.module");
 const message_entity_1 = require("./entities/messages/entities/message.entity");
 const conversation_entity_1 = require("./entities/conversation/entities/conversation.entity");
+const raket_application_module_1 = require("./entities/raket-application/raket-application.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -65,7 +66,8 @@ exports.AppModule = AppModule = __decorate([
             job_history_module_1.JobHistoryModule,
             raketista_skill_module_1.RaketistaSkillModule,
             messages_module_1.MessagesModule,
-            conversation_module_1.ConversationModule
+            conversation_module_1.ConversationModule,
+            raket_application_module_1.RaketApplicationModule
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

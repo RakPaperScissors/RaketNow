@@ -12,12 +12,12 @@ export class RaketApplicationService {
     private readonly raketApplicationRepository: Repository<RaketApplication>,
   ) {}
 
-  async create(CreateRaketApplicationDto: CreateRaketApplicationDto) {
+  async create(createRaketApplicationDto: CreateRaketApplicationDto) {
     const application = this.raketApplicationRepository.create({
-      raketista: { uid: CreateRaketApplicationDto.raketistaId },
-      raket: { raketId: CreateRaketApplicationDto.raketId },
-      priceProposal: CreateRaketApplicationDto.priceProposal,
-      budget: CreateRaketApplicationDto.budget,
+      raketista: { uid: createRaketApplicationDto.raketistaId },
+      raket: { raketId: createRaketApplicationDto.raketId },
+      priceProposal: createRaketApplicationDto.priceProposal,
+      budget: createRaketApplicationDto.budget,
     });
     return this.raketApplicationRepository.save(application);
   }
