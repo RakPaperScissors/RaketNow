@@ -1,0 +1,41 @@
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { RaketApplication } from './entities/raket-application.entity';
+import { CreateRaketApplicationDto } from './dto/create-raket-application.dto';
+import { UpdateRaketApplicationDto } from './dto/update-raket-application.dto';
+
+@Injectable()
+export class RaketApplicationService {
+  constructor(
+    @InjectRepository(RaketApplication)
+    private readonly raketApplicationRepository: Repository<RaketApplication>,
+  ) {}
+
+  async create(CreateRaketApplicationDto: CreateRaketApplicationDto) {
+    const application = this.raketApplicationRepository.create({
+      raketista: { uid: CreateRaketApplicationDto.raketistaId },
+      raket: { raketId: CreateRaketApplicationDto.raketId },
+      priceProposal: CreateRaketApplicationDto.priceProposal,
+      budget: CreateRaketApplicationDto.budget,
+    });
+    return this.raketApplicationRepository.save(application);
+  }
+
+  findAll() {
+    return this.raketApplicationRepository.find();
+  }
+
+  findOne(id: number) {
+    return this.raketApplicationRepository.findOne({ where: { applicationId: id } });
+  }
+
+  async update(id: number, updateRaketApplicationDto: UpdateRaketApplicationDto) {
+    await this.raketApplicationRepository.update(id, updateRaketApplicationDto);
+    return this.findOne(id);
+  }
+
+  remove(id: number) {
+    return this.raketApplicationRepository.delete(id);
+  }
+}

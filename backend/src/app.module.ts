@@ -24,6 +24,7 @@ import { ConversationModule } from './entities/conversation/conversation.module'
 import { MessageModule } from './entities/message/message.module';
 import { Message } from './entities/message/entities/message.entity';
 import { Conversation } from './entities/conversation/entities/conversation.entity';
+import { RaketApplicationModule } from './entities/raket-application/raket-application.module';
 import { ProfileModule } from './profile/profile.module';
 
 @Module({
@@ -58,6 +59,7 @@ import { ProfileModule } from './profile/profile.module';
     JobHistoryModule,
     RaketistaSkillModule,
     ConversationModule,
+    RaketApplicationModule,
     MessageModule,
     ProfileModule
   ],
