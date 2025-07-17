@@ -1,4 +1,11 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateRaketApplicationDto } from './create-raket-application.dto';
+import { IsOptional, IsNumber } from 'class-validator';
 
-export class UpdateRaketApplicationDto extends PartialType(CreateRaketApplicationDto) {}
+export class UpdateRaketApplicationDto {
+  @IsOptional()
+  @IsNumber()
+  priceProposal?: number;
+
+  @IsOptional()
+  @IsNumber()
+  budget?: number;
+}
