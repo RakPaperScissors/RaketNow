@@ -1,11 +1,11 @@
+// changed some format coz deins ko gets pano naga work yung root layout HASHDHASD
+
+import React from "react";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+
+import Header from "./components/Header";
 import Footer from "./components/Footer";
-import {
-  Route,
-  createBrowserRouter,
-  createRoutesFromElements,
-  RouterProvider,
-} from "react-router-dom";
-import RootLayout from "./layout/RootLayout";
+
 import About from "./pages/About";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -13,28 +13,42 @@ import Landing from "./pages/Landing";
 import Faqs from "./pages/Faqs";
 import Home from "./pages/Home";
 
-function App() {
-  const router = createBrowserRouter(
-    createRoutesFromElements(
-      <Route path="/" element={<RootLayout />}>
-        {/* <Route index element={<Landing />} /> */}
-        <Route index element={<Landing />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/Faqs" element={<Faqs />} />
-        {/* only when api is connected na */}
-        {/* <Route path="/home" element={isLoggedIn ? <Home /> : <Navigate to="/login" />} /> */}
-        <Route path="/home" element={<Home />} />
-      </Route>
-    )
+function AppContent() {
+  const location = useLocation();
+
+  const currentPath = location.pathname;
+
+  // will see header on these pages
+  const showHeader = ["/", "/about", "/faqs", "/login", "/signup"].includes(
+    currentPath
   );
+
+  // will see footer on these pages
+  const showFooter = ["/", "/about", "/faqs"].includes(currentPath);
 
   return (
     <>
-      <RouterProvider router={router} />
-      <Footer />
+      {showHeader && <Header />}
+
+      <Routes>
+        <Route path="/" element={<Landing />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/faqs" element={<Faqs />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/home" element={<Home />} />
+      </Routes>
+
+      {showFooter && <Footer />}
     </>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AppContent />
+    </BrowserRouter>
   );
 }
 
