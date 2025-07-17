@@ -8,6 +8,8 @@ import { profile } from 'console';
 import { Raketista } from 'src/entities/raketista/entities/raketista.entity';
 import { Organization } from 'src/entities/organization/entities/organization.entity';
 
+import { CognitoIdentityProviderClient, SignUpCommand } from '@aws-sdk/client-cognito-identity-provider';
+import { last } from 'rxjs';
 
 @Injectable()
 export class AuthService {
@@ -109,5 +111,9 @@ export class AuthService {
         return { message: 'Password updated successfully'};
     }
 
+
+    // AWS COGNITO SETUP
+
+    
     
 }

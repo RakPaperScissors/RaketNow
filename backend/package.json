@@ -21,6 +21,7 @@
     "seed": "ts-node src/seed/seed-skills.ts"
   },
   "dependencies": {
+    "@aws-sdk/client-cognito-identity-provider": "^3.846.0",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.0.1",
