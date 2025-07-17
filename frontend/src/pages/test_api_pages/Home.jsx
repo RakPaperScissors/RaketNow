@@ -22,8 +22,8 @@ function Home() {
         <div style={{ border: '3px solid black', margin: '10px', padding: '16px' }}>
             <h1>
                 {isNew 
-                    ? `Welcome, ${user.name.split(" ")[0]}!` 
-                    : `Welcome back, ${user.name.split(" ")[0]}!`}
+                    ? `Welcome, ${user.firstName}!` 
+                    : `Welcome back, ${user.firstName}!`}
             </h1>
 
             <h2>

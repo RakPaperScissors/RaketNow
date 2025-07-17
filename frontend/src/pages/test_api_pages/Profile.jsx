@@ -24,8 +24,8 @@ function Profile() {
 
     return (
         <div style={{ maxWidth: 500, margin: "40px auto", border: "1px solid #ccc", padding: 24, borderRadius: 8 }}>
-            <h2>Hi, <strong>{user.name}</strong>!</h2>
-            <p><strong>Name:</strong> {user.name}</p>
+            <h2>Hi, <strong>{user.firstName}</strong>!</h2>
+            <p><strong>Name:</strong> {user.firstName + " " + user.lastName}</p>
             <p><strong>Email:</strong> {user.email}</p>
             <p><strong>Role:</strong> {user.role}</p>
             {user.role === "organization" && user.organizationName && (
