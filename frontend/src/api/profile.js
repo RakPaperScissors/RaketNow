@@ -39,7 +39,7 @@ export async function getAllSkills() {
 
 // To assign a skill to the raketista
 export async function addSkill(raketistaId, skillId, accessToken) {
-    const response = await fetch(`http://localhost:3000/raketista-skill/${raketistaSkillId}`, {
+    const response = await fetch(`http://localhost:3000/raketista-skill`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -55,7 +55,7 @@ export async function addSkill(raketistaId, skillId, accessToken) {
 
 // To remove a skill from the raketista
 export async function deleteSkill(raketistaSkillId, accessToken) {
-    const response = await fetch(`http://localhost:3000/raketista=skill/${raketistaSkillId}`, {
+    const response = await fetch(`http://localhost:3000/raketista-skill/${raketistaSkillId}`, {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json",
