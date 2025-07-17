@@ -13,9 +13,9 @@ function Home() {
     
     const filteredFeed = feed.filter((item) => 
         user.role === "raketista"
-            ?   item.title.toLowerCase().includes(search.toLowerCase())
-            :   item.name.toLowerCase().includes(search.toLowerCase()) ||
-                item.email.toLowerCase().includes(search.toLowerCase())
+            ?   item.title?.toLowerCase().includes(search.toLowerCase())
+            :   item.name?.toLowerCase().includes(search.toLowerCase()) ||
+                item.email?.toLowerCase().includes(search.toLowerCase())
     );
 
     return (
@@ -30,7 +30,7 @@ function Home() {
                 {user.role === "raketista" ? "Available Rakets" : "Raketistas"}
             </h2>
 
-            {["client", "organization"].includes(user.role) && (
+            {["client", "organization", "raketista"].includes(user.role) && (
                 <form
                 onSubmit={async (e) => {
                     e.preventDefault();
