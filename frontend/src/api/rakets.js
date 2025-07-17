@@ -14,3 +14,24 @@ export async function getRaketById(id) {
     }
     return response.json();
 }
+
+// applying to a raket
+export async function applyToRaket({ raketId, raketistaId, priceProposal, budget }, accessToken) {
+    const response = await fetch('http://localhost:3000/raket-application', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+            raketId,
+            raketistaId,
+            priceProposal,
+            budget,
+        }),
+    });
+    if (!response.ok) {
+        throw new Error('Failed to apply to raket.');
+    }
+    return response.json();
+}
