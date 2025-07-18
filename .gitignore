@@ -1,6 +1,6 @@
 #backend
-backend/node_modules/
-backend/dist/
+backend/node_modules
+backend/dist
 
 # Logs
 logs
@@ -29,3 +29,5 @@ frontend/*.local
 *.njsproj
 *.sln
 *.sw?
+
+/backend
