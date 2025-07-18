@@ -59,20 +59,21 @@ export class RaketsService {
       .leftJoinAndSelect("raket.user", "user")
       .leftJoinAndSelect("raket.pictures", "pictures")
       .select([
-        "raket.raketId",
-        "raket.title",
-        "raket.description",
-        "raket.status",
-        "raket.budget",
-        "raket.dateCreated",
-        "raket.completedAt",
-        "user.uid",
-        "user.email",
-        "user.name",
-        "user.lastActive",
-        "pictures.id",
-        "pictures.imageUrl",
-        "pictures.displayOrder",
+        'raket.raketId',
+        'raket.title',
+        'raket.description',
+        'raket.status',
+        'raket.budget',
+        'raket.dateCreated',
+        'raket.completedAt',
+        'user.uid',
+        'user.email',
+        'user.firstName',
+        'user.lastName',
+        'user.lastActive',
+        'pictures.id',
+        'pictures.imageUrl',
+        'pictures.displayOrder',
       ])
       .where("raket.raketId = :raketId", { raketId })
       .getOne();
@@ -104,53 +105,31 @@ export class RaketsService {
     };
   }
 
-  async patch(
-    raketId: number,
-    updateRaketDto: UpdateRaketDto,
-    userid: number
-  ): Promise<Raket> {
-    // Find the raket and verify ownership in one query.
+  async getEntityById(raketId: number): Promise<Raket> {
     const raket = await this.raket.findOne({
-      where: {
-        raketId: raketId,
-        user: { uid: userid },
-      },
+      where: { raketId },
+      relations: ['user', 'pictures']
     });
-
     if (!raket) {
-      throw new NotFoundException(
-        `Raket with ID ${raketId} not found or you do not have permission to edit it.`
-      );
+      throw new NotFoundException();
+    }
+    return raket;
+  }
+
+  async patch(raketId: number, updateRaketDto: UpdateRaketDto) {
+    const raket = await this.getEntityById(raketId);
+
+    if ('user' in updateRaketDto) {
+      throw new BadRequestException('Changing the user of a raket is not allowed.');
     }
 
-    // Prevent changing the owner of the raket
-    if ("user" in updateRaketDto) {
-      throw new BadRequestException(
-        "Changing the user of a raket is not allowed."
-      );
-    }
-
-    // Apply the updates and save
     Object.assign(raket, updateRaketDto);
-    return this.raket.save(raket);
+    return await this.raket.save(raket);
   }
 
-  async remove(raketId: number, userId: number): Promise<{ message: string }> {
-    // Find the raket and verify ownership.
-    const raket = await this.raket.findOne({
-      where: {
-        raketId: raketId,
-        user: { uid: userId },
-      },
-    });
-
-    if (!raket) {
-      throw new NotFoundException(
-        `Raket with ID ${raketId} not found or you do not have permission to delete it.`
-      );
-    }
-
-    await this.raket.delete(raketId);
-    return { message: "Raket deleted successfully." };
+  async remove(raketId: number) {
+    const raket = await this.getEntityById(raketId);
+    return await this.raket.remove(raket);
   }
+
 }

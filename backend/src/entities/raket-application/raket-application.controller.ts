@@ -1,15 +1,19 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UseGuards } from '@nestjs/common';
 import { RaketApplicationService } from './raket-application.service';
 import { CreateRaketApplicationDto } from './dto/create-raket-application.dto';
 import { UpdateRaketApplicationDto } from './dto/update-raket-application.dto';
+import { Request } from 'express';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('raket-application')
 export class RaketApplicationController {
   constructor(private readonly raketApplicationService: RaketApplicationService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Post()
-  create(@Body() createRaketApplicationDto: CreateRaketApplicationDto) {
-    return this.raketApplicationService.create(createRaketApplicationDto);
+  create(@Body() dto: CreateRaketApplicationDto, @Req() req: Request) {
+    const user = req.user;
+    return this.raketApplicationService.create(dto, user);
   }
 
   @Get()

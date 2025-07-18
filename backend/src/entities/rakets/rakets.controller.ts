@@ -5,6 +5,7 @@ import { UpdateRaketDto } from './dto/update-raket.dto';
 import { CurrentUser } from 'src/auth/current-user.decorator';
 import { Users } from '../user/entities/user.entity';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { ParseIntPipe } from '@nestjs/common';
 
 @Controller('rakets')
 export class RaketsController {
@@ -22,19 +23,18 @@ export class RaketsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.raketsService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.raketsService.findOne(id);
   }
-
 
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateRaketDto: UpdateRaketDto, @CurrentUser() user: Users) {
-    return this.raketsService.patch(+id, updateRaketDto, user.uid);
+    return this.raketsService.patch(+id, updateRaketDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string, @CurrentUser() user: Users) {
-    return this.raketsService.remove(+id, user.uid);
+    return this.raketsService.remove(+id);
   }
 }
