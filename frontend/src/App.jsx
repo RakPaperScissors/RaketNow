@@ -12,6 +12,7 @@ import Signup from "./pages/Signup";
 import Landing from "./pages/Landing";
 import Faqs from "./pages/Faqs";
 import Home from "./pages/Home";
+import ForYou from "./pages/ForYou";
 
 function AppContent() {
   const location = useLocation();
@@ -37,6 +38,7 @@ function AppContent() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/home" element={<Home />} />
+        <Route path="/rakets" element={<ForYou />} />
       </Routes>
 
       {showFooter && <Footer />}
