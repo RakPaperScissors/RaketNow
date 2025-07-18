@@ -16,22 +16,22 @@ export class RaketApplicationService {
     private readonly usersRepository: Repository<Users>,
   ) {}
 
-  async create(createRaketApplicationDto: CreateRaketApplicationDto) {
-    const user = await this.usersRepository.findOne({
-      where: { uid: createRaketApplicationDto.raketistaId },
+  async create(dto: CreateRaketApplicationDto, user: any) {
+    const foundUser = await this.usersRepository.findOne({
+      where: { uid: user.uid },
     });
 
-    // error handling: check if the applicant is a raketista
-    if (!user || user.role !== 'raketista') {
+    if (!foundUser || foundUser.role !== 'raketista') {
       throw new Error('Only raketistas can apply to rakets.');
     }
 
     const application = this.raketApplicationRepository.create({
-      raketista: { uid: createRaketApplicationDto.raketistaId },
-      raket: { raketId: createRaketApplicationDto.raketId },
-      priceProposal: createRaketApplicationDto.priceProposal,
-      budget: createRaketApplicationDto.budget,
+      raketista: { uid: user.uid },
+      raket: { raketId: dto.raketId },
+      priceProposal: dto.priceProposal,
+      budget: dto.budget,
     });
+
     return this.raketApplicationRepository.save(application);
   }
 

@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { RaketsService } from './rakets.service';
 import { CreateRaketDto } from './dto/create-raket.dto';
 import { UpdateRaketDto } from './dto/update-raket.dto';
+import { ParseIntPipe } from '@nestjs/common';
 
 @Controller('rakets')
 export class RaketsController {
@@ -18,9 +19,10 @@ export class RaketsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.raketsService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.raketsService.findOne(id);
   }
+
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateRaketDto: UpdateRaketDto) {

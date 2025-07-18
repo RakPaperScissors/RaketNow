@@ -67,7 +67,8 @@ export class RaketsService {
         'raket.completedAt',
         'user.uid',
         'user.email',
-        'user.name',
+        'user.firstName',
+        'user.lastName',
         'user.lastActive',
         'pictures.id',
         'pictures.imageUrl',
@@ -103,28 +104,31 @@ export class RaketsService {
     };
   }
 
-  async patch(racketId: number, updateRaketDto: UpdateRaketDto) {
-    const findRaket = await this.findOne(racketId);
-
-    if (!findRaket) {
+  async getEntityById(raketId: number): Promise<Raket> {
+    const raket = await this.raket.findOne({
+      where: { raketId },
+      relations: ['user', 'pictures']
+    });
+    if (!raket) {
       throw new NotFoundException();
     }
+    return raket;
+  }
+
+  async patch(raketId: number, updateRaketDto: UpdateRaketDto) {
+    const raket = await this.getEntityById(raketId);
 
     if ('user' in updateRaketDto) {
       throw new BadRequestException('Changing the user of a raket is not allowed.');
     }
 
-    Object.assign(findRaket, updateRaketDto);
-    return await this.raket.save(findRaket);
+    Object.assign(raket, updateRaketDto);
+    return await this.raket.save(raket);
   }
 
-  async remove(racketId: number) {
-    const findRaket = await this.findOne(racketId);
-
-    if (!findRaket) {
-      throw new NotFoundException();
-    }
-
-    return await this.raket.delete(racketId);
+  async remove(raketId: number) {
+    const raket = await this.getEntityById(raketId);
+    return await this.raket.remove(raket);
   }
+
 }

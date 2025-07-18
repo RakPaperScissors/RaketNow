@@ -17,6 +17,7 @@ const common_1 = require("@nestjs/common");
 const rakets_service_1 = require("./rakets.service");
 const create_raket_dto_1 = require("./dto/create-raket.dto");
 const update_raket_dto_1 = require("./dto/update-raket.dto");
+const common_2 = require("@nestjs/common");
 let RaketsController = class RaketsController {
     raketsService;
     constructor(raketsService) {
@@ -29,7 +30,7 @@ let RaketsController = class RaketsController {
         return this.raketsService.findAll();
     }
     findOne(id) {
-        return this.raketsService.findOne(+id);
+        return this.raketsService.findOne(id);
     }
     update(id, updateRaketDto) {
         return this.raketsService.patch(+id, updateRaketDto);
@@ -54,9 +55,9 @@ __decorate([
 ], RaketsController.prototype, "findAll", null);
 __decorate([
     (0, common_1.Get)(':id'),
-    __param(0, (0, common_1.Param)('id')),
+    __param(0, (0, common_1.Param)('id', common_2.ParseIntPipe)),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", void 0)
 ], RaketsController.prototype, "findOne", null);
 __decorate([

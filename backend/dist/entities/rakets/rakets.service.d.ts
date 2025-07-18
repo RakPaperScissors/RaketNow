@@ -50,26 +50,7 @@ export declare class RaketsService {
             displayOrder: number;
         }[];
     }>;
-    patch(racketId: number, updateRaketDto: UpdateRaketDto): Promise<{
-        raketId: number;
-        title: string;
-        description: string;
-        status: import("./entities/raket.entity").RaketStatus;
-        budget: number;
-        dateCreated: Date;
-        completedAt: Date;
-        user: {
-            uid: number;
-            email: string;
-            firstName: string;
-            lastName: string;
-            lastActive: Date;
-        };
-        pictures: {
-            id: number;
-            imageUrl: string;
-            displayOrder: number;
-        }[];
-    } & Raket>;
-    remove(racketId: number): Promise<import("typeorm").DeleteResult>;
+    getEntityById(raketId: number): Promise<Raket>;
+    patch(raketId: number, updateRaketDto: UpdateRaketDto): Promise<Raket>;
+    remove(raketId: number): Promise<Raket>;
 }

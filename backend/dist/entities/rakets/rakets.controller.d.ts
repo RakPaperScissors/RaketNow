@@ -26,7 +26,7 @@ export declare class RaketsController {
             displayOrder: number;
         }[];
     }[]>;
-    findOne(id: string): Promise<{
+    findOne(id: number): Promise<{
         raketId: number;
         title: string;
         description: string;
@@ -47,26 +47,6 @@ export declare class RaketsController {
             displayOrder: number;
         }[];
     }>;
-    update(id: string, updateRaketDto: UpdateRaketDto): Promise<{
-        raketId: number;
-        title: string;
-        description: string;
-        status: import("./entities/raket.entity").RaketStatus;
-        budget: number;
-        dateCreated: Date;
-        completedAt: Date;
-        user: {
-            uid: number;
-            email: string;
-            firstName: string;
-            lastName: string;
-            lastActive: Date;
-        };
-        pictures: {
-            id: number;
-            imageUrl: string;
-            displayOrder: number;
-        }[];
-    } & import("./entities/raket.entity").Raket>;
-    remove(id: string): Promise<import("typeorm").DeleteResult>;
+    update(id: string, updateRaketDto: UpdateRaketDto): Promise<import("./entities/raket.entity").Raket>;
+    remove(id: string): Promise<import("./entities/raket.entity").Raket>;
 }

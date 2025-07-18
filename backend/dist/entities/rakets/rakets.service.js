@@ -74,7 +74,8 @@ let RaketsService = class RaketsService {
             'raket.completedAt',
             'user.uid',
             'user.email',
-            'user.name',
+            'user.firstName',
+            'user.lastName',
             'user.lastActive',
             'pictures.id',
             'pictures.imageUrl',
@@ -107,23 +108,27 @@ let RaketsService = class RaketsService {
             })),
         };
     }
-    async patch(racketId, updateRaketDto) {
-        const findRaket = await this.findOne(racketId);
-        if (!findRaket) {
+    async getEntityById(raketId) {
+        const raket = await this.raket.findOne({
+            where: { raketId },
+            relations: ['user', 'pictures']
+        });
+        if (!raket) {
             throw new common_1.NotFoundException();
         }
+        return raket;
+    }
+    async patch(raketId, updateRaketDto) {
+        const raket = await this.getEntityById(raketId);
         if ('user' in updateRaketDto) {
             throw new common_1.BadRequestException('Changing the user of a raket is not allowed.');
         }
-        Object.assign(findRaket, updateRaketDto);
-        return await this.raket.save(findRaket);
+        Object.assign(raket, updateRaketDto);
+        return await this.raket.save(raket);
     }
-    async remove(racketId) {
-        const findRaket = await this.findOne(racketId);
-        if (!findRaket) {
-            throw new common_1.NotFoundException();
-        }
-        return await this.raket.delete(racketId);
+    async remove(raketId) {
+        const raket = await this.getEntityById(raketId);
+        return await this.raket.remove(raket);
     }
 };
 exports.RaketsService = RaketsService;
