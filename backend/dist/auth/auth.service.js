@@ -98,6 +98,14 @@ let AuthService = class AuthService {
         await this.usersRepo.save(user);
         return { message: 'Password updated successfully' };
     }
+    async verifyJwt(token) {
+        try {
+            return this.jwtService.verify(token);
+        }
+        catch (e) {
+            return null;
+        }
+    }
 };
 exports.AuthService = AuthService;
 exports.AuthService = AuthService = __decorate([
