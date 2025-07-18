@@ -17,14 +17,16 @@ const Home = () => {
         {/* Top Banner */}
         <WelcomeBanner fullName={mockUser.fullName} />
 
-        {/* Floating Search */}
-        <SearchBar />
+        {/* Search */}
+        <div className="absolute left-1/2 top-44 transform -translate-x-1/2 z-10 w-full px-4">
+          <SearchBar transparentBg />
+        </div>
 
-        {/* Main content (add padding to avoid overlap) */}
+        {/* Main content */}
         <div className="pt-28 px-8 space-y-6">
           <DashboardCardList />
         </div>
-        
+
       </div>
     </div>
   );
