@@ -89,19 +89,17 @@ export class UserService {
 
   // --- User profile and role management ---
   // 1. Update profile picture
-  async updateProfilePicture(uid: number, profilePicture: string) {
-    // Find user by uid
-    const findUser = await this.findOne(uid);
-    if(!findUser) {
-      // Throw not found exception if user is not found
-      throw new NotFoundException('User not found');
-    }
-    // Updates profile picture if user is found and save
-    findUser.profilePicture = profilePicture;
-    return await this.users.save(findUser);
+  async updateProfilePicture(userId: number, key: string) {
+    await this.users.update(userId, { profilePicture: key, });
   }
 
-  // 2. Set or Change role (admin only)
+  // 2. Get profile picture
+  async getProfilePicture(userId: number): Promise<string | null> {
+    const user = await this.users.findOneBy({ uid: userId });
+    return user?.profilePicture ?? null;
+  }
+
+  // 3. Set or Change role (admin only)
   async changeRole(uid:number, role: userRole) {
     // Find user by uid
     const findUser = await this.findOne(uid);
