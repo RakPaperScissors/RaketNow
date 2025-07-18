@@ -1,10 +1,17 @@
 import { useRaket } from "../../hooks/useRaket";
 import { useParams } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
+import { useState } from "react";
+import { useCurrentUser } from "../../hooks/useCurrentUser";
 
 function Raket() {
     const { id } = useParams();
-    const { raket, loading, error } = useRaket(id);
+    const { raket, loading, error, apply, applyLoading, applyError, applySuccess } = useRaket(id);
+    const [priceProposal, setPriceProposal] = useState("");
+    const [budget, setBudget] = useState("");
+
+    const currentUser = useCurrentUser();
+    const raketistaId = currentUser?.uid;
 
     if (error) return <div>{error}</div>;
     if (loading) return <div>Loading...</div>;
@@ -23,6 +30,31 @@ function Raket() {
                 <h2>Name: {raket.user?.name}</h2>
                 <h3>Email: {raket.user?.email}</h3>
                 <p>{raket.user?.bio}</p>
+            </div>
+
+            {/* apply to raket */}
+            <div>
+                <h2>Apply to this Raket</h2>
+                <input
+                    type="number"
+                    placeholder="Your Price Proposal"
+                    value={priceProposal}
+                    onChange={e => setPriceProposal(e.target.value)}
+                />
+                <input
+                    type="number"
+                    placeholder="Your Budget"
+                    value={budget}
+                    onChange={e => setBudget(e.target.value)}
+                />
+                <button
+                    onClick={() => apply(raketistaId, Number(priceProposal), Number(budget))}
+                    disabled={applyLoading}
+                >
+                    {applyLoading ? "Applying..." : "Apply"}
+                </button>
+                {applyError && <p style={{ color: "red" }}>{applyError}</p>}
+                {applySuccess && <p style={{ color: "green" }}>Application successful!</p>}
             </div>
         </div>
     );
