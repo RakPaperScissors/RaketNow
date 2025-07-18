@@ -11,6 +11,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Users = exports.userRole = void 0;
 const typeorm_1 = require("typeorm");
+const conversation_entity_1 = require("../../conversation/entities/conversation.entity");
+const message_entity_1 = require("../../message/entities/message.entity");
 var userRole;
 (function (userRole) {
     userRole["CLIENT"] = "client";
@@ -31,6 +33,8 @@ let Users = class Users {
     lastActive;
     createdAt;
     deletedAt;
+    conversations;
+    messages;
 };
 exports.Users = Users;
 __decorate([
@@ -81,6 +85,14 @@ __decorate([
     (0, typeorm_1.Column)({ type: 'timestamp', nullable: true }),
     __metadata("design:type", Date)
 ], Users.prototype, "deletedAt", void 0);
+__decorate([
+    (0, typeorm_1.ManyToMany)(() => conversation_entity_1.Conversation, (conversation) => conversation.participants),
+    __metadata("design:type", Array)
+], Users.prototype, "conversations", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => message_entity_1.Message, message => message.sender),
+    __metadata("design:type", Array)
+], Users.prototype, "messages", void 0);
 exports.Users = Users = __decorate([
     (0, typeorm_1.Entity)(),
     (0, typeorm_1.TableInheritance)({ column: { type: 'varchar', name: 'type' } })

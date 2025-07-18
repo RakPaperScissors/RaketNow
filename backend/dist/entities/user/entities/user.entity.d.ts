@@ -1,3 +1,5 @@
+import { Conversation } from 'src/entities/conversation/entities/conversation.entity';
+import { Message } from 'src/entities/message/entities/message.entity';
 export declare enum userRole {
     CLIENT = "client",
     RAKETISTA = "raketista",
@@ -17,4 +19,6 @@ export declare class Users {
     lastActive: Date;
     createdAt: Date;
     deletedAt: Date;
+    conversations: Conversation[];
+    messages: Message[];
 }

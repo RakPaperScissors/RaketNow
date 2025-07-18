@@ -29,9 +29,9 @@ const certification_module_1 = require("./entities/certification/certification.m
 const job_history_module_1 = require("./entities/job-history/job-history.module");
 const raketista_skill_module_1 = require("./entities/raketista-skill/raketista-skill.module");
 const raketista_skill_entity_1 = require("./entities/raketista-skill/entities/raketista-skill.entity");
-const messages_module_1 = require("./entities/messages/messages.module");
 const conversation_module_1 = require("./entities/conversation/conversation.module");
-const message_entity_1 = require("./entities/messages/entities/message.entity");
+const message_module_1 = require("./entities/message/message.module");
+const message_entity_1 = require("./entities/message/entities/message.entity");
 const conversation_entity_1 = require("./entities/conversation/entities/conversation.entity");
 let AppModule = class AppModule {
 };
@@ -64,8 +64,8 @@ exports.AppModule = AppModule = __decorate([
             certification_module_1.CertificationModule,
             job_history_module_1.JobHistoryModule,
             raketista_skill_module_1.RaketistaSkillModule,
-            messages_module_1.MessagesModule,
-            conversation_module_1.ConversationModule
+            conversation_module_1.ConversationModule,
+            message_module_1.MessageModule
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

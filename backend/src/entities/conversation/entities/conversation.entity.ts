@@ -1,32 +1,25 @@
-import { Entity, PrimaryColumn, ManyToOne, JoinColumn, CreateDateColumn, OneToMany, Check, Unique, Column } from "typeorm";
-import { Users } from "src/entities/user/entities/user.entity";
-import { Message } from "src/entities/messages/entities/message.entity";
-
-@Entity({ name: "conversations" })
-@Unique(["participant1Id", "participant2Id"])
-@Check(`"participant_1_id" < "participant_2_id"`)
+import { Message } from 'src/entities/message/entities/message.entity';
+import { Users } from 'src/entities/user/entities/user.entity';
+import { Entity, PrimaryColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToMany, JoinTable, OneToMany } from 'typeorm';
+@Entity({ name: 'conversations' })
 export class Conversation {
-  @PrimaryColumn({ type: "uuid", default: () => "uuid_generate_v4()" })
+  @PrimaryColumn({ type: 'uuid', default: () => 'uuid_generate_v4()' })
   id: string;
 
-  @Column({ name: "participant_1_id", type: "uuid" })
-  participant1Id: string;
-  @ManyToOne(() => Users, { nullable: false, onDelete: "CASCADE" })
-  @JoinColumn({ name: "participant_1_id" })
-  participant1: Users;
-
-
-  @Column({ name: "participant_2_id", type: "uuid" })
-  participant2Id: string;
-  @ManyToOne(() => Users, { nullable: false, onDelete: "CASCADE" })
-  @JoinColumn({ name: "participant_2_id" })
-  participant2: Users;
-
+  @ManyToMany(() => Users, (user) => user.conversations, { onDelete: 'CASCADE' })
+  @JoinTable({
+    name: 'conversation_participants',
+    joinColumn: { name: 'conversation_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'user_id', referencedColumnName: 'uid' },
+  })
+  participants: Users[];
 
   @OneToMany(() => Message, (message) => message.conversation)
   messages: Message[];
 
-
-  @CreateDateColumn({ name: "created_at", type: "timestamptz" })
+  @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt: Date;
+
+  @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz' })
+  updatedAt: Date;
 }

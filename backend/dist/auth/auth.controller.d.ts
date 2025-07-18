@@ -26,6 +26,8 @@ export declare class AuthController {
         profilePicture: string;
         lastActive: Date;
         createdAt: Date;
+        conversations: import("../entities/conversation/entities/conversation.entity").Conversation[];
+        messages: import("../entities/message/entities/message.entity").Message[];
     }>;
     changePassword(req: any, body: {
         oldPassword: string;

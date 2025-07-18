@@ -109,5 +109,12 @@ export class AuthService {
         return { message: 'Password updated successfully'};
     }
 
+    async verifyJwt(token: string): Promise<any> {
+        try {
+            return this.jwtService.verify(token);
+        } catch (e) {
+            return null;
+        }
+    }
     
 }
