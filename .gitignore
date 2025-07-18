@@ -30,4 +30,3 @@ frontend/*.local
 *.sln
 *.sw?
 
-/backend
