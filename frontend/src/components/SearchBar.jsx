@@ -1,9 +1,9 @@
 import React from "react";
 import { Search } from "lucide-react";
 
-const SearchBar = () => {
+const SearchBar = ({ transparentBg = false }) => {
   return (
-    <div className="absolute left-1/2 top-48 transform -translate-x-1/2 z-10 w-full px-4">
+    <div className={`w-full px-4 py-4 ${transparentBg ? "bg-transparent" : "bg-[#f9fafb]"}`}>
       <div className="mx-auto w-full max-w-xl flex rounded-md overflow-hidden border border-gray-300 bg-white">
         <input
           type="text"
