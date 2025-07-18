@@ -4,7 +4,7 @@ import { getProfile, updateBio, getAllSkills, addSkill, deleteSkill } from "../a
 export function useProfile() {
     const [user, setUser] = useState(null);
     const [message, setMessage] = useState("");
-    const [editing, setEditing] = useState(false);
+    const [isEditingProfile, setIsEditingProfile] = useState(false);
     const [bio, setBio] = useState("");
     const [allSkills, setAllSkills] = useState([]);
     const [selectedSkillId, setSelectedSkillId] = useState("");
@@ -34,7 +34,7 @@ export function useProfile() {
         try {
             await updateBio(user.uid, bio, accessToken);
             setUser((prev) => ({ ...prev, bio }));
-            setEditing(false);
+            setIsEditingProfile(false);
             setMessage("Bio updated!");
         } catch {
             setMessage("Error updating bio.");
@@ -70,12 +70,12 @@ export function useProfile() {
     return {
         user,
         bio,
-        editing,
+        isEditingProfile,
         message,
         allSkills,
         selectedSkillId,
         setSelectedSkillId,
-        setEditing,
+        setIsEditingProfile,
         setBio,
         handleBioSave,
         handleAddSkill,

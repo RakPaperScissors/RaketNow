@@ -13,24 +13,24 @@ function Home() {
     
     const filteredFeed = feed.filter((item) => 
         user.role === "raketista"
-            ?   item.title.toLowerCase().includes(search.toLowerCase())
-            :   item.name.toLowerCase().includes(search.toLowerCase()) ||
-                item.email.toLowerCase().includes(search.toLowerCase())
+            ?   item.title?.toLowerCase().includes(search.toLowerCase())
+            :   item.name?.toLowerCase().includes(search.toLowerCase()) ||
+                item.email?.toLowerCase().includes(search.toLowerCase())
     );
 
     return (
         <div style={{ border: '3px solid black', margin: '10px', padding: '16px' }}>
             <h1>
                 {isNew 
-                    ? `Welcome, ${user.name.split(" ")[0]}!` 
-                    : `Welcome back, ${user.name.split(" ")[0]}!`}
+                    ? `Welcome, ${user.firstName}!` 
+                    : `Welcome back, ${user.firstName}!`}
             </h1>
 
             <h2>
                 {user.role === "raketista" ? "Available Rakets" : "Raketistas"}
             </h2>
 
-            {["client", "organization"].includes(user.role) && (
+            {["client", "organization", "raketista"].includes(user.role) && (
                 <form
                 onSubmit={async (e) => {
                     e.preventDefault();
