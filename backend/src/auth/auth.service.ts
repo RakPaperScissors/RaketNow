@@ -84,8 +84,13 @@ export class AuthService {
             throw new UnauthorizedException('User not found');
         }
         // Exclude some fields from the GET profile
-        const {password, providerId, authProvider, deletedAt, ...profile} = user;
-        return profile;
+        const {password, providerId, authProvider, deletedAt, ...rest} = user;
+        return { 
+            ...rest, 
+            profilePicture: user.profilePicture 
+                ? `http://localhost:9000/user-profile-pictures/${user.profilePicture}`
+                : null
+        };
     }
 
     // 4. AUTH FUNCTION - Change password for logged in user
