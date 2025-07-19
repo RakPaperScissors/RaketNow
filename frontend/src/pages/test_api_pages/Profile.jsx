@@ -37,11 +37,11 @@ function Profile() {
             <p>Joined {user.createdAt ? format(new Date(user.createdAt), "MMMM yyyy") : ""}</p>
             <p><strong>Last Active:</strong> {user.lastActive ? new Date(user.lastActive).toLocaleString() : "N/A"}</p>
 
-            <img
-                src={user.profilePicture}
-                alt="Profile"
-                className="w-16 h-16 rounded-full"
-            />
+            {user.profilePicture && (
+                <div>
+                    <img src={user.profilePicture} alt="Profile" style={{ width: 100, borderRadius: "50%" }} />
+                </div>
+            )}
 
             {/* BIO SECTION */}
             <div style={{ marginTop: 16 }}>
