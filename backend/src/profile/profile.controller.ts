@@ -55,7 +55,7 @@ export class ProfileController {
         
         return {
             message: 'Profile picture uploaded successfully.',
-            imageUrl: `http://localhost:9000/profile-pictures/${newKey}`,
+            imageUrl: `http://localhost:9000/user-profile-pictures/${newKey}`,
             imageKey: newKey,
             user: [
                 userId,
@@ -71,7 +71,7 @@ export class ProfileController {
         const user = await this.userService.findOne(req.user.uid);
         return {
             profilePicture: user?.profilePicture
-                ? `http://localhost:3000/uploads/${user.profilePicture}`
+                ? `http://localhost:9000/user-profile-pictures/${user.profilePicture}`
                 : 'default.png',
         };
     }
