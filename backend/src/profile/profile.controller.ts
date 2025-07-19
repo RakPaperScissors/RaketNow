@@ -1,10 +1,11 @@
-import { Controller, Post, UploadedFile, UseInterceptors, Inject, Req } from '@nestjs/common';
+import { Controller, Post, UploadedFile, UseInterceptors, Inject, Req, UseGuards } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { S3 } from 'aws-sdk';
 import { v4 as uuid } from 'uuid';
 import { Express } from 'express';
 import { UserService } from 'src/entities/user/user.service';
 import { Request } from 'express';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('profile')
 export class ProfileController {
@@ -13,10 +14,12 @@ export class ProfileController {
         private readonly userService: UserService
     ) {}
 
+    @UseGuards(AuthGuard('jwt'))
     @Post('upload')
     @UseInterceptors(FileInterceptor('file'))
     async uploadProfilePicture(@UploadedFile() file: Express.Multer.File, @Req() req: Request) {
-        const userId = 10;
+        const user = req.user as { uid: number, email: string, role: string};
+        const userId = user.uid;
 
         // 1 - Get current profile picture (if any)
         const currentUser = await this.userService.findOne(userId);
@@ -53,8 +56,10 @@ export class ProfileController {
         await this.userService.updateProfilePicture(userId, newKey);
         
         return {
-        imageUrl: `http://localhost:9000/profile-pictures/${newKey}`,
-        imageKey: newKey,
+            message: 'Profile picture uploaded successfully.',
+            imageUrl: `http://localhost:9000/profile-pictures/${newKey}`,
+            imageKey: newKey,
+            user,
         };
     }
 }
