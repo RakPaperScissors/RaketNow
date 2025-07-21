@@ -15,6 +15,9 @@ function Profile() {
         handleBioSave,
         handleAddSkill,
         handleDeleteSkill,
+        selectedImageFile,
+        setSelectedImageFile,
+        handleProfilePictureUpload,
     } = useProfile();
 
 
@@ -36,14 +39,47 @@ function Profile() {
             <p>Joined {user.createdAt ? format(new Date(user.createdAt), "MMMM yyyy") : ""}</p>
             <p><strong>Last Active:</strong> {user.lastActive ? new Date(user.lastActive).toLocaleString() : "N/A"}</p>
 
-            <img
+            {/* <img
                 src={user?.profilePicture ? user.profilePicture : "http://localhost:9000/raketnow/user-profile-pictures/default_profile.jpg"}
                 alt="Profile"
                 className="w-16 h-16 rounded-full"
                 onError={(e) => {
                     e.target.src = 'http://localhost:9000/raketnow/user-profile-pictures/default_profile.jpg';
                 }}
-            />
+            /> */}
+            {/* PROFILE PICTURE SECTION */}
+            {isEditingProfile ? (
+                <div style={{ marginBottom: 16 }}>
+                    <input 
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => setSelectedImageFile(e.target.files[0])}
+                    />
+                    <img 
+                        src={
+                            selectedImageFile
+                            ? URL.createObjectURL(selectedImageFile)
+                            : user?.profilePicture || "http://localhost:9000/raketnow/user-profile-pictures/default_profile.jpg"
+                        }
+                        alt="Profile Preview"
+                        className="w-16 h-16 rounded-full mt-2"
+                    />
+                    <button
+                        onClick={handleProfilePictureUpload}
+                        style={{ marginTop: 8, backgroundColor: "green", color: "white" }}
+                        disabled={!selectedImageFile}
+                    >
+                        Upload New Picture
+                    </button>
+                </div>
+            ) : (
+                <img 
+                    src={user?.profilePicture || "http://localhost:9000/raketnow/user-profile-pictures/default_profile.jpg"}
+                    alt="Profile"
+                    className="w-16 h-16 rounded-full mt-2"
+                />
+            )}
+
 
             {/* BIO SECTION */}
             <div style={{ marginTop: 16 }}>
