@@ -21,6 +21,9 @@ export class RaketApplication {
   @Column({ type: 'decimal', precision: 10, scale: 2, default: 0, nullable:true})
   budget: number;
 
+  @Column({ type: 'varchar', length: 20, default: 'PENDING' })
+  status: string;
+
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   dateCreated: Date;
 }
