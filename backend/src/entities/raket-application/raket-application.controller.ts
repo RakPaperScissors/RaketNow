@@ -31,6 +31,17 @@ export class RaketApplicationController {
     return this.raketApplicationService.update(+id, updateRaketApplicationDto);
   }
 
+  // for accepting or rejecting applications (from client side)
+  @Patch(':id/accept')
+  accept(@Param('id') id: number) {
+    return this.raketApplicationService.accept(id);
+  }
+
+  @Patch(':id/reject')
+  reject(@Param('id') id: number) {
+    return this.raketApplicationService.reject(id);
+  }
+
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.raketApplicationService.remove(+id);

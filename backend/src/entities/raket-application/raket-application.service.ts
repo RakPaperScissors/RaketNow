@@ -65,6 +65,17 @@ export class RaketApplicationService {
     return this.findOne(id);
   }
 
+  // for accepting or rejecting application
+  async accept(id: number) {
+    await this.raketApplicationRepository.update(id, { status: 'accepted' });
+    // Optionally, create a notification for the raketista here
+  }
+
+  async reject(id: number) {
+    await this.raketApplicationRepository.update(id, { status: 'rejected' });
+    // Optionally, create a notification for the raketista here
+  }
+
   remove(id: number) {
     return this.raketApplicationRepository.delete(id);
   }
