@@ -13,6 +13,7 @@ import Landing from "./pages/Landing";
 import Faqs from "./pages/Faqs";
 import Home from "./pages/Home";
 import ForYou from "./pages/ForYou";
+import MyRakets from "./pages/MyRakets";
 
 function AppContent() {
   const location = useLocation();
@@ -39,6 +40,7 @@ function AppContent() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/home" element={<Home />} />
         <Route path="/rakets" element={<ForYou />} />
+        <Route path="/my-rakets" element={<MyRakets />} />
       </Routes>
 
       {showFooter && <Footer />}
