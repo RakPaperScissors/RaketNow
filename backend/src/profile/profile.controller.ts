@@ -28,7 +28,7 @@ export class ProfileController {
             try {
                 await this.minioClient
                     .deleteObject({
-                        Bucket: 'user-profile-pictures',
+                        Bucket: 'raketnow',
                         Key: currentImageKey,
                     })
                     .promise();
@@ -39,11 +39,11 @@ export class ProfileController {
 
         // 3 - Upload new image
         const fileExtension = file.originalname.split('.').pop();
-        const newKey = `profile-pictures/${uuid()}.${fileExtension}`;
+        const newKey = `user-profile-pictures/${uuid()}.${fileExtension}`;
 
         await this.minioClient
             .putObject({
-                Bucket: 'user-profile-pictures',
+                Bucket: 'raketnow',
                 Key: newKey,
                 Body: file.buffer,
                 ContentType: file.mimetype,
@@ -55,7 +55,7 @@ export class ProfileController {
         
         return {
             message: 'Profile picture uploaded successfully.',
-            imageUrl: `http://localhost:9000/user-profile-pictures/${newKey}`,
+            imageUrl: `http://localhost:9000/raketnow/${newKey}`,
             imageKey: newKey,
             user: [
                 userId,
@@ -71,8 +71,8 @@ export class ProfileController {
         const user = await this.userService.findOne(req.user.uid);
         return {
             profilePicture: user?.profilePicture
-                ? `http://localhost:9000/user-profile-pictures/${user.profilePicture}`
-                : 'default.png',
+                ? `http://localhost:9000/raketnow/${user.profilePicture}`
+                : 'http://localhost:9000/raketnow/user-profile-pictures/default_profile.jpg',
         };
     }
 }

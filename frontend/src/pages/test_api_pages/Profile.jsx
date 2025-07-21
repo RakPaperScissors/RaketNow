@@ -16,7 +16,6 @@ function Profile() {
         handleAddSkill,
         handleDeleteSkill,
     } = useProfile();
-    
 
 
     if (message) return <div>{message}</div>;
@@ -38,9 +37,12 @@ function Profile() {
             <p><strong>Last Active:</strong> {user.lastActive ? new Date(user.lastActive).toLocaleString() : "N/A"}</p>
 
             <img
-                src={user.profilePicture}
+                src={user?.profilePicture ? user.profilePicture : "http://localhost:9000/raketnow/user-profile-pictures/default_profile.jpg"}
                 alt="Profile"
                 className="w-16 h-16 rounded-full"
+                onError={(e) => {
+                    e.target.src = 'http://localhost:9000/raketnow/user-profile-pictures/default_profile.jpg';
+                }}
             />
 
             {/* BIO SECTION */}

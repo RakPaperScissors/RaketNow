@@ -88,7 +88,7 @@ export class AuthService {
         return { 
             ...rest, 
             profilePicture: user.profilePicture 
-                ? `http://localhost:9000/user-profile-pictures/${user.profilePicture}`
+                ? `http://localhost:9000/raketnow/${user.profilePicture}`
                 : null
         };
     }

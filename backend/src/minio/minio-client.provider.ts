@@ -5,8 +5,8 @@ export const MinioClientProvider = {
     useFactory: async () => {
         return new S3({
             endpoint: 'http://localhost:9000',
-            accessKeyId: 'minioadmin',
-            secretAccessKey: 'minioadmin123',
+            accessKeyId: 'raketnow',
+            secretAccessKey: 'raketnowadmin_2345',
             s3ForcePathStyle: true,
             signatureVersion: 'v4',
         });
