@@ -27,6 +27,9 @@ export class RaketApplication {
   @Column({ type: 'enum', enum: RaketApplicationStatus, default: RaketApplicationStatus.PENDING })
   status: RaketApplicationStatus;
 
+  @Column({ type: 'varchar', length: 20, default: 'PENDING' })
+  status: string;
+
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   dateCreated: Date;
 }
