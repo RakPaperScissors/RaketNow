@@ -3,6 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { RaketApplication } from './entities/raket-application.entity';
 import { Users } from './../user/entities/user.entity';
+import { Notification } from '../notification/entities/notification.entity';
+import { Raket } from '../rakets/entities/raket.entity';
 import { CreateRaketApplicationDto } from './dto/create-raket-application.dto';
 import { UpdateRaketApplicationDto } from './dto/update-raket-application.dto';
 
@@ -11,6 +13,12 @@ export class RaketApplicationService {
   constructor(
     @InjectRepository(RaketApplication)
     private readonly raketApplicationRepository: Repository<RaketApplication>,
+
+    @InjectRepository(Notification)
+    private readonly notificationRepository: Repository<Notification>,
+
+    @InjectRepository(Raket)
+    private readonly raketRepository: Repository<Raket>,
 
     @InjectRepository(Users)
     private readonly usersRepository: Repository<Users>,
@@ -31,6 +39,15 @@ export class RaketApplicationService {
       priceProposal: dto.priceProposal,
       budget: dto.budget,
     });
+
+    const raket = await this.raketRepository.findOne({ where: { raketId: dto.raketId }, relations: ['user'] });
+    if (raket) {
+      await this.notificationRepository.save({
+        user: { uid: raket.user.uid },
+        message: `A raketista has applied to your raket "${raket.title}".`,
+        isRead: false,
+      });
+    }
 
     return this.raketApplicationRepository.save(application);
   }
