@@ -10,6 +10,7 @@ import {
   LogOut,
   Package,
 } from "lucide-react";
+import { NavLink } from "react-router-dom";
 import SideNavItem from "./SideNavItem";
 import SideNavUser from "./SideNavUser";
 import logo from "../assets/images/raketnow-blue-logo.png";
@@ -28,7 +29,7 @@ function SideNav() {
           />
         </div>
 
-        {/* Primary links */}
+        {/* links */}
         <nav className="space-y-2">
           <SideNavItem to="/home" icon={Home} label="Home" />
           <SideNavItem to="/rakets" icon={Star} label="Rakets For You" />
@@ -39,7 +40,6 @@ function SideNav() {
 
       {/* BOTTOM SECTION */}
       <div>
-        {/* Help & settings group */}
         <div className="space-y-2 mb-4">
           <SideNavItem to="/help" icon={HelpCircle} label="Help" />
           <SideNavItem to="/settings" icon={Settings} label="Settings" />
@@ -48,14 +48,14 @@ function SideNav() {
         </div>
         <div className="border-t border-gray-200 my-4" />
 
-        {/* User info */}
-        <SideNavUser
-          name="Liarrah Lambayao"
-          role="Raketista"
-          image="https://randomuser.me/api/portraits/men/1.jpg"
-        />
+        <NavLink to="/profile">
+          <SideNavUser
+            name="Liarrah Lambayao"
+            role="Raketista"
+            image="https://randomuser.me/api/portraits/lego/6.jpg"
+          />
+        </NavLink>
 
-        {/* Logout */}
         <div className="mt-4">
           <SideNavItem to="/logout" icon={LogOut} label="Logout" />
         </div>
