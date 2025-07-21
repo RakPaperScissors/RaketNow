@@ -15,7 +15,7 @@ const DashboardCardList = () => {
           "Social Media Manager - Ongoing",
         ]}
         ctaText="View All →"
-        ctaLink="#"
+        ctaLink="/my-rakets"
       />
 
       <DashboardCard
@@ -27,7 +27,7 @@ const DashboardCardList = () => {
           "Logo Design Contest",
         ]}
         ctaText="Explore Matches →"
-        ctaLink="#"
+        ctaLink="/rakets"
       />
 
       <DashboardCard
