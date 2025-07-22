@@ -17,7 +17,7 @@ export class Users {
     @Column({ type: 'varchar', length: 255 })
     email: string;
 
-    @Column({ type: 'varchar', length: 255 })
+    @Column({ type: 'varchar', length: 255, nullable: true})
     password: string;
 
     @Column({ type: 'varchar', length: 255, nullable: true })
