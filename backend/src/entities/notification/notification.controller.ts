@@ -19,9 +19,14 @@ export class NotificationController {
         return this.notificationService.create({ ...dto, user: { uid: userId } });
     }
 
+    @UseGuards(JwtAuthGuard)
     @Get()
-    findAll() {
-        return this.notificationService.findAll();
+    findAll(@Req() req: Request) {
+      if (!req.user || !('uid' in req.user)) {
+        throw new Error('User not found in request');
+      }
+      const userId = (req.user as any).uid;
+      return this.notificationService.findAll(userId);
     }
 
     @Get(':id')

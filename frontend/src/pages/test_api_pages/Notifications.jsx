@@ -7,9 +7,7 @@ function Notifications() {
   const { notifications, loading, error } = useNotifications();
   const currentUser = useCurrentUser();
 
-  const userNotifications = notifications?.filter(
-    n => n.user?.uid === currentUser?.uid
-  );
+  const userNotifications = notifications;
   
   const handleAccept = async (id) => {
     const token = localStorage.getItem("access_token");

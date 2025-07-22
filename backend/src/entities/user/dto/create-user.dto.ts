@@ -1,4 +1,4 @@
-import { IsDate, isDate, IsEmail, IsEnum, IsOptional, IsString } from "class-validator";
+import { IsDate, IsEmail, IsEnum, IsOptional, IsString } from "class-validator";
 import { userRole } from "../entities/user.entity";
 import { Type } from "class-transformer";
 
