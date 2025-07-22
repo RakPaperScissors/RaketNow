@@ -3,13 +3,12 @@ import { useParams } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
 import { useState } from "react";
 import { useCurrentUser } from "../../hooks/useCurrentUser";
+import DebugPanel from "../../components/DebugPanel"; 
 
 function Raket() {
     const { id } = useParams();
     const { raket, loading, error, apply, applyLoading, applyError, applySuccess } = useRaket(id);
     const [priceProposal, setPriceProposal] = useState("");
-    const [budget, setBudget] = useState("");
-
     const currentUser = useCurrentUser();
     const raketistaId = currentUser?.uid;
 
@@ -18,6 +17,7 @@ function Raket() {
 
     return (
         <div>
+            <DebugPanel user={currentUser} />
             <div>
             <h2><strong>{raket.title}</strong></h2>
             <p>{raket.description}</p>
@@ -41,14 +41,8 @@ function Raket() {
                     value={priceProposal}
                     onChange={e => setPriceProposal(e.target.value)}
                 />
-                <input
-                    type="number"
-                    placeholder="Your Budget"
-                    value={budget}
-                    onChange={e => setBudget(e.target.value)}
-                />
                 <button
-                    onClick={() => apply(raketistaId, Number(priceProposal), Number(budget))}
+                    onClick={() => apply(raketistaId, Number(priceProposal))}
                     disabled={applyLoading}
                 >
                     {applyLoading ? "Applying..." : "Apply"}

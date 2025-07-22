@@ -1,26 +1,43 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Notification } from './entities/notification.entity';
 import { CreateNotificationDto } from './dto/create-notification.dto';
 import { UpdateNotificationDto } from './dto/update-notification.dto';
 
 @Injectable()
 export class NotificationService {
-  create(createNotificationDto: CreateNotificationDto) {
-    return 'This action adds a new notification';
-  }
+    constructor(
+      @InjectRepository(Notification)
+      private readonly notificationRepository: Repository<Notification>,
+    ) {}
 
-  findAll() {
-    return `This action returns all notification`;
-  }
+    async create(createNotificationDto: CreateNotificationDto) {
+      const notification = this.notificationRepository.create(createNotificationDto);
+      return this.notificationRepository.save(notification);
+    }
 
-  findOne(id: number) {
-    return `This action returns a #${id} notification`;
-  }
+    async findAll(userId?: number) {
+      if (userId) {
+        return this.notificationRepository.find({
+          where: { user: { uid: userId } },
+          order: { createdAt: 'DESC' },
+        });
+      }
+      return this.notificationRepository.find({ order: { createdAt: 'DESC' } });
+    }
 
-  update(id: number, updateNotificationDto: UpdateNotificationDto) {
-    return `This action updates a #${id} notification`;
-  }
+    async findOne(id: number) {
+      return this.notificationRepository.findOne({ where: { id } });
+    }
 
-  remove(id: number) {
-    return `This action removes a #${id} notification`;
-  }
+    async update(id: number, updateNotificationDto: UpdateNotificationDto) {
+      await this.notificationRepository.update(id, updateNotificationDto);
+      return this.findOne(id);
+    }
+
+    async remove(id: number) {
+      await this.notificationRepository.delete(id);
+      return { deleted: true };
+    }
 }

@@ -1,11 +1,14 @@
 import { useHomeFeed } from "../../hooks/useHomeFeed";
 import { format, formatDistanceToNow } from "date-fns";
 import { Link } from "react-router-dom";
+import { useCurrentUser } from "../../hooks/useCurrentUser";
+import DebugPanel from "../../components/DebugPanel";
 
 function Home() {
 
     const { user, feed, message, search, setSearch, handlePostRaket } = useHomeFeed();
-
+    const currentUser = useCurrentUser();
+    
     if (message) return <div>{message}</div>
     if (!user) return <div>Loading...</div>
 
@@ -13,17 +16,19 @@ function Home() {
     
     const filteredFeed = feed.filter((item) => 
         user.role === "raketista"
-            ?   item.title?.toLowerCase().includes(search.toLowerCase())
-            :   item.name?.toLowerCase().includes(search.toLowerCase()) ||
-                item.email?.toLowerCase().includes(search.toLowerCase())
+            ? item.title?.toLowerCase().includes(search.toLowerCase())
+            : (item.name?.toLowerCase().includes(search.toLowerCase()) ||
+            item.email?.toLowerCase().includes(search.toLowerCase()))
     );
 
     return (
         <div style={{ border: '3px solid black', margin: '10px', padding: '16px' }}>
+            {/*Debug panel here*/}
+            <DebugPanel user={currentUser} />
             <h1>
-                {isNew 
-                    ? `Welcome, ${user.firstName}!` 
-                    : `Welcome back, ${user.firstName}!`}
+                {isNew
+                    ? `Welcome, ${user.name?.split(" ")[0] || "User"}!`
+                    : `Welcome back, ${user.name?.split(" ")[0] || "User"}!`}
             </h1>
 
             <h2>

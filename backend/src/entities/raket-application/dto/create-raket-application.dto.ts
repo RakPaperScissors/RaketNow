@@ -11,7 +11,4 @@ export class CreateRaketApplicationDto {
   @IsOptional()
   priceProposal?: number;
 
-  @IsNumber()
-  @IsOptional()
-  budget?: number;
 }
