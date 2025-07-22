@@ -39,7 +39,7 @@ const DashboardCardList = () => {
           "Rank higher in search",
         ]}
         ctaText="Upgrade Now"
-        ctaLink="#"
+        ctaLink="/boost"
         isPromo={true}
         bgGradient="from-[#1e2761] via-[#94480e] to-[#ff7c2b]"
         textColor="text-white"
