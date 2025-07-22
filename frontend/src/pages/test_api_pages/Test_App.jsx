@@ -18,6 +18,9 @@ import Raket from "./pages/test_api_pages/Raket";
 import Login from "./pages/test_api_pages/Login";
 import Signup from "./pages/test_api_pages/Signup";
 import Home from "./pages/test_api_pages/Home";
+import Notifications from "./pages/test_api_pages/Notifications";
+
+
 
 function App() {
   const router = createBrowserRouter(
@@ -34,6 +37,7 @@ function App() {
         <Route path="/home" element={<Home />} />
         <Route path="/rakets" element={<Rakets />} />
         <Route path="/rakets/:id" element={<Raket />} />
+        <Route path="/notification" element={<Notifications />} />
       </Route>
     )
   );

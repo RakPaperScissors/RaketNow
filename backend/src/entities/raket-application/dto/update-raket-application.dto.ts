@@ -1,4 +1,4 @@
-import { IsOptional, IsNumber } from 'class-validator';
+import { IsOptional, IsNumber, IsString } from 'class-validator';
 
 export class UpdateRaketApplicationDto {
   @IsOptional()
@@ -6,6 +6,6 @@ export class UpdateRaketApplicationDto {
   priceProposal?: number;
 
   @IsOptional()
-  @IsNumber()
-  budget?: number;
+  @IsString()
+  status?: string;
 }

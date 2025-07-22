@@ -18,9 +18,6 @@ export class RaketApplication {
   @Column({ type: 'decimal', precision: 10, scale: 2, default: 0, nullable: true})
   priceProposal: number;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0, nullable:true})
-  budget: number;
-
   @Column({ type: 'varchar', length: 20, default: 'PENDING' })
   status: string;
 

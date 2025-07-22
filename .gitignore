@@ -31,3 +31,4 @@ frontend/*.local
 *.sln
 *.sw?
 
+.env
