@@ -15,7 +15,7 @@ const DashboardCardList = () => {
           "Social Media Manager - Ongoing",
         ]}
         ctaText="View All →"
-        ctaLink="#"
+        ctaLink="/my-rakets"
       />
 
       <DashboardCard
@@ -27,7 +27,7 @@ const DashboardCardList = () => {
           "Logo Design Contest",
         ]}
         ctaText="Explore Matches →"
-        ctaLink="#"
+        ctaLink="/rakets"
       />
 
       <DashboardCard
@@ -39,7 +39,7 @@ const DashboardCardList = () => {
           "Rank higher in search",
         ]}
         ctaText="Upgrade Now"
-        ctaLink="#"
+        ctaLink="/boost"
         isPromo={true}
         bgGradient="from-[#1e2761] via-[#94480e] to-[#ff7c2b]"
         textColor="text-white"

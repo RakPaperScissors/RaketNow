@@ -13,7 +13,8 @@ import Landing from "./pages/Landing";
 import Faqs from "./pages/Faqs";
 import Home from "./pages/Home";
 import ForYou from "./pages/ForYou";
-import ProfilePage from "./pages/ProfilePage";
+import MyRakets from "./pages/MyRakets";
+import Boost from "./pages/Boost";
 
 function AppContent() {
   const location = useLocation();
@@ -33,17 +34,15 @@ function AppContent() {
       {showHeader && <Header />}
 
       <Routes>
-        {/* public pages -- LANDING */}
         <Route path="/" element={<Landing />} />
         <Route path="/about" element={<About />} />
         <Route path="/faqs" element={<Faqs />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-
-        {/* authenticated pages -- AFTER LOG IN */}
         <Route path="/home" element={<Home />} />
         <Route path="/rakets" element={<ForYou />} />
-        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/my-rakets" element={<MyRakets />} />
+        <Route path="/boost" element={<Boost />} />
       </Routes>
 
       {showFooter && <Footer />}
