@@ -12,6 +12,27 @@ export async function getProfile(accessToken) {
     return await response.json();
 }
 
+// To update profile picture
+export async function uploadProfilePicture(file, accessToken) {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const response = await fetch(`http://localhost:3000/profile/upload`, {
+        method: 'POST',
+        headers: {
+            Authorization: `Bearer ${accessToken}`,
+        },
+        body: formData,
+        credentials: "include",
+    });
+
+    if (!response.ok) {
+        throw new Error("Failed to upload profile picture.");
+    }
+
+    return await response.json();
+}
+
 // To update raketista bio
 export async function updateBio(uid, bio, accessToken) {
     const response = await fetch(`http://localhost:3000/user/${uid}`, {
