@@ -140,15 +140,6 @@ export class AuthService {
     }
   }
 
-  async validateGoogleUser(googleUser: CreateUserDto) {
-    const user = await this.userService.searchByEmail(googleUser.email);
-    if (user) {
-      return user;
-    } else {
-      return await this.userService.createUser(googleUser);
-    }
-  }
-
   async validateUser(email: string, password: string) {
     const user = await this.usersRepo.findOne({ where: { email } });
     if (!user) throw new UnauthorizedException("User not found!");
@@ -159,56 +150,49 @@ export class AuthService {
     return { id: user.uid };
   }
 
-async loginWithGoogle(googleProfile: {
-  id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  profilePicture?: string;
-}) {
-  let user = await this.usersRepo.findOne({
-    where: { providerId: googleProfile.id, authProvider: 'google' },
-  });
-
-  if (!user) {
-    user = await this.usersRepo.findOne({
-      where: { email: googleProfile.email },
+  async validateAndLinkGoogleUser(googleProfile: {
+    id: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    profilePicture?: string;
+  }): Promise<Users> {
+    let user = await this.usersRepo.findOne({
+      where: { providerId: googleProfile.id, authProvider: 'google' },
     });
 
-    if (user) {
-      user.providerId = googleProfile.id;
-      user.authProvider = 'google';
-      await this.usersRepo.save(user);
+    if (!user) {
+      user = await this.usersRepo.findOne({
+        where: { email: googleProfile.email },
+      });
+      if (user) {
+        user.providerId = googleProfile.id;
+        user.authProvider = 'google';
+        await this.usersRepo.save(user);
+      }
     }
+
+    if (!user) {
+      user = await this.register({
+        email: googleProfile.email,
+        firstName: googleProfile.firstName,
+        lastName: googleProfile.lastName,
+        authProvider: 'google',
+        providerId: googleProfile.id,
+        profilePicture: googleProfile.profilePicture,
+        role: userRole.CLIENT,
+        createdAt: new Date(),
+      });
+    }
+    return user; // Return the user entity
   }
-
-  if (!user) {
-    user = await this.register({
-      email: googleProfile.email,
-      firstName: googleProfile.firstName,
-      lastName: googleProfile.lastName,
-      authProvider: 'google',
-      providerId: googleProfile.id,
-      profilePicture: googleProfile.profilePicture,
-      role: userRole.CLIENT,
-      createdAt: new Date(),
-    });
-  }
-
-  const payload = { sub: user.uid, email: user.email, role: user.role };
-  const accessToken = this.jwtService.sign(payload);
-
-  return { accessToken };
-}
-  async generateTokens(userId: number) {
-    const payload: AuthJwtPayload = { sub: userId };
-    const [accessToken, refreshToken] = await Promise.all([
-      this.jwtService.signAsync(payload),
-      this.jwtService.signAsync(payload, this.refreshTokenConfig),
-    ]);
+  
+  // Keep your `login` method, but let it accept a user object
+  // This will now be used by both local and google login flows.
+  async generateJwtToken(user: Users) {
+    const payload = { sub: user.uid, email: user.email, role: user.role };
     return {
-      accessToken,
-      refreshToken,
+      accessToken: this.jwtService.sign(payload)
     };
   }
 }
