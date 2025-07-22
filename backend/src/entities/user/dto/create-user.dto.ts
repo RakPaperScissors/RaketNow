@@ -1,30 +1,44 @@
-import { IsDate, isDate, IsEmail } from "class-validator";
+import { IsDate, isDate, IsEmail, IsEnum, IsOptional, IsString } from "class-validator";
 import { userRole } from "../entities/user.entity";
 
 export class CreateUserDto {
     @IsEmail()
     email: string
 
-    password: string
+    @IsOptional()
+    @IsString()
+    password?: string
     
+    @IsString()
     firstName: string;
 
+    @IsString()
     lastName: string;
 
-    role: userRole
+    @IsOptional()
+    @IsEnum(userRole)
+    role?: userRole
 
-    authProvider: string
+    @IsOptional()
+    @IsString()
+    authProvider?: string
 
-    providerId: string
+    @IsOptional()
+    @IsString()
+    providerId?: string
 
-    profilePicture: string
+    @IsOptional()
+    @IsString()
+    profilePicture?: string
 
     @IsDate()
-    lastActive: Date
+    @IsOptional()
+    lastActive?: Date
 
     @IsDate()
     createdAt: Date
 
+    @IsOptional()
     @IsDate()
-    deletedAt: Date
+    deletedAt?: Date
 }
