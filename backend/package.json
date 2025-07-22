@@ -21,9 +21,10 @@
     "seed": "ts-node src/seed/seed-skills.ts"
   },
   "dependencies": {
-    "@nestjs/common": "^11.0.1",
+    "@aws-sdk/client-s3": "^3.848.0",
+    "@nestjs/common": "^11.1.5",
     "@nestjs/config": "^4.0.2",
-    "@nestjs/core": "^11.0.1",
+    "@nestjs/core": "^11.1.5",
     "@nestjs/jwt": "^11.0.0",
     "@nestjs/mapped-types": "*",
     "@nestjs/passport": "^11.0.5",
@@ -37,6 +38,7 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.2",
     "dotenv": "^16.5.0",
+    "minio": "^8.0.5",
     "multer": "^2.0.2",
     "multer-s3": "^3.0.1",
     "passport": "^0.7.0",
@@ -45,7 +47,7 @@
     "passport-local": "^1.0.0",
     "pg": "^8.16.0",
     "reflect-metadata": "^0.2.2",
-    "rxjs": "^7.8.1",
+    "rxjs": "^7.8.2",
     "socket.io": "^4.8.1",
     "typeorm": "^0.3.24"
   },
