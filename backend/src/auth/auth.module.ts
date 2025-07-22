@@ -7,6 +7,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Users } from '../entities/user/entities/user.entity';
 import { JwtStrategy } from './jwt.strategy';
 import { jwtConstants } from './constant';
+import { ConfigModule } from '@nestjs/config';
+import { GoogleStrategy } from './google.strategy';
+import googleOathConfig from './google-oath.config';
+import { UserService } from 'src/entities/user/user.service';
+import refreshJwtConfig from './refresh-jwt.config';
+
+
 
 @Module({
   imports: [
@@ -14,10 +21,12 @@ import { jwtConstants } from './constant';
     PassportModule,
     JwtModule.register({
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '1h' },
+      signOptions: { expiresIn: jwtConstants.expiresIn },
     }),
+    ConfigModule.forFeature(googleOathConfig),
+    ConfigModule.forFeature(refreshJwtConfig),
   ],
-  providers: [AuthService, JwtStrategy],
+  providers: [AuthService, JwtStrategy, GoogleStrategy, UserService],
   controllers: [AuthController],
   exports: [AuthService],
 })
