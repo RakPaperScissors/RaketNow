@@ -1,7 +1,7 @@
 import { Controller, Post, Body, Get, UseGuards, Request, Patch, Req, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
-import { userRole } from 'src/entities/user/entities/user.entity';
+import { userRole, Users } from 'src/entities/user/entities/user.entity';
 import { Public } from 'src/common/decorators/public.decorator';
 import { GoogleAuthGuard } from 'src/common/google-auth/google-auth.guard';
 import { CreateUserDto } from 'src/entities/user/dto/create-user.dto';
@@ -47,13 +47,10 @@ export class AuthController {
     @UseGuards(GoogleAuthGuard)
     @Get('google/callback')
     async googleCallback(@Req() req, @Res() res) {
-        const tokenResponse = await this.authService.loginWithGoogle({
-            id: req.user.id,
-            email: req.user.email,
-            firstName: req.user.firstName,
-            lastName: req.user.lastName,
-            profilePicture: req.user.profilePicture,
-        });
+        const user = req.user as Users;
+
+        // Call the service method to generate a JWT for this user.
+        const tokenResponse = await this.authService.generateJwtToken(user);
         res.redirect(`http://localhost:3000/auth/callback?token=${tokenResponse.accessToken}`);
     }
 }

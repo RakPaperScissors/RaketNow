@@ -31,18 +31,15 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     profile: Profile,
     done: VerifyCallback,
   ) {
-    const email = profile.emails?.[0]?.value ?? '';
-    if (!email) {
-      return done(new Error('Could not retrieve email from Google.'));
-    }
-    const googleProfile = {
-      id: profile.id,
-      email: email,
-      firstName: profile.name?.givenName ?? '',
-      lastName: profile.name?.familyName ?? '',
-      profilePicture: profile.photos?.[0]?.value,
+      const googleProfile = {
+        id: profile.id,
+        email: profile.emails?.[0]?.value ?? '',
+        firstName: profile.name?.givenName ?? '',
+        lastName: profile.name?.familyName ?? '',
+        profilePicture: profile.photos?.[0]?.value,
     };
-    const tokenResponse = await this.authService.loginWithGoogle(googleProfile);
-    done(null, tokenResponse);
+
+    const user = await this.authService.validateAndLinkGoogleUser(googleProfile);
+    done(null, user);
   }
 }
