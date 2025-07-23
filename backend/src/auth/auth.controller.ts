@@ -1,7 +1,10 @@
-import { Controller, Post, Body, Get, UseGuards, Request, Patch } from '@nestjs/common';
+import { Controller, Post, Body, Get, UseGuards, Request, Patch, Req, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
-import { userRole } from 'src/entities/user/entities/user.entity';
+import { userRole, Users } from 'src/entities/user/entities/user.entity';
+import { Public } from 'src/common/decorators/public.decorator';
+import { GoogleAuthGuard } from 'src/common/google-auth/google-auth.guard';
+import { CreateUserDto } from 'src/entities/user/dto/create-user.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -9,8 +12,8 @@ export class AuthController {
 
     // POSTs new user
     @Post('register')
-    async register(@Body() body: { email: string; password: string; firstName: string; lastName: string; role?: userRole, orgName?: string }) {
-        return this.authService.register(body.email, body.password, body.firstName, body.lastName, body.role, body.orgName);
+    async register(@Body() createUserDto: CreateUserDto) {
+        return this.authService.register(createUserDto);
     }
 
     // POSTs existing user
@@ -31,5 +34,23 @@ export class AuthController {
     @Patch('change-password')
     async changePassword(@Request() req, @Body() body: { oldPassword: string, newPassword: string } ) {
         return this.authService.changePassword(req.user.uid, body.oldPassword, body.newPassword);
+    }
+
+    @Public()
+    @UseGuards(GoogleAuthGuard)
+    @Get('google/login')
+    googleLogin(){
+        
+    }
+
+    @Public()
+    @UseGuards(GoogleAuthGuard)
+    @Get('google/callback')
+    async googleCallback(@Req() req, @Res() res) {
+        const user = req.user as Users;
+
+        // Call the service method to generate a JWT for this user.
+        const tokenResponse = await this.authService.generateJwtToken(user);
+        res.redirect(`http://localhost:3000/auth/callback?token=${tokenResponse.accessToken}`);
     }
 }

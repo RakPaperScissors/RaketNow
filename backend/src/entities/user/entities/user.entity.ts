@@ -1,4 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, TableInheritance, OneToMany, ManyToMany, ManyToOne } from 'typeorm';
+import { Conversation } from 'src/entities/conversation/entities/conversation.entity';
+import { Message } from 'src/entities/message/entities/message.entity';
 export enum userRole {
     CLIENT = 'client',
     RAKETISTA = 'raketista',
@@ -15,7 +17,7 @@ export class Users {
     @Column({ type: 'varchar', length: 255 })
     email: string;
 
-    @Column({ type: 'varchar', length: 255 })
+    @Column({ type: 'varchar', length: 255, nullable: true})
     password: string;
 
     @Column({ type: 'varchar', length: 255, nullable: true })
@@ -49,4 +51,10 @@ export class Users {
 
     @Column({ type: 'timestamp', nullable: true })
     deletedAt: Date;
+
+    @ManyToMany(() => Conversation, (conversation) => conversation.participants)
+    conversations: Conversation[];
+
+    @OneToMany(() => Message, message => message.sender)
+    messages: Message[];
 }

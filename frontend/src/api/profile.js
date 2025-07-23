@@ -12,6 +12,27 @@ export async function getProfile(accessToken) {
     return await response.json();
 }
 
+// To update profile picture
+export async function uploadProfilePicture(file, accessToken) {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const response = await fetch(`http://localhost:3000/profile/upload`, {
+        method: 'POST',
+        headers: {
+            Authorization: `Bearer ${accessToken}`,
+        },
+        body: formData,
+        credentials: "include",
+    });
+
+    if (!response.ok) {
+        throw new Error("Failed to upload profile picture.");
+    }
+
+    return await response.json();
+}
+
 // To update raketista bio
 export async function updateBio(uid, bio, accessToken) {
     const response = await fetch(`http://localhost:3000/user/${uid}`, {
@@ -39,7 +60,7 @@ export async function getAllSkills() {
 
 // To assign a skill to the raketista
 export async function addSkill(raketistaId, skillId, accessToken) {
-    const response = await fetch(`http://localhost:3000/raketista-skill/${raketistaSkillId}`, {
+    const response = await fetch(`http://localhost:3000/raketista-skill`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -55,7 +76,7 @@ export async function addSkill(raketistaId, skillId, accessToken) {
 
 // To remove a skill from the raketista
 export async function deleteSkill(raketistaSkillId, accessToken) {
-    const response = await fetch(`http://localhost:3000/raketista=skill/${raketistaSkillId}`, {
+    const response = await fetch(`http://localhost:3000/raketista-skill/${raketistaSkillId}`, {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json",

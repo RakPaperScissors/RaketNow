@@ -20,14 +20,15 @@ import { CertificationModule } from './entities/certification/certification.modu
 import { JobHistoryModule } from './entities/job-history/job-history.module';
 import { RaketistaSkillModule } from './entities/raketista-skill/raketista-skill.module';
 import { RaketistaSkill } from './entities/raketista-skill/entities/raketista-skill.entity';
-import { MessagesModule } from './entities/messages/messages.module';
 import { ConversationModule } from './entities/conversation/conversation.module';
-import { Message } from './entities/messages/entities/message.entity';
+import { MessageModule } from './entities/message/message.module';
+import { Message } from './entities/message/entities/message.entity';
 import { Conversation } from './entities/conversation/entities/conversation.entity';
+import { ProfileModule } from './profile/profile.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({isGlobal: true}),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST,
@@ -56,8 +57,9 @@ import { Conversation } from './entities/conversation/entities/conversation.enti
     CertificationModule,
     JobHistoryModule,
     RaketistaSkillModule,
-    MessagesModule,
-    ConversationModule
+    ConversationModule,
+    MessageModule,
+    ProfileModule
   ],
   controllers: [AppController],
   providers: [AppService],

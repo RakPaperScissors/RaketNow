@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
-import { getProfile, updateBio, getAllSkills, addSkill, deleteSkill } from "../api/profile";
+import { getProfile, uploadProfilePicture, updateBio, getAllSkills, addSkill, deleteSkill } from "../api/profile";
 
 export function useProfile() {
     const [user, setUser] = useState(null);
     const [message, setMessage] = useState("");
-    const [editing, setEditing] = useState(false);
+    const [isEditingProfile, setIsEditingProfile] = useState(false);
     const [bio, setBio] = useState("");
     const [allSkills, setAllSkills] = useState([]);
     const [selectedSkillId, setSelectedSkillId] = useState("");
+    const [selectedImageFile, setSelectedImageFile] = useState(null);
 
     const accessToken = localStorage.getItem("access_token");
 
@@ -29,12 +30,29 @@ export function useProfile() {
             .catch(() => setMessage("Failed to load skills."));
     }, []);
 
+    const handleProfilePictureUpload = async () => {
+        try {
+            if (!selectedImageFile) return;
+
+            const data = await uploadProfilePicture(selectedImageFile, accessToken);
+            setUser((prev) => ({
+                ...prev,
+                profilePicture: data.imageUrl,
+            }));
+            setSelectedImageFile(null);
+            setMessage("Profile picture uploaded successfully.");
+        } catch (err) {
+            setMessage(err.message || "Error updating profile picture.");
+        }
+
+    }
+
     const handleBioSave = async () => {
         setMessage("");
         try {
             await updateBio(user.uid, bio, accessToken);
             setUser((prev) => ({ ...prev, bio }));
-            setEditing(false);
+            setIsEditingProfile(false);
             setMessage("Bio updated!");
         } catch {
             setMessage("Error updating bio.");
@@ -70,15 +88,18 @@ export function useProfile() {
     return {
         user,
         bio,
-        editing,
+        isEditingProfile,
         message,
         allSkills,
         selectedSkillId,
         setSelectedSkillId,
-        setEditing,
+        setIsEditingProfile,
         setBio,
         handleBioSave,
         handleAddSkill,
         handleDeleteSkill,
+        selectedImageFile,
+        setSelectedImageFile,
+        handleProfilePictureUpload,
     };
 }
