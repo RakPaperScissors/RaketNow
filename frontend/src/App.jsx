@@ -15,6 +15,7 @@ import Home from "./pages/Home";
 import ForYou from "./pages/ForYou";
 import MyRakets from "./pages/MyRakets";
 import Boost from "./pages/Boost";
+import Message from "./pages/Message";
 
 function AppContent() {
   const location = useLocation();
@@ -43,6 +44,7 @@ function AppContent() {
         <Route path="/rakets" element={<ForYou />} />
         <Route path="/my-rakets" element={<MyRakets />} />
         <Route path="/boost" element={<Boost />} />
+        <Route path="/message" element={<Message />} />
       </Routes>
 
       {showFooter && <Footer />}
