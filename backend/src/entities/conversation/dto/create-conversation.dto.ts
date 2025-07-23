@@ -1,7 +1,7 @@
-import { IsArray, IsUUID, ArrayMinSize } from 'class-validator';
+import { IsArray, ArrayMinSize, IsInt } from 'class-validator';
 export class CreateConversationDto {
   @IsArray()
   @ArrayMinSize(1) 
-  @IsUUID('4', { each: true })
-  participantIds: string[];
+  @IsInt({ each: true })
+  participantIds: number[];
 }
