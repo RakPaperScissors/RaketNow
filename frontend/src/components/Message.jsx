@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { SendHorizontal, Image as ImageIcon, ArrowLeft } from "lucide-react";
 
+
 const messagesData = [
   {
     id: 1,
