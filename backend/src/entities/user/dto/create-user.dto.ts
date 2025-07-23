@@ -41,4 +41,8 @@ export class CreateUserDto {
     @IsOptional()
     @IsDate()
     deletedAt?: Date
+
+    @IsString()
+    @IsOptional()
+    organizationName?: string
 }
