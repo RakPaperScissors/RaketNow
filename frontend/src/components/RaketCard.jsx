@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
-import { MessageCircle } from "lucide-react";
+import { Send } from "lucide-react";
 import { useNavigate } from "react-router-dom"; // React Router navigation
 
 const categoryColors = {
@@ -157,8 +157,8 @@ const RaketCard = ({
                                 onClick={() => redirectToChat(user)}
                                 className="flex items-center gap-1 text-[#0C2C57] hover:text-orange-500 transition"
                             >
-                                <MessageCircle size={18} />
-                                <span className="text-xs font-medium">Message Client</span>
+                                <Send size={18} />
+                                <span className="text-xs font-medium"> Apply Raket</span>
                             </button>
                         )}
                     </div>
