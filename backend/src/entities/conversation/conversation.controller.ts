@@ -12,13 +12,16 @@ export class ConversationController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  create(@Body() createConversationDto: CreateConversationDto) {
-    return this.conversationService.create(createConversationDto);
+  create(
+    @Body() createConversationDto: CreateConversationDto,
+    @CurrentUser() creator: Users,
+  ) {
+    return this.conversationService.create(createConversationDto, creator.uid);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get()
   getConversationsForUser(@CurrentUser() user: Users) {
-    return this.conversationService.getConversationsForUser(String(user.uid));
+    return this.conversationService.getConversationsForUser((user.uid));
   }
 }
