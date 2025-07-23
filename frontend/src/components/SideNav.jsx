@@ -4,7 +4,6 @@ import {
   Star,
   TrendingUp,
   HelpCircle,
-  Settings,
   Bell,
   MessageSquare,
   LogOut,
@@ -32,8 +31,12 @@ function SideNav() {
         {/* links */}
         <nav className="space-y-2">
           <SideNavItem to="/home" icon={Home} label="Home" />
-          <SideNavItem to="/rakets" icon={Star} label="Rakets For You" />
-          <SideNavItem to="/my-rakets" icon={Package} label="My Rakets" />
+          <SideNavItem to="/rakets" icon={Star} label="For You" />
+          <SideNavItem
+            to="/my-rakets"
+            icon={Package}
+            label="Current Rakets Rakets"
+          />
           <SideNavItem to="/boost" icon={TrendingUp} label="Boost Post" />
         </nav>
       </div>
@@ -42,7 +45,6 @@ function SideNav() {
       <div>
         <div className="space-y-2 mb-4">
           <SideNavItem to="/help" icon={HelpCircle} label="Help" />
-          <SideNavItem to="/settings" icon={Settings} label="Settings" />
           <SideNavItem to="/notifications" icon={Bell} label="Notifications" />
           <SideNavItem to="/messages" icon={MessageSquare} label="Messages" />
         </div>
