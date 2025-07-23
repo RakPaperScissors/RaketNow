@@ -44,7 +44,7 @@ function AppContent() {
         <Route path="/rakets" element={<ForYou />} />
         <Route path="/my-rakets" element={<MyRakets />} />
         <Route path="/boost" element={<Boost />} />
-        <Route path="/message" element={<Message />} />
+        <Route path="/messages" element={<Message />} />
       </Routes>
 
       {showFooter && <Footer />}

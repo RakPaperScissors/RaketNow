@@ -25,10 +25,11 @@ const messagesData = [
 ];
 
 export default function Messaging() {
+  const [messages, setMessages] = useState(messagesData);
   const [selected, setSelected] = useState(null);
   const [search, setSearch] = useState("");
   const [message, setMessage] = useState("");
-  const [showChatPanel, setShowChatPanel] = useState(false); // 👈 Mobile-only logic
+  const [showChatPanel, setShowChatPanel] = useState(false);
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -42,8 +43,27 @@ export default function Messaging() {
   const handleSelectMessage = (msg) => {
     setSelected(msg);
     if (window.innerWidth < 768) {
-      setShowChatPanel(true); // Show chat panel only on mobile
+      setShowChatPanel(true);
     }
+  };
+
+  const handleSendMessage = () => {
+    if (!message.trim()) return;
+    const updatedMessages = messages.map((m) =>
+      m.id === selected.id
+        ? {
+            ...m,
+            replies: [
+              ...m.replies,
+              { id: Date.now(), fromMe: true, text: message },
+            ],
+          }
+        : m
+    );
+    setMessages(updatedMessages);
+    setSelected(updatedMessages.find((m) => m.id === selected.id));
+    setMessage("");
+    scrollToBottom();
   };
 
   return (
@@ -63,7 +83,7 @@ export default function Messaging() {
           className="w-full mb-4 px-4 py-2 rounded-full border border-gray-200 focus:outline-none focus:ring-1 focus:ring-gray-300"
         />
         <div className="overflow-y-auto flex-1">
-          {messagesData
+          {messages
             .filter((msg) =>
               msg.name.toLowerCase().includes(search.toLowerCase())
             )
@@ -153,19 +173,7 @@ export default function Messaging() {
             />
             <button
               className="bg-[#FF7C2B] hover:bg-orange-600 text-white p-2 rounded-full"
-              onClick={() => {
-                if (!message.trim()) return;
-                const updated = {
-                  ...selected,
-                  replies: [
-                    ...selected.replies,
-                    { id: Date.now(), fromMe: true, text: message },
-                  ],
-                };
-                setSelected(updated);
-                setMessage("");
-                scrollToBottom();
-              }}
+              onClick={handleSendMessage}
             >
               <SendHorizontal size={20} />
             </button>
