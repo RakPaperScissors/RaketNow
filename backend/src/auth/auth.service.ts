@@ -59,11 +59,33 @@ export class AuthService {
     const role = createUserDto.role || userRole.CLIENT;
 
     if (role === userRole.RAKETISTA) {
-      userEntity = new Raketista();
+      const raketista = new Raketista();
+      raketista.email = email;
+      raketista.password = hashed;
+      raketista.firstName = firstName;
+      raketista.lastName = lastName;
+      raketista.role = role;
+      raketista.roles = [raketista.role];
+      userEntity = raketista;
     } else if (role === userRole.ORGANIZATION) {
-      userEntity = new Organization();
+      const org = new Organization();
+      org.email = email;
+      org.password = hashed;
+      org.firstName = firstName;
+      org.lastName = lastName;
+      org.role = role;
+      org.roles = [org.role];
+      org.orgName = organizationName || '';
+      userEntity = org;
     } else {
-      userEntity = new Users();
+      const client = new Users();
+      client.email = email;
+      client.password = hashed;
+      client.firstName = firstName;
+      client.lastName = lastName;
+      client.role = role;
+      client.roles = [client.role];
+      userEntity = client
     }
 
     Object.assign(userEntity, userToCreate);

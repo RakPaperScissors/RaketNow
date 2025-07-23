@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Query, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Query, Delete, ParseIntPipe } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -76,6 +76,9 @@ export class UserController {
     return this.userService.filterByRole(role);
   }
 
+  // --------------------------------------------------------------------------------------------------------
+
+  // --- Additional User Functions ---
   // PATCHes user's role by uid
   @Roles('admin')
   @Patch('change-role/:uid')
@@ -88,5 +91,10 @@ export class UserController {
   @Patch('update-profile-pic/:uid')
   updateProfilePicture(@Param('uid') uid: number, @Body('profilePicture') profilePicture: string) {
     return this.userService.updateProfilePicture(uid, profilePicture);
+  }
+
+  @Patch(':id/add-role')
+  async addRole(@Param('id', ParseIntPipe) id: number, @Body('newRole') newRole: userRole) {
+    return this.userService.addRole(id, newRole);
   }
 }
