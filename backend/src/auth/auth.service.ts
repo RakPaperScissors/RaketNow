@@ -190,7 +190,7 @@ export class AuthService {
   // Keep your `login` method, but let it accept a user object
   // This will now be used by both local and google login flows.
   async generateJwtToken(user: Users) {
-    const payload = { sub: user.uid, email: user.email, role: user.role };
+    const payload = { email: user.email, sub: user.uid, role: user.role };
     return {
       accessToken: this.jwtService.sign(payload)
     };
