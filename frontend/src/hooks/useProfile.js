@@ -13,6 +13,7 @@ export function useProfile() {
     // States for skills management
     const [allSkills, setAllSkills] = useState([]);
     const [selectedSkillId, setSelectedSkillId] = useState("");
+
     // Original skills state
     const [originalRaketistaSkills, setOriginalRaketistaSkills] = useState([]);
     // Temporary skills state for display and manipulation in edit mode
@@ -20,7 +21,6 @@ export function useProfile() {
     // New states to track pending changes
     const [skillsToAdd, setSkillsToAdd] = useState([]);
     const [skillsToDelete, setSkillsToDelete] = useState([]); 
-
 
     const accessToken = localStorage.getItem("access_token");
 

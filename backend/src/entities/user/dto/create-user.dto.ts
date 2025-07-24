@@ -41,4 +41,3 @@ export class CreateUserDto {
     @IsOptional()
     @IsDate()
     deletedAt?: Date
-}
