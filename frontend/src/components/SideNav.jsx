@@ -32,11 +32,7 @@ function SideNav() {
         <nav className="space-y-2">
           <SideNavItem to="/home" icon={Home} label="Home" />
           <SideNavItem to="/rakets" icon={Star} label="For You" />
-          <SideNavItem
-            to="/my-rakets"
-            icon={Package}
-            label="Current Rakets Rakets"
-          />
+          <SideNavItem to="/my-rakets" icon={Package} label="Current Rakets" />
           <SideNavItem to="/boost" icon={TrendingUp} label="Boost Post" />
         </nav>
       </div>
