@@ -1,27 +1,41 @@
 import React from "react";
+import { format } from "date-fns";
 import { Mail, User, Hammer, Pencil } from "lucide-react";
+import { useProfile } from "../hooks/useProfile";
 
 function ProfileCard() {
+
+  const { user, bio, isEditingProfile, message, allSkills, selectedSkillId, setSelectedSkillId, setIsEditingProfile, setBio, handleSaveAllChanges, handleAddSkill, handleDeleteSkill, selectedImageFile, setSelectedImageFile, currentRaketistaSkills } = useProfile();
+
+  if (!user) return <div>Loading profile...</div>
+  
   return (
     <div className="bg-white shadow-md rounded-xl p-6 max-w-4xl mx-auto mt-10">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <img
-            src="https://randomuser.me/api/portraits/lego/6.jpg"
+            src={
+              selectedImageFile
+                ? URL.createObjectURL(selectedImageFile)
+                : user?.profilePicture || "http://localhost:9000/raketnow/user-profile-pictures/default_profile.jpg"
+            }
             alt="Profile"
             className="w-20 h-20 rounded-full object-cover"
+            onError={(e) => {
+                e.target.src = 'http://localhost:9000/raketnow/user-profile-pictures/default_profile.jpg';
+            }}
           />
           <div>
-            <h2 className="text-xl font-bold">Liarrah Lambayao</h2>
+            <h2 className="text-xl font-bold">{user?.firstName + " " + user?.lastName}</h2>
             <div className="flex items-center gap-2 text-sm text-gray-600">
               <span className="bg-orange-100 text-orange-600 px-2 py-0.5 rounded-full text-xs font-medium">
-                Raketista
+                {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
               </span>
-              <span>• Joined May 2023</span>
+              <span>• Joined {user.createdAt ? format(new Date(user.createdAt), "MMMM yyyy") : ""}</span>
             </div>
             <div className="flex items-center text-gray-600 mt-1">
               <Mail className="w-4 h-4 mr-1" />
-              <span>liarrahright?@up.edu.ph</span>
+              <span>{user.email}</span>
             </div>
           </div>
         </div>
@@ -37,11 +51,7 @@ function ProfileCard() {
           Bio
         </h3>
         <p className="text-gray-700">
-          Experienced web developer with 5+ years of experience building
-          responsive and user-friendly applications. Passionate about clean code
-          and intuitive user interfaces. Currently focused on frontend
-          development with React and exploring new technologies in the web
-          development ecosystem.
+          {user.bio}
         </p>
       </div>
 
@@ -51,22 +61,12 @@ function ProfileCard() {
           Skills
         </h3>
         <div className="flex flex-wrap gap-2">
-          {[
-            "JavaScript",
-            "React",
-            "Node.js",
-            "CSS3",
-            "Tailwind CSS",
-            "UI/UX Design",
-            "Responsive Design",
-            "Git",
-            "maoy",
-          ].map((skill) => (
+          {currentRaketistaSkills.map((rs) => (
             <span
-              key={skill}
+              key={rs.id}
               className="bg-gray-100 text-gray-700 text-sm px-3 py-1 rounded-full"
             >
-              {skill}
+              {rs.skill.skillName}
             </span>
           ))}
         </div>
