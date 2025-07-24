@@ -13,8 +13,12 @@ import { NavLink } from "react-router-dom";
 import SideNavItem from "./SideNavItem";
 import SideNavUser from "./SideNavUser";
 import logo from "../assets/images/raketnow-blue-logo.png";
+import { useProfile } from "../hooks/useProfile";
 
 function SideNav() {
+
+  const { user, selectedImageFile } = useProfile();
+
   return (
     <aside className="h-screen w-64 bg-white border-r border-gray-200 flex flex-col justify-between py-6 px-4">
       {/* TOP SECTION */}
@@ -48,9 +52,13 @@ function SideNav() {
 
         <NavLink to="/profile">
           <SideNavUser
-            name="Liarrah Lambayao"
-            role="Raketista"
-            image="https://randomuser.me/api/portraits/lego/6.jpg"
+            name={user?.firstName + " " + user?.lastName}
+            role={user?.role ? user.role.charAt(0).toUpperCase() + user.role.slice(1) : ""}
+            image={
+              selectedImageFile
+                ? URL.createObjectURL(selectedImageFile)
+                : user?.profilePicture || "http://localhost:9000/raketnow/user-profile-pictures/default_profile.jpg"
+            }
           />
         </NavLink>
 
