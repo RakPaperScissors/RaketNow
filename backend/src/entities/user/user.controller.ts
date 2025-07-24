@@ -7,7 +7,6 @@ import { UseGuards } from '@nestjs/common';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { RolesGuard } from 'src/common/guards/roles.guard';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { ApplyRaketistaDto } from './dto/apply-raketista.dto';
 
 // @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('user')

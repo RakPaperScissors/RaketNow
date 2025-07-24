@@ -5,7 +5,6 @@ import { Users } from './entities/user.entity';
 import { ILike, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { userRole } from './entities/user.entity';
-import { ApplyRaketistaDto } from './dto/apply-raketista.dto';
 import { Raketista } from './../raketista/entities/raketista.entity';
 import { Skills } from '../skills/entities/skill.entity';
 import { RaketistaSkill } from '../raketista-skill/entities/raketista-skill.entity';
