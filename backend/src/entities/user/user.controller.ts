@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Query, Delete, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Query, Delete, ParseIntPipe, Req } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -7,6 +7,7 @@ import { UseGuards } from '@nestjs/common';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { RolesGuard } from 'src/common/guards/roles.guard';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { ApplyRaketistaDto } from './dto/apply-raketista.dto';
 
 // @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('user')
@@ -93,8 +94,18 @@ export class UserController {
     return this.userService.updateProfilePicture(uid, profilePicture);
   }
 
+  // Add role
   @Patch(':id/add-role')
   async addRole(@Param('id', ParseIntPipe) id: number, @Body('newRole') newRole: userRole) {
     return this.userService.addRole(id, newRole);
+  }
+
+  // Apply to be a raketista from client
+  @UseGuards(JwtAuthGuard)
+  @Post('apply-raketista')
+  async applyForRaketista(@Req() req: any, @Body() body: { bio: string; skillId: number }) {
+    const userId = req.user['uid'];
+    const { bio, skillId } = body;
+    return this.userService.applyForRaketistaRole(userId, bio, skillId);
   }
 }
