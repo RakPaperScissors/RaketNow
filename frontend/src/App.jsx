@@ -14,6 +14,7 @@ import Faqs from "./pages/Faqs";
 import Home from "./pages/Home";
 import ForYou from "./pages/ForYou";
 import ProfilePage from "./pages/ProfilePage";
+import Message from "./pages/Message";
 
 function AppContent() {
   const location = useLocation();
@@ -44,6 +45,7 @@ function AppContent() {
         <Route path="/home" element={<Home />} />
         <Route path="/rakets" element={<ForYou />} />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/message" element={<Message />} />
       </Routes>
 
       {showFooter && <Footer />}

@@ -42,7 +42,7 @@ function SideNav() {
         <div className="space-y-2 mb-4">
           <SideNavItem to="/help" icon={HelpCircle} label="Help" />
           <SideNavItem to="/notifications" icon={Bell} label="Notifications" />
-          <SideNavItem to="/messages" icon={MessageSquare} label="Messages" />
+          <SideNavItem to="/message" icon={MessageSquare} label="Messages" />
         </div>
         <div className="border-t border-gray-200 my-4" />
 
