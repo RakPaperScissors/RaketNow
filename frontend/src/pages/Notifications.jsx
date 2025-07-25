@@ -1,7 +1,7 @@
 import React from "react";
 import SearchBar from "../components/SearchBar";
 import SideNav from "../components/SideNav";
-import Notifications from "../components/Notifications";
+import UserNotifications from "../components/Notifications";
 
 const MyRakets = () => {
   return (
@@ -20,7 +20,7 @@ const MyRakets = () => {
 
         {/* Scrollable Content */}
         <div className="flex-1 overflow-y-auto px-8 py-6 space-y-6">
-            <Notifications />
+          <UserNotifications />
         </div>
       </div>
     </div>
