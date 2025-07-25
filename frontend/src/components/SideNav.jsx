@@ -13,8 +13,15 @@ import { NavLink } from "react-router-dom";
 import SideNavItem from "./SideNavItem";
 import SideNavUser from "./SideNavUser";
 import logo from "../assets/images/raketnow-blue-logo.png";
+import { useUser } from "../hooks/useUsers";
 
 function SideNav() {
+  const { user, loading } = useUser();
+
+    const handleLogout = () => {
+    window.location.href = "/login";
+  };
+
   return (
     <aside className="h-screen w-64 bg-white border-r border-gray-200 flex flex-col justify-between py-6 px-4">
       {/* TOP SECTION */}
@@ -46,16 +53,23 @@ function SideNav() {
         </div>
         <div className="border-t border-gray-200 my-4" />
 
-        <NavLink to="/profile">
-          <SideNavUser
-            name="Liarrah Lambayao"
-            role="Raketista"
-            image="https://randomuser.me/api/portraits/lego/6.jpg"
-          />
-        </NavLink>
+        {/* Conditionally render the user info */}
+        {loading ? (
+          <p>Loading user...</p>
+        ) : user ? (
+          <NavLink to="/profile">
+            <SideNavUser
+              name={`${user.firstName} ${user.lastName}`}
+              role={user.role}
+              image={user.profilePicture || 'https://randomuser.me/api/portraits/lego/6.jpg'} // Fallback image
+            />
+          </NavLink>
+        ) : (
+          <p>Not logged in.</p>
+        )}
 
-        <div className="mt-4">
-          <SideNavItem to="/logout" icon={LogOut} label="Logout" />
+        <div className="mt-4" onClick={handleLogout} style={{ cursor: 'pointer' }}>
+          <SideNavItem to="#" icon={LogOut} label="Logout" />
         </div>
       </div>
     </aside>

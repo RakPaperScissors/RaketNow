@@ -1,7 +1,10 @@
 import React from "react";
 
 function GoogleLoginButton() {
+  const googleLoginUrl = "http://localhost:3000/auth/google/callback"
+
   return (
+    <a href={googleLoginUrl}>
     <button className="bg-white border py-2 w-full rounded-xl mt-5 flex justify-center items-center text-sm hover:scale-105 duration-300 text-[#002D74]">
       <svg
         className="mr-3"
@@ -28,6 +31,7 @@ function GoogleLoginButton() {
       </svg>
       Login with Google
     </button>
+    </a>
   );
 }
 

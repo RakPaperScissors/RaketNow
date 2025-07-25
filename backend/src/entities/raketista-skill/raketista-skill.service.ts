@@ -18,17 +18,19 @@ export class RaketistaSkillService {
     private readonly skillsRepo: Repository<Skills>,
   ) {}
 
-  async create(createRaketistaSkillDto: CreateRaketistaSkillDto) {
-    const raketista = await this.raketistaRepo.findOneBy({ uid: createRaketistaSkillDto.raketistaId});
+  async create(createRaketistaSkillDto: CreateRaketistaSkillDto, userId: number) {
+    const raketista = await this.raketistaRepo.findOneBy({ uid: userId });
+    if (!raketista) {
+      throw new NotFoundException('Raketista profile not found for the current user.');
+    }
     const skill = await this.skillsRepo.findOneBy({ skill_Id: createRaketistaSkillDto.skillId});
-
-    if (!raketista || !skill ) {
-      throw new NotFoundException('Raketista or Skill not found');
+    if (!skill) {
+      throw new NotFoundException('Skill not found');
     }
 
     const existing = await this.rsRepo.findOne({
       where: {
-        raketista: { uid: createRaketistaSkillDto.raketistaId },
+        raketista: { uid: userId },
         skill: { skill_Id: createRaketistaSkillDto.skillId },
       },
     });
@@ -77,11 +79,23 @@ export class RaketistaSkillService {
     return this.rsRepo.save(existing);
   }
 
-  async remove(id: number) {
-    const result = await this.rsRepo.delete(id);
-    if(result.affected === 0) {
-      throw new NotFoundException(`RaketistaSkill with id ${id} not found.`);
+  async remove(id: number, userId: number) {
+    // First, find the skill assignment and verify ownership in one step.
+    const skillToRemove = await this.rsRepo.findOne({
+        where: { 
+            id: id, 
+            raketista: { uid: userId } // Check if the owner is the user
+        }
+    });
+
+    if (!skillToRemove) {
+        // This error is thrown if the skill doesn't exist OR if the user doesn't own it.
+        // We keep the message generic for security.
+      throw new NotFoundException(`RaketistaSkill with id ${id} not found or you do not have permission to delete it.`);
     }
+
+    await this.rsRepo.delete(id);
+    
     return { message: 'Deleted successfully.'};
   }
 }

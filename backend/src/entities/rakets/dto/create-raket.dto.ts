@@ -3,7 +3,6 @@ import { RaketStatus } from "../entities/raket.entity";
 import { IsDate } from "class-validator";
 
 export class CreateRaketDto {
-    user: Users["uid"];
 
     title: string;
 

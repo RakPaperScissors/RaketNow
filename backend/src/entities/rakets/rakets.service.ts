@@ -1,36 +1,36 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { CreateRaketDto } from './dto/create-raket.dto';
-import { UpdateRaketDto } from './dto/update-raket.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Raket } from './entities/raket.entity';
-import { Repository } from 'typeorm';
-import { Users } from '../user/entities/user.entity';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
+import { CreateRaketDto } from "./dto/create-raket.dto";
+import { UpdateRaketDto } from "./dto/update-raket.dto";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Raket } from "./entities/raket.entity";
+import { Repository } from "typeorm";
+import { Users } from "../user/entities/user.entity";
 
 @Injectable()
 export class RaketsService {
-  constructor (
+  constructor(
     @InjectRepository(Raket)
-    private readonly raket: Repository<Raket>,
-    @InjectRepository(Users)
-    private readonly users: Repository<Users>) {
-  }
+    private readonly raket: Repository<Raket>
+  ) {}
 
-  async create(createRaketDto: CreateRaketDto) {
-    const user = await this.users.findOne({ where: { uid: createRaketDto.user } });
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
-
-    const raket = this.raket.create({ ...createRaketDto, user: { uid: createRaketDto.user } as Users });
-    return await this.raket.save(raket);
+  async create(createRaketDto: CreateRaketDto, creator: Users): Promise<Raket> {
+    const raket = this.raket.create({
+      ...createRaketDto,
+      user: creator,
+    });
+    return this.raket.save(raket);
   }
 
   async findAll() {
     const rakets = await this.raket.find({
-      relations: ['user', 'pictures'],
-      order: { dateCreated: 'DESC' }
+      relations: ["user", "pictures"],
+      order: { dateCreated: "DESC" },
     });
-    return rakets.map(raket => ({
+    return rakets.map((raket) => ({
       raketId: raket.raketId,
       title: raket.title,
       description: raket.description,
@@ -43,37 +43,38 @@ export class RaketsService {
         email: raket.user.email,
         firtName: raket.user.firstName,
         lastName: raket.user.lastName,
-        lastActive: raket.user.lastActive
+        lastActive: raket.user.lastActive,
       },
-      pictures: raket.pictures.map(picture => ({
+      pictures: raket.pictures.map((picture) => ({
         id: picture.id,
         imageUrl: picture.imageUrl,
-        displayOrder: picture.displayOrder
-      }))
+        displayOrder: picture.displayOrder,
+      })),
     }));
   }
 
   async findOne(raketId: number) {
-    const raket = await this.raket.createQueryBuilder('raket')
-      .leftJoinAndSelect('raket.user', 'user')
-      .leftJoinAndSelect('raket.pictures', 'pictures')
+    const raket = await this.raket
+      .createQueryBuilder("raket")
+      .leftJoinAndSelect("raket.user", "user")
+      .leftJoinAndSelect("raket.pictures", "pictures")
       .select([
-        'raket.raketId',
-        'raket.title',
-        'raket.description',
-        'raket.status',
-        'raket.budget',
-        'raket.dateCreated',
-        'raket.completedAt',
-        'user.uid',
-        'user.email',
-        'user.name',
-        'user.lastActive',
-        'pictures.id',
-        'pictures.imageUrl',
-        'pictures.displayOrder',
+        "raket.raketId",
+        "raket.title",
+        "raket.description",
+        "raket.status",
+        "raket.budget",
+        "raket.dateCreated",
+        "raket.completedAt",
+        "user.uid",
+        "user.email",
+        "user.name",
+        "user.lastActive",
+        "pictures.id",
+        "pictures.imageUrl",
+        "pictures.displayOrder",
       ])
-      .where('raket.raketId = :raketId', { raketId })
+      .where("raket.raketId = :raketId", { raketId })
       .getOne();
 
     if (!raket) {
@@ -95,7 +96,7 @@ export class RaketsService {
         lastName: raket.user.lastName,
         lastActive: raket.user.lastActive,
       },
-      pictures: raket.pictures.map(picture => ({
+      pictures: raket.pictures.map((picture) => ({
         id: picture.id,
         imageUrl: picture.imageUrl,
         displayOrder: picture.displayOrder,
@@ -103,28 +104,53 @@ export class RaketsService {
     };
   }
 
-  async patch(racketId: number, updateRaketDto: UpdateRaketDto) {
-    const findRaket = await this.findOne(racketId);
+  async patch(
+    raketId: number,
+    updateRaketDto: UpdateRaketDto,
+    userid: number
+  ): Promise<Raket> {
+    // Find the raket and verify ownership in one query.
+    const raket = await this.raket.findOne({
+      where: {
+        raketId: raketId,
+        user: { uid: userid },
+      },
+    });
 
-    if (!findRaket) {
-      throw new NotFoundException();
+    if (!raket) {
+      throw new NotFoundException(
+        `Raket with ID ${raketId} not found or you do not have permission to edit it.`
+      );
     }
 
-    if ('user' in updateRaketDto) {
-      throw new BadRequestException('Changing the user of a raket is not allowed.');
+    // Prevent changing the owner of the raket
+    if ("user" in updateRaketDto) {
+      throw new BadRequestException(
+        "Changing the user of a raket is not allowed."
+      );
     }
 
-    Object.assign(findRaket, updateRaketDto);
-    return await this.raket.save(findRaket);
+    // Apply the updates and save
+    Object.assign(raket, updateRaketDto);
+    return this.raket.save(raket);
   }
 
-  async remove(racketId: number) {
-    const findRaket = await this.findOne(racketId);
+  async remove(raketId: number, userId: number): Promise<{ message: string }> {
+    // Find the raket and verify ownership.
+    const raket = await this.raket.findOne({
+      where: {
+        raketId: raketId,
+        user: { uid: userId },
+      },
+    });
 
-    if (!findRaket) {
-      throw new NotFoundException();
+    if (!raket) {
+      throw new NotFoundException(
+        `Raket with ID ${raketId} not found or you do not have permission to delete it.`
+      );
     }
 
-    return await this.raket.delete(racketId);
+    await this.raket.delete(raketId);
+    return { message: "Raket deleted successfully." };
   }
 }
