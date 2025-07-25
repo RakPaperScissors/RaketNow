@@ -67,4 +67,10 @@ export class AuthController {
 
         res.redirect(`http://localhost:5173/home`);
     }
+
+    @Post('logout')
+    logout(@Res({ passthrough: true }) res: Response) {
+        res.clearCookie('access_token', { path: '/' });
+        return { message: 'Logged out successfully' };
+    }
 }

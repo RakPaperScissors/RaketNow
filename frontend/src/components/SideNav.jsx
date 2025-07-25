@@ -18,8 +18,8 @@ import { useAuth } from "../context/AuthContext";
 function SideNav() {
   const { user, loading, logout } = useAuth();
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     window.location.href = "/login";
   };
 

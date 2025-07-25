@@ -30,8 +30,17 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    const logout = () => {
-        setUser(null);
+    const logout = async () => {
+        try {
+            await fetch("http://localhost:3000/auth/logout", {
+                method: "POST",
+                credentials: "include",
+            });
+            setUser(null);
+        } catch (err) {
+            console.error("Logout failed.", err);
+        }
+        
     };
 
     return(
