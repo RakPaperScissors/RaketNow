@@ -6,25 +6,21 @@ import LoginButton from "../components/LoginButton";
 import GoogleLoginButton from "../components/GoogleLoginButton";
 import logo from "../assets/images/raketnow-logo.png";
 
-import { useAuth } from "../hooks/useAuth";
+import { useLoginForm } from "../hooks/useLoginForm";
+import { useAuth } from "../context/AuthContext";
 
 function Login() {
   const navigate = useNavigate();
 
-  const { email, password, setEmail, setPassword, handleLogin } = useAuth(); 
-  // const [email, setEmail] = useState("");
-  // const [password, setPassword] = useState("");
+  const { email, password, setEmail, setPassword, handleLogin } = useLoginForm();
+  const { login } = useAuth();
 
-  // const handleLogin = (e) => {
-  //   e.preventDefault();
-
-  //   // Replace if connected na with the backend peeps HSAJHDAHDSA
-  //   // if (email === "test@example.com" && password === "password") {
-  //   //   navigate("/home"); // Redirect to home on successful login
-  //   // } else {
-  //   //   alert("Invalid email or password");
-  //   // }
-  // };
+  const handleSubmit = (e) => {
+    handleLogin(e, async () => {
+      await login();
+      window.location.href = "/home";
+    });
+  };
 
   return (
     <section className="bg-gray-50 min-h-screen flex items-center justify-center">
@@ -41,7 +37,7 @@ function Login() {
           If you are already a member, easily log in
         </p>
 
-        <form className="flex flex-col gap-4" onSubmit={handleLogin}>
+        <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
           <EmailInput
             value={email}
             onChange={(e) => setEmail(e.target.value)}

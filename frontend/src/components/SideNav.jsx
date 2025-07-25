@@ -13,14 +13,18 @@ import { NavLink } from "react-router-dom";
 import SideNavItem from "./SideNavItem";
 import SideNavUser from "./SideNavUser";
 import logo from "../assets/images/raketnow-blue-logo.png";
-import { useUser } from "../hooks/useUsers";
+import { useAuth } from "../context/AuthContext";
 
 function SideNav() {
-  const { user, loading } = useUser();
+  const { user, loading, logout } = useAuth();
 
-    const handleLogout = () => {
+  const handleLogout = () => {
+    logout();
     window.location.href = "/login";
   };
+
+  if (loading) return <p>Loading...</p>
+  if (!user) return <p>You are not logged in.</p>
 
   return (
     <aside className="h-screen w-64 bg-white border-r border-gray-200 flex flex-col justify-between py-6 px-4">
