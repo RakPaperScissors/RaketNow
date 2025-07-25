@@ -1,6 +1,7 @@
 import { RaketPictures } from 'src/entities/raket-pictures/entities/raket-picture.entity';
 import { Users } from 'src/entities/user/entities/user.entity';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm';
+import { RaketApplication } from 'src/entities/raket-application/entities/raket-application.entity';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
 export enum RaketStatus {
     OPEN = 'open',
     IN_PROGRESS = 'in_progress',
@@ -13,7 +14,8 @@ export class Raket {
     @PrimaryGeneratedColumn()
     raketId: number;
 
-    @ManyToOne(() => Users, user => user.uid)
+    @ManyToOne(() => Users, { eager: false })
+    @JoinColumn({ name: 'userId', referencedColumnName: 'uid' })
     user: Users;
 
     @Column({ type: 'varchar', length: 100 })
@@ -36,5 +38,8 @@ export class Raket {
 
     @Column({ type: 'timestamp', nullable: true })
     completedAt: Date;
+
+    @OneToMany(() => RaketApplication, application => application.raket)
+    applications: RaketApplication[];
 
 }

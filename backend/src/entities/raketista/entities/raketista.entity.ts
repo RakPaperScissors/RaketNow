@@ -1,7 +1,7 @@
-import { ChildEntity, Column, OneToMany } from "typeorm";
+import { Entity, ChildEntity, Column, OneToMany } from "typeorm";
 import { Users } from "./../../user/entities/user.entity";
+import { Raket } from 'src/entities/rakets/entities/raket.entity';
 import {RaketistaSkill} from "./../../raketista-skill/entities/raketista-skill.entity";
-
 @ChildEntity()
 export class Raketista extends Users {
     @Column({ type: 'varchar', length: 255, nullable: true })

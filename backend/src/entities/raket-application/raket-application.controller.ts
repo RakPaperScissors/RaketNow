@@ -1,9 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UseGuards, UnauthorizedException  } from '@nestjs/common';
 import { RaketApplicationService } from './raket-application.service';
 import { CreateRaketApplicationDto } from './dto/create-raket-application.dto';
 import { UpdateRaketApplicationDto } from './dto/update-raket-application.dto';
 import { Request } from 'express';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { Users } from 'src/entities/user/entities/user.entity';
+
+interface AuthenticatedRequest extends Request {
+  user: Users;
+}
 
 @Controller('raket-application')
 export class RaketApplicationController {
@@ -11,14 +16,15 @@ export class RaketApplicationController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  create(@Body() dto: CreateRaketApplicationDto, @Req() req: Request) {
-    const user = req.user;
-    return this.raketApplicationService.create(dto, user);
+  create(@Body() dto: CreateRaketApplicationDto, @Req() req: AuthenticatedRequest) {
+    return this.raketApplicationService.create(dto, req.user);
   }
 
+  // for raket applications
+  @UseGuards(JwtAuthGuard)
   @Get()
-  findAll() {
-    return this.raketApplicationService.findAll();
+  getClientApplications(@Req() req: AuthenticatedRequest) {
+    return this.raketApplicationService.getAllForClient(req.user);
   }
 
   @Get(':id')
@@ -26,22 +32,30 @@ export class RaketApplicationController {
     return this.raketApplicationService.findOne(+id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateRaketApplicationDto: UpdateRaketApplicationDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateRaketApplicationDto: UpdateRaketApplicationDto,
+  ) {
     return this.raketApplicationService.update(+id, updateRaketApplicationDto);
   }
 
-  // for accepting or rejecting applications (from client side)
+  @UseGuards(JwtAuthGuard)
   @Patch(':id/accept')
-  accept(@Param('id') id: number) {
-    return this.raketApplicationService.accept(id);
+  accept(@Param('id') id: string, @Req() req: AuthenticatedRequest) {
+    if (!req.user) throw new UnauthorizedException();
+    return this.raketApplicationService.accept(+id, req.user);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch(':id/reject')
-  reject(@Param('id') id: number) {
-    return this.raketApplicationService.reject(id);
+  reject(@Param('id') id: string, @Req() req: AuthenticatedRequest) {
+    if (!req.user) throw new UnauthorizedException();
+    return this.raketApplicationService.reject(+id, req.user);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.raketApplicationService.remove(+id);
