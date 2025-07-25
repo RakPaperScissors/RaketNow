@@ -146,8 +146,8 @@ export function useProfile() {
         selectedImageFile,
         setSelectedImageFile,
         toggleEditMode,
-        addSkillToCurrent,
-        removeSkillFromCurrent,
-        saveAllChanges,
+        handleAddSkill: addSkillToCurrent,
+        handleDeleteSkill: removeSkillFromCurrent,
+        handleSaveChanges: saveAllChanges,
     };
 }
