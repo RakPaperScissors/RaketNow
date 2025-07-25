@@ -25,7 +25,6 @@ function SideNav() {
 
   if (loading) return <p>Loading...</p>
   if (!user) return <p>You are not logged in.</p>
-  console.log("Image URL:", user?.profilePicture);
 
   return (
     <aside className="h-screen w-64 bg-white border-r border-gray-200 flex flex-col justify-between py-6 px-4">
