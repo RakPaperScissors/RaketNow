@@ -1,219 +1,153 @@
-import { useEffect, useState } from "react";
-import { getProfile, uploadProfilePicture, updateBio, getAllSkills, addSkill, deleteSkill } from "../api/profile";
+import { useEffect, useState, useCallback } from "react";
+import { 
+    getProfile, 
+    uploadProfilePicture, 
+    updateBio, 
+    getAllSkills, 
+    addSkill, 
+    deleteSkill 
+} from "../api/profile";
 
 export function useProfile() {
+    // Core data states
     const [user, setUser] = useState(null);
+    const [allSkills, setAllSkills] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [message, setMessage] = useState("");
-    const [isEditingProfile, setIsEditingProfile] = useState(false);
 
-    // States for editable fields
+    // States for managing the UI in edit mode
+    const [isEditing, setIsEditing] = useState(false);
     const [bio, setBio] = useState("");
     const [selectedImageFile, setSelectedImageFile] = useState(null);
+    const [currentSkills, setCurrentSkills] = useState([]);
 
-    // States for skills management
-    const [allSkills, setAllSkills] = useState([]);
-    const [selectedSkillId, setSelectedSkillId] = useState("");
-
-    // Original skills state
-    const [originalRaketistaSkills, setOriginalRaketistaSkills] = useState([]);
-    // Temporary skills state for display and manipulation in edit mode
-    const [currentRaketistaSkills, setCurrentRaketistaSkills] = useState([]);
-    // New states to track pending changes
-    const [skillsToAdd, setSkillsToAdd] = useState([]);
-    const [skillsToDelete, setSkillsToDelete] = useState([]); 
-
-    const accessToken = localStorage.getItem("access_token");
-
-    // Initial load effect
-    useEffect(() => {
-        if (!accessToken) {
-            setMessage("You are not logged in.");
-            return;
-        }
-
-        getProfile(accessToken)
-            .then((data) => {
-                setUser(data);
-                setBio(data.bio || "");
-                setOriginalRaketistaSkills(data.raketistaSkills || []);
-                setCurrentRaketistaSkills(data.raketistaSkills || []);
-            })
-            .catch(() => setMessage("Failed to fetch profile."));
-
-        getAllSkills()
-            .then(setAllSkills)
-            .catch(() => setMessage("Failed to load skills."));
-    }, [accessToken]);
-
-    // Reset bio when editing mode starts
-    useEffect(() => {
-        if (!isEditingProfile && user) {
-            // When exiting editing mode, reset temporary states
-            setBio(user.bio || "");
-            setSelectedImageFile(null);
-            setCurrentRaketistaSkills(user.raketistaSkills?.length ? user.raketistaSkills : []);
-            setSkillsToAdd([]);
-            setSkillsToDelete([]);
-            setSelectedSkillId("");
-        } else if (isEditingProfile && user) {
-            // When entering edit mode, ensure currentSkills reflect user's skills
-            setCurrentRaketistaSkills(user.raketistaSkills?.length ? user.raketistaSkills : []);
-        }
-    }, [isEditingProfile, user]);
-
-
-    // Skill Management Functions
-    const handleAddSkill = async () => {
-        if (!user || !selectedSkillId) return;
-
-        const skillIdNum = parseInt(selectedSkillId);
-        const addedSkill = allSkills.find((s) => s.skill_Id === skillIdNum);
-
-        // Prevent adding duplicate skills
-        if (currentRaketistaSkills.some(rs => rs.skill.skill_Id === skillIdNum)) {
-            setMessage("Skill already added.");
-            return;
-        }
-
-        // Check if this skill was previously marked for deletion
-        const wasMarkedForDeletion = skillsToDelete.includes(`pending-delete-${skillIdNum}`);
-        const newSkillsToDelete = skillsToDelete.filter(id => id !== `pending-delete-${skillIdNum}`);
-
-        // Add to current skills for display, give it a temporary ID
-        const tempId = `temp-${Date.now()}-${Math.random()}`;
-        setCurrentRaketistaSkills(prev => [...prev, { skill: addedSkill, id: tempId, isNew: true, skill_Id: skillIdNum }]);
-
-        // Add to pending additions, but only if it's truly new
-        if (!wasMarkedForDeletion) {
-            setSkillsToAdd(prev => [...prev, { raketistaId: user.uid, skillId: skillIdNum }]);
-        }
-        setSkillsToDelete(newSkillsToDelete);
-
-        setSelectedSkillId("");
-        setMessage("Skill added to pending changes.");
-    };
-
-    const handleDeleteSkill = async (raketistaSkillId) => {
-        // Find the skill to be deleted from current skills
-        const skillToRemove = currentRaketistaSkills.find(rs => rs.id === raketistaSkillId);
-        if (!skillToRemove) return;
-
-        // If it's a new skill, just remove it from pending additions and current skills
-        if (skillToRemove.isNew) {
-            setSkillsToAdd(prev => prev.filter(s => s.skillId !== skillToRemove.skill_Id));
-            setCurrentRaketistaSkills(prev => prev.filter(rs => rs.id !== raketistaSkillId));
-            setMessage("Pending skill addition removed.");
-        } else {
-            // If it's an existing skill, mark it for deletion
-            setSkillsToDelete(prev => [...prev, raketistaSkillId]);
-            // Remove from the current skills for display
-            setCurrentRaketistaSkills(prev => prev.filter(rs => rs.id !== raketistaSkillId));
-            setMessage("Skill marked for removal.");
-        }
-    };
-
-    // Core Save Functions
-    const handleSaveAllChanges = async () => {
+    // Fetches all necessary data for the profile page
+    const fetchProfileData = useCallback(async () => {
+        setLoading(true);
         setMessage("");
-        let hasError = false;
-        let successfulChanges = 0;
+        try {
+            // Fetch profile and all skills in parallel for a faster load time
+            const [userData, skillsData] = await Promise.all([getProfile(), getAllSkills()]);
+            
+            setUser(userData);
+            setAllSkills(skillsData);
+            
+            // Initialize the states used for editing
+            setBio(userData.bio || "");
+            setCurrentSkills(userData.raketistaSkills || []);
+        } catch (err) {
+            setMessage(err.message || "Failed to load profile data.");
+            console.error("Profile fetch error:", err);
+        } finally {
+            setLoading(false);
+        }
+    }, []);
 
-        // 1 - Handle Profile Picture Upload
-        if (selectedImageFile) {
-            try {
-                const data = await uploadProfilePicture(selectedImageFile, accessToken);
-                setUser((prev) => ({
-                    ...prev,
-                    profilePicture: data.imageUrl,
-                }));
+    // Load data on initial component mount
+    useEffect(() => {
+        fetchProfileData();
+    }, [fetchProfileData]);
+
+    // Handler to toggle editing mode on/off
+    const toggleEditMode = () => {
+        setIsEditing(prev => {
+            // If we are canceling the edit, reset the fields to their original state
+            if (prev && user) {
+                setBio(user.bio || "");
+                setCurrentSkills(user.raketistaSkills || []);
                 setSelectedImageFile(null);
-                setMessage(prev => prev + "Profile picture uploaded. ");
-            } catch (err) {
-                console.error("Error uploading profile picture:", err);
-                setMessage(prev => prev + (err.message || "Error updating profile picture. "));
-                hasError = true;
+                setMessage("");
             }
+            return !prev;
+        });
+    };
+
+    // Adds a skill to the temporary 'currentSkills' list for display
+    const addSkillToCurrent = (skillIdToAdd) => {
+        if (!skillIdToAdd) return;
+        
+        const skillIdNum = parseInt(skillIdToAdd);
+        if (currentSkills.some(rs => rs.skill.skill_Id === skillIdNum)) {
+            setMessage("Skill is already in your list.");
+            return;
         }
 
-        // 2 - Handle Bio Update
-        if (user && user.role === "raketista" && bio !== user.bio) {
-            try {
-                await updateBio(user.uid, bio, accessToken);
-                setUser((prev) => ({ ...prev, bio }));
-                setMessage(prev => prev + "Bio updated. ");
-            } catch (err) {
-                console.error("Error updating bio:", err);
-                setMessage(prev => prev + (err.message || "Error updating bio. "));
-                hasError = true;
-            }
+        const skillData = allSkills.find(s => s.skill_Id === skillIdNum);
+        if (skillData) {
+            const newRaketistaSkill = { 
+                id: `new-${skillIdNum}`, // Temporary ID for the key
+                skill: skillData, 
+                isNew: true // Flag to identify this as a pending addition
+            };
+            setCurrentSkills(prev => [...prev, newRaketistaSkill]);
+            setMessage("");
         }
+    };
 
-        // 3 - Handle Skill Additions
-        for (const skill of skillsToAdd) {
-            try {
-                await addSkill(skill.raketistaId, skill.skillId, accessToken);
-                successfulChanges++;
-            } catch (err) {
-                console.error(`Error adding skill ${skill.skillId}:`, err);
-                setMessage(prev => prev + `Error adding skill ${skill.skillId}.`);
-                hasError = true;
+    // Removes a skill from the temporary 'currentSkills' list
+    const removeSkillFromCurrent = (raketistaSkillId) => {
+        setCurrentSkills(prev => prev.filter(rs => rs.id !== raketistaSkillId));
+    };
+
+    // Main function to save all pending changes
+    const saveAllChanges = async () => {
+        if (!user) return;
+        setLoading(true);
+        setMessage("Saving...");
+
+        try {
+            // Determine what has changed by comparing original state with current state
+            const skillsToAdd = currentSkills.filter(rs => rs.isNew);
+            const skillsToDelete = user.raketistaSkills.filter(
+                rs => !currentSkills.some(current => current.id === rs.id)
+            );
+
+            // Build an array of promises for all API calls
+            const promises = [];
+
+            if (selectedImageFile) {
+                promises.push(uploadProfilePicture(selectedImageFile));
             }
-        }
-
-        // 4 - Handle Skill Deletions
-        for (const raketistaSkillId of skillsToDelete) {
-            try {
-                await deleteSkill(raketistaSkillId, accessToken);
-                successfulChanges++;
-            } catch (err) {
-                console.error(`Error deleting skill ${raketistaSkillId}:`, err);
-                setMessage(prev => prev + `Error deleting skill ${raketistaSkillId}.`);
-                hasError = true;
+            if (bio !== user.bio) {
+                promises.push(updateBio(user.uid, bio));
             }
-        }
+            skillsToAdd.forEach(skill => {
+                promises.push(addSkill(user.uid, skill.skill.skill_Id));
+            });
+            skillsToDelete.forEach(rs => {
+                promises.push(deleteSkill(rs.id));
+            });
 
-        // After all saves, if no erros, reset pending states and exit edit mode
-        if (!hasError) {
-            setMessage("Profile changes saved successfully!");
-            try {
-                const updatedUser = await getProfile(accessToken);
-                setUser(updatedUser);
-                setOriginalRaketistaSkills(updatedUser.raketistaSkills || []);
-                setCurrentRaketistaSkills(updatedUser.raketistaSkills || []);
-                setBio(updatedUser.bio || "");
+            // Execute all API calls concurrently
+            await Promise.all(promises);
 
-                // Clear all pending change states
-                setSkillsToAdd([]);
-                setSkillsToDelete([]);
-                setSelectedImageFile(null);
-                setSelectedSkillId("");
+            setMessage("Profile updated successfully!");
+            setIsEditing(false);
 
-                setIsEditingProfile(false);
-            } catch (fetchError) {
-                console.error("Error re-fetching profile after save:", fetchError);
-                setMessage("Profile saved, but failed to refresh data. Please refresh manually.");
-                setIsEditingProfile(false);
-            }
-        } else {
-            setMessage(prev => prev + "Some changes could not be saved. Please review and try again.");
+        } catch (err) {
+            setMessage(err.message || "An error occurred while saving. Please try again.");
+            console.error("Save changes error:", err);
+        } finally {
+            // Always refresh data from the server to get the latest state
+            await fetchProfileData(); 
+            setLoading(false);
         }
     };
 
     return {
         user,
-        bio,
-        isEditingProfile,
+        loading,
         message,
-        allSkills,
-        selectedSkillId,
-        setSelectedSkillId,
-        setIsEditingProfile,
+        isEditing,
+        bio,
         setBio,
-        handleSaveAllChanges,
-        handleAddSkill,
-        handleDeleteSkill,
+        allSkills,
+        currentSkills,
         selectedImageFile,
         setSelectedImageFile,
-        currentRaketistaSkills,
+        toggleEditMode,
+        addSkillToCurrent,
+        removeSkillFromCurrent,
+        saveAllChanges,
     };
 }

@@ -5,6 +5,7 @@ import { userRole, Users } from 'src/entities/user/entities/user.entity';
 import { Public } from 'src/common/decorators/public.decorator';
 import { GoogleAuthGuard } from 'src/common/google-auth/google-auth.guard';
 import { CreateUserDto } from 'src/entities/user/dto/create-user.dto';
+import { Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -18,8 +19,16 @@ export class AuthController {
 
     // POSTs existing user
     @Post('login')
-    login(@Body() body: { email: string; password: string }) {
-        return this.authService.login(body.email, body.password);
+    async login(@Body() body: { email: string; password: string }, @Res({ passthrough: true }) res: Response) {
+        const tokenResponse = await this.authService.login(body.email, body.password);
+
+        res.cookie('access_token', tokenResponse.access_token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+        });
+
+        return { message: 'Login successful' }; // Return a simple success message
     }
 
     // GETs profile of logged in user using token
@@ -46,11 +55,16 @@ export class AuthController {
     @Public()
     @UseGuards(GoogleAuthGuard)
     @Get('google/callback')
-    async googleCallback(@Req() req, @Res() res) {
+    async googleCallback(@Req() req, @Res() res: Response) {
         const user = req.user as Users;
-
-        // Call the service method to generate a JWT for this user.
         const tokenResponse = await this.authService.generateJwtToken(user);
-        res.redirect(`http://localhost:3000/auth/callback?token=${tokenResponse.accessToken}`);
+
+        res.cookie('access_token', tokenResponse.accessToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+        });
+
+        res.redirect(`http://localhost:5173/home`);
     }
 }

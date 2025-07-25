@@ -5,11 +5,9 @@ export async function fetchRakets() {
 }
 
 // To open specific raket details
-export async function getRaketById(id, accessToken) {
+export async function getRaketById(id) {
     const response = await fetch(`http://localhost:3000/rakets/${id}`, {
-        headers: {
-            Authorization: `Bearer ${accessToken}`,
-        }
+        credentials: 'include',
     });
     if (!response.ok) {
         throw new Error("Failed to fetch raket.");
