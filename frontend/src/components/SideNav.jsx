@@ -25,6 +25,7 @@ function SideNav() {
 
   if (loading) return <p>Loading...</p>
   if (!user) return <p>You are not logged in.</p>
+  console.log("Image URL:", user?.profilePicture);
 
   return (
     <aside className="h-screen w-64 bg-white border-r border-gray-200 flex flex-col justify-between py-6 px-4">
@@ -64,8 +65,8 @@ function SideNav() {
           <NavLink to="/profile">
             <SideNavUser
               name={`${user.firstName} ${user.lastName}`}
-              role={user.role}
-              image={user.profilePicture || 'https://randomuser.me/api/portraits/lego/6.jpg'} // Fallback image
+              role={user.role.charAt(0).toUpperCase() + user.role.slice(1)}
+              image={user?.profilePicture} // Fallback image
             />
           </NavLink>
         ) : (
