@@ -1,105 +1,153 @@
-import { useEffect, useState } from "react";
-import { getProfile, uploadProfilePicture, updateBio, getAllSkills, addSkill, deleteSkill } from "../api/profile";
+import { useEffect, useState, useCallback } from "react";
+import { 
+    getProfile, 
+    uploadProfilePicture, 
+    updateBio, 
+    getAllSkills, 
+    addSkill, 
+    deleteSkill 
+} from "../api/profile";
 
 export function useProfile() {
+    // Core data states
     const [user, setUser] = useState(null);
-    const [message, setMessage] = useState("");
-    const [isEditingProfile, setIsEditingProfile] = useState(false);
-    const [bio, setBio] = useState("");
     const [allSkills, setAllSkills] = useState([]);
-    const [selectedSkillId, setSelectedSkillId] = useState("");
+    const [loading, setLoading] = useState(true);
+    const [message, setMessage] = useState("");
+
+    // States for managing the UI in edit mode
+    const [isEditing, setIsEditing] = useState(false);
+    const [bio, setBio] = useState("");
     const [selectedImageFile, setSelectedImageFile] = useState(null);
+    const [currentSkills, setCurrentSkills] = useState([]);
 
-    const accessToken = localStorage.getItem("access_token");
+    // Fetches all necessary data for the profile page
+    const fetchProfileData = useCallback(async () => {
+        setLoading(true);
+        setMessage("");
+        try {
+            // Fetch profile and all skills in parallel for a faster load time
+            const [userData, skillsData] = await Promise.all([getProfile(), getAllSkills()]);
+            
+            setUser(userData);
+            setAllSkills(skillsData);
+            
+            // Initialize the states used for editing
+            setBio(userData.bio || "");
+            setCurrentSkills(userData.raketistaSkills || []);
+        } catch (err) {
+            setMessage(err.message || "Failed to load profile data.");
+            console.error("Profile fetch error:", err);
+        } finally {
+            setLoading(false);
+        }
+    }, []);
 
+    // Load data on initial component mount
     useEffect(() => {
-        if (!accessToken) {
-            setMessage("You are not logged in.");
+        fetchProfileData();
+    }, [fetchProfileData]);
+
+    // Handler to toggle editing mode on/off
+    const toggleEditMode = () => {
+        setIsEditing(prev => {
+            // If we are canceling the edit, reset the fields to their original state
+            if (prev && user) {
+                setBio(user.bio || "");
+                setCurrentSkills(user.raketistaSkills || []);
+                setSelectedImageFile(null);
+                setMessage("");
+            }
+            return !prev;
+        });
+    };
+
+    // Adds a skill to the temporary 'currentSkills' list for display
+    const addSkillToCurrent = (skillIdToAdd) => {
+        if (!skillIdToAdd) return;
+        
+        const skillIdNum = parseInt(skillIdToAdd);
+        if (currentSkills.some(rs => rs.skill.skill_Id === skillIdNum)) {
+            setMessage("Skill is already in your list.");
             return;
         }
 
-        getProfile(accessToken)
-            .then((data) => {
-                setUser(data);
-                setBio(data.bio || "");
-            })
-            .catch(() => setMessage("Failed to fetch profile."));
+        const skillData = allSkills.find(s => s.skill_Id === skillIdNum);
+        if (skillData) {
+            const newRaketistaSkill = { 
+                id: `new-${skillIdNum}`, // Temporary ID for the key
+                skill: skillData, 
+                isNew: true // Flag to identify this as a pending addition
+            };
+            setCurrentSkills(prev => [...prev, newRaketistaSkill]);
+            setMessage("");
+        }
+    };
 
-        getAllSkills()
-            .then(setAllSkills)
-            .catch(() => setMessage("Failed to load skills."));
-    }, []);
+    // Removes a skill from the temporary 'currentSkills' list
+    const removeSkillFromCurrent = (raketistaSkillId) => {
+        setCurrentSkills(prev => prev.filter(rs => rs.id !== raketistaSkillId));
+    };
 
-    const handleProfilePictureUpload = async () => {
+    // Main function to save all pending changes
+    const saveAllChanges = async () => {
+        if (!user) return;
+        setLoading(true);
+        setMessage("Saving...");
+
         try {
-            if (!selectedImageFile) return;
+            // Determine what has changed by comparing original state with current state
+            const skillsToAdd = currentSkills.filter(rs => rs.isNew);
+            const skillsToDelete = user.raketistaSkills.filter(
+                rs => !currentSkills.some(current => current.id === rs.id)
+            );
 
-            const data = await uploadProfilePicture(selectedImageFile, accessToken);
-            setUser((prev) => ({
-                ...prev,
-                profilePicture: data.imageUrl,
-            }));
-            setSelectedImageFile(null);
-            setMessage("Profile picture uploaded successfully.");
+            // Build an array of promises for all API calls
+            const promises = [];
+
+            if (selectedImageFile) {
+                promises.push(uploadProfilePicture(selectedImageFile));
+            }
+            if (bio !== user.bio) {
+                promises.push(updateBio(user.uid, bio));
+            }
+            skillsToAdd.forEach(skill => {
+                promises.push(addSkill(user.uid, skill.skill.skill_Id));
+            });
+            skillsToDelete.forEach(rs => {
+                promises.push(deleteSkill(rs.id));
+            });
+
+            // Execute all API calls concurrently
+            await Promise.all(promises);
+
+            setMessage("Profile updated successfully!");
+            setIsEditing(false);
+
         } catch (err) {
-            setMessage(err.message || "Error updating profile picture.");
-        }
-
-    }
-
-    const handleBioSave = async () => {
-        setMessage("");
-        try {
-            await updateBio(user.uid, bio, accessToken);
-            setUser((prev) => ({ ...prev, bio }));
-            setIsEditingProfile(false);
-            setMessage("Bio updated!");
-        } catch {
-            setMessage("Error updating bio.");
-        }
-    };
-
-    const handleAddSkill = async () => {
-        try {
-            await addSkill(user.uid, parseInt(selectedSkillId), accessToken);
-            const added = allSkills.find((s) => s.skill_Id === parseInt(selectedSkillId));
-            setUser((prev) => ({
-                ...prev,
-                raketistaSkills: [...(prev.raketistaSkills || []), { skill: added, id: Date.now() }],
-            }));
-            setSelectedSkillId("");
-        } catch {
-            setMessage("Error adding skill.");
-        }
-    };
-
-    const handleDeleteSkill = async (raketistaSkillId) => {
-        try {
-            await deleteSkill(raketistaSkillId, accessToken);
-            setUser((prev) => ({
-                ...prev,
-                raketistaSkills: prev.raketistaSkills.filter((s) => s.id !== raketistaSkillId),
-            }));
-        } catch {
-            setMessage("Error deleting skill.");
+            setMessage(err.message || "An error occurred while saving. Please try again.");
+            console.error("Save changes error:", err);
+        } finally {
+            // Always refresh data from the server to get the latest state
+            await fetchProfileData(); 
+            setLoading(false);
         }
     };
 
     return {
         user,
-        bio,
-        isEditingProfile,
+        loading,
         message,
-        allSkills,
-        selectedSkillId,
-        setSelectedSkillId,
-        setIsEditingProfile,
+        isEditing,
+        bio,
         setBio,
-        handleBioSave,
-        handleAddSkill,
-        handleDeleteSkill,
+        allSkills,
+        currentSkills,
         selectedImageFile,
         setSelectedImageFile,
-        handleProfilePictureUpload,
+        toggleEditMode,
+        handleAddSkill: addSkillToCurrent,
+        handleDeleteSkill: removeSkillFromCurrent,
+        handleSaveChanges: saveAllChanges,
     };
 }

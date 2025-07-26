@@ -115,8 +115,8 @@ export class AuthService {
     return {
       ...rest,
       profilePicture: user.profilePicture
-        ? `http://localhost:9000/user-profile-pictures/${user.profilePicture}`
-        : null,
+        ? `http://localhost:9000/raketnow/${user.profilePicture}`
+        : "http://localhost:9000/raketnow/user-profile-pictures/default_profile.jpg",
     };
   }
 
