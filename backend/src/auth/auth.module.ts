@@ -12,6 +12,8 @@ import { GoogleStrategy } from './google.strategy';
 import googleOathConfig from './google-oath.config';
 import { UserService } from 'src/entities/user/user.service';
 import refreshJwtConfig from './refresh-jwt.config';
+import { SkillsModule } from 'src/entities/skills/skills.module';
+import { RaketistaSkillModule } from 'src/entities/raketista-skill/raketista-skill.module';
 
 
 
@@ -25,6 +27,8 @@ import refreshJwtConfig from './refresh-jwt.config';
     }),
     ConfigModule.forFeature(googleOathConfig),
     ConfigModule.forFeature(refreshJwtConfig),
+    SkillsModule,
+    RaketistaSkillModule,
   ],
   providers: [AuthService, JwtStrategy, GoogleStrategy, UserService],
   controllers: [AuthController],

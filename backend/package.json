@@ -21,7 +21,7 @@
     "seed": "ts-node src/seed/seed-skills.ts"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.848.0",
+    "@aws-sdk/client-s3": "^3.850.0",
     "@nestjs/common": "^11.1.5",
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.1.5",

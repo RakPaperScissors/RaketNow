@@ -26,8 +26,13 @@ export class Users {
     @Column({ type: 'varchar', length: 255, nullable: true })
     lastName: string;
 
+    // Main role of the user
     @Column({ type: 'enum', enum: userRole, default: userRole.CLIENT, })
     role: userRole;
+
+    // Additional roles that the user can have
+    @Column("text", { array: true, default: [userRole.CLIENT]})
+    roles: userRole[];
 
     @Column({ type: 'varchar', length: 50, nullable: true})
     authProvider: string;

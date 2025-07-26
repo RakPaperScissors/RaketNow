@@ -55,15 +55,24 @@ export class AuthService {
       };
     }
 
-    let userEntity;
+    let userEntity: Users;
     const role = createUserDto.role || userRole.CLIENT;
+    userToCreate.role = role;
+    userToCreate.roles = [role];
 
     if (role === userRole.RAKETISTA) {
-      userEntity = new Raketista();
+      const raketista = new Raketista();
+      Object.assign(raketista, userToCreate);
+      userEntity = raketista;
     } else if (role === userRole.ORGANIZATION) {
-      userEntity = new Organization();
+      const org = new Organization();
+      Object.assign(org, userToCreate);
+      org.orgName = createUserDto.organizationName || '';
+      userEntity = org;
     } else {
-      userEntity = new Users();
+      const client = new Users();
+      Object.assign(client, userToCreate);
+      userEntity = client
     }
 
     Object.assign(userEntity, userToCreate);
