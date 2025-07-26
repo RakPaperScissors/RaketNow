@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Mail, User, Hammer, Pencil, X } from "lucide-react";
 import { useProfile } from "../hooks/useProfile";
-import { useUser } from "../hooks/useUsers";
+import { useAuth } from "../context/AuthContext";
 
 // A simple utility to format dates
 const formatDate = (dateString) => {
@@ -12,6 +12,7 @@ const formatDate = (dateString) => {
 
 function ProfileCard() {
   const {
+    skillsLoading,
     message,
     isEditing,
     bio,
@@ -26,7 +27,7 @@ function ProfileCard() {
     handleSaveChanges,
   } = useProfile();
 
-  const { user, loading, error } = useUser();
+  const { user, loading, error } = useAuth();
 
   // Local state for the dropdown, managed by the component itself
   const [selectedSkillId, setSelectedSkillId] = useState("");
@@ -104,7 +105,12 @@ function ProfileCard() {
         <div className="mt-6">
           <h3 className="text-lg font-semibold mb-2 text-orange-500 flex items-center gap-2"><Hammer className="w-5 h-5" /> Skills</h3>
           <div className="flex flex-wrap gap-2">
-            {currentSkills && currentSkills.length > 0 ? (
+            {skillsLoading ? (
+              <div className="flex items-center gap-2 text-gray-500 text-sm">
+                <div className="w-4 h-4 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />
+                <span>Loading skills...</span>
+              </div>
+            ) : currentSkills && currentSkills.length > 0 ? (
               currentSkills.map((raketistaSkill) => (
                 <span key={raketistaSkill.id} className="bg-gray-100 text-gray-700 text-sm px-3 py-1 rounded-full flex items-center gap-2">
                   {raketistaSkill.skill.skillName}

@@ -17,14 +17,16 @@ import { useAuth } from "../context/AuthContext";
 
 function SideNav() {
   const { user, loading, logout } = useAuth();
+  const [isLoggingOut, setIsLoggingOut] = React.useState(false);
 
   const handleLogout = async () => {
+    setIsLoggingOut(true);
     await logout();
     window.location.href = "/login";
   };
 
   if (loading) return <p>Loading...</p>
-  if (!user) return <p>You are not logged in.</p>
+  if (!user && !isLoggingOut) return <p>You are not logged in.</p>
 
   return (
     <aside className="h-screen w-64 bg-white border-r border-gray-200 flex flex-col justify-between py-6 px-4">
@@ -72,8 +74,17 @@ function SideNav() {
           <p>Not logged in.</p>
         )}
 
-        <div className="mt-4" onClick={handleLogout} style={{ cursor: 'pointer' }}>
-          <SideNavItem to="#" icon={LogOut} label="Logout" />
+        <div className="mt-4">
+          {loading ? (
+            <div className="flex flex-col items-center justify-center text-gray-500">
+              <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mb-1" />
+              <p className="text-sm">Logging out...</p>
+            </div>
+          ) : (
+            <div onClick={handleLogout} style={{ cursor: 'pointer' }}>
+              <SideNavItem to="#" icon={LogOut} label="Logout" />
+            </div>
+          )}
         </div>
       </div>
     </aside>

@@ -20,10 +20,12 @@ export function useProfile() {
     const [bio, setBio] = useState("");
     const [selectedImageFile, setSelectedImageFile] = useState(null);
     const [currentSkills, setCurrentSkills] = useState([]);
+    const [skillsLoading, setSkillsLoading] = useState(true);
 
     // Fetches all necessary data for the profile page
     const fetchProfileData = useCallback(async () => {
         setLoading(true);
+        setSkillsLoading(true);
         setMessage("");
         try {
             // Fetch profile and all skills in parallel for a faster load time
@@ -40,6 +42,7 @@ export function useProfile() {
             console.error("Profile fetch error:", err);
         } finally {
             setLoading(false);
+            setSkillsLoading(false);
         }
     }, []);
 
@@ -137,6 +140,7 @@ export function useProfile() {
     return {
         user,
         loading,
+        skillsLoading,
         message,
         isEditing,
         bio,

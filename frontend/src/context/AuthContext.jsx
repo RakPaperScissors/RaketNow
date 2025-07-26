@@ -31,6 +31,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     const logout = async () => {
+        setLoading(true);
         try {
             await fetch("http://localhost:3000/auth/logout", {
                 method: "POST",
@@ -39,6 +40,8 @@ export const AuthProvider = ({ children }) => {
             setUser(null);
         } catch (err) {
             console.error("Logout failed.", err);
+        } finally {
+            setLoading(false);
         }
         
     };
