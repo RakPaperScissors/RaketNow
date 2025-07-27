@@ -57,20 +57,31 @@ export async function applyToRaket({ raketId, raketistaId, priceProposal }, acce
 
 
 // accepting or rejecting raket application
-export async function acceptApplication(id, accessToken) {
-    const response = await fetch(`http://localhost:3000/raket-application/${id}/accept`, {
-        method: 'PATCH',
-        headers: { Authorization: `Bearer ${accessToken}` }
-    });
-    if (!response.ok) throw new Error('Failed to accept application');
-    return response.json();
+export async function acceptApplication(id, token) {
+  const res = await fetch(`http://localhost:3000/raket-application/${id}/accept`, {
+    method: 'PATCH',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!res.ok) {
+    const text = await res.text().catch(() => '');
+    throw new Error(`(${res.status}) ${text || res.statusText}`);
+  }
+  return res.json();
 }
 
-export async function rejectApplication(id, accessToken) {
-    const response = await fetch(`http://localhost:3000/raket-application/${id}/reject`, {
-        method: 'PATCH',
-        headers: { Authorization: `Bearer ${accessToken}` }
-    });
-    if (!response.ok) throw new Error('Failed to reject application');
-    return response.json();
+export async function rejectApplication(id, token) {
+  const res = await fetch(`http://localhost:3000/raket-application/${id}/reject`, {
+    method: 'PATCH',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (!res.ok) {
+    const text = await res.text().catch(() => '');
+    throw new Error(`(${res.status}) ${text || res.statusText}`);
+  }
+  return res.json();
 }

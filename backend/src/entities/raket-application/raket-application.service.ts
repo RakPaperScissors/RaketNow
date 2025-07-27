@@ -105,10 +105,17 @@ export class RaketApplicationService {
   // fetch all raket applications posted for a single client (like user notifs)
   async getAllForClient(user: Users) {
     return this.raketApplicationRepository.find({
-      where: {
-        raket: { user: { uid: user.uid } },
-      },
+      where: {raket: { user: { uid: user.uid } }, },
       relations: ['raketista', 'raket', 'raket.user'],
+      order: { dateCreated: 'DESC' },
+    });
+  }
+
+  // fetch raket applications applied by the raketista
+  async getApplicationsByRaketista(user: Users) {
+    return this.raketApplicationRepository.find({
+      where: { raketista: { uid: user.uid } },
+      relations: ['raket', 'raket.user'],
       order: { dateCreated: 'DESC' },
     });
   }
@@ -122,7 +129,7 @@ export class RaketApplicationService {
   async accept(id: number, user: Users) {
     const application = await this.raketApplicationRepository.findOne({
       where: { applicationId: id },
-      relations: ['raket', 'raket.user'],
+      relations: ['raket', 'raket.user', 'raketista'],
     });
 
     if (!application || application.raket.user.uid !== user.uid) {
@@ -132,13 +139,15 @@ export class RaketApplicationService {
     await this.raketApplicationRepository.update(id, {
       status: RaketApplicationStatus.ACCEPTED,
     });
-  }
 
-  // reject an application (restricted for raket poster)
+    return this.findOne(id);
+    }
+
+  // reject
   async reject(id: number, user: Users) {
     const application = await this.raketApplicationRepository.findOne({
       where: { applicationId: id },
-      relations: ['raket', 'raket.user'],
+      relations: ['raket', 'raket.user', 'raketista'],
     });
 
     if (!application || application.raket.user.uid !== user.uid) {
@@ -148,6 +157,8 @@ export class RaketApplicationService {
     await this.raketApplicationRepository.update(id, {
       status: RaketApplicationStatus.REJECTED,
     });
+
+    return this.findOne(id);
   }
 
   async remove(id: number) {

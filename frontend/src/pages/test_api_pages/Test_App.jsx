@@ -19,6 +19,7 @@ import Login from "./pages/test_api_pages/Login";
 import Signup from "./pages/test_api_pages/Signup";
 import Home from "./pages/test_api_pages/Home";
 import Notifications from "./pages/test_api_pages/Notifications";
+import Applications from "./pages/test_api_pages/Applications";
 
 
 
@@ -38,6 +39,7 @@ function App() {
         <Route path="/rakets" element={<Rakets />} />
         <Route path="/rakets/:id" element={<Raket />} />
         <Route path="/notification" element={<Notifications />} />
+        <Route path="/raket-application" element={<Applications />} />
       </Route>
     )
   );

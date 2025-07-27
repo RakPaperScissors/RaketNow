@@ -27,6 +27,12 @@ export class RaketApplicationController {
     return this.raketApplicationService.getAllForClient(req.user);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Get('my-applications')
+  getMyApplications(@Req() req: AuthenticatedRequest) {
+    return this.raketApplicationService.getApplicationsByRaketista(req.user);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.raketApplicationService.findOne(+id);

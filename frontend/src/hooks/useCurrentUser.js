@@ -1,17 +1,28 @@
-export function useCurrentUser() {
-    const token = localStorage.getItem("access_token");
+import { useEffect, useState } from "react";
 
-    if (!token) return null;
+export function useCurrentUser() {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const raw = localStorage.getItem("access_token");
+    if (!raw) return setUser(null);
 
     try {
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        return {
-            uid: payload.uid,
-            email: payload.email,
-            role: payload.role,
-        };
+      const token = raw.startsWith("Bearer ") ? raw.split(" ")[1] : raw;
+      const base64 = token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/");
+      const payload = JSON.parse(atob(base64));
+      const uid = payload.uid ?? payload.sub ?? payload.userId ?? payload.id;
+
+      setUser(
+        uid
+          ? { uid, email: payload.email, role: payload.role }
+          : null
+      );
     } catch (e) {
-        console.error("Failed to decode token", e);
-        return null;
+      console.error("Failed to decode token", e);
+      setUser(null);
     }
+  }, []);
+
+  return user;
 }
