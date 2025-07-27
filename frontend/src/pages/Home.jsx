@@ -3,6 +3,7 @@ import WelcomeBanner from "../components/WelcomeBanner";
 import SearchBar from "../components/SearchBar";
 import DashboardCardList from "../components/DashboardCardList";
 import SideNav from "../components/SideNav";
+import PostRaket from "../components/PostRaket";
 
 const Home = () => {
   const mockUser = {
@@ -24,6 +25,7 @@ const Home = () => {
 
         {/* Main content */}
         <div className="pt-28 px-8 space-y-6">
+          <PostRaket />
           <DashboardCardList />
         </div>
 
