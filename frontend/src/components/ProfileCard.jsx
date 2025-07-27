@@ -42,7 +42,10 @@ function ProfileCard() {
   if (error) return <div className="text-center p-10 text-red-500">Error: {error}</div>;
   if (!user) return <div className="text-center p-10">No user data found. Please log in.</div>;
 
-  const isRaketista = user.role === "raketista";
+  const isRaketista = user?.role === "raketista" ||  user?.roles?.includes("raketista");
+  console.log("Is user raketista?", isRaketista);
+  console.log("bio:", user.bio);
+  console.log("currentSkills:", currentSkills);
 
   // Filter out skills that are already in the user's list for the dropdown
   const availableSkills = allSkills.filter(

@@ -102,9 +102,8 @@ export class UserController {
   // Apply to be a raketista from client
   @UseGuards(JwtAuthGuard)
   @Post('apply-raketista')
-  async applyForRaketista(@Req() req: any, @Body() body: { bio: string; skillId: number }) {
+  async applyForRaketista(@Req() req: any) {
     const userId = req.user['uid'];
-    const { bio, skillId } = body;
-    return this.userService.applyForRaketistaRole(userId, bio, skillId);
+    return this.userService.applyForRaketistaRole(userId);
   }
 }

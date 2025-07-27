@@ -8,6 +8,7 @@ import { userRole } from './entities/user.entity';
 import { Raketista } from './../raketista/entities/raketista.entity';
 import { Skills } from '../skills/entities/skill.entity';
 import { RaketistaSkill } from '../raketista-skill/entities/raketista-skill.entity';
+import { RaketistaSkillService } from '../raketista-skill/raketista-skill.service';
 
 @Injectable()
 export class UserService {
@@ -18,6 +19,8 @@ export class UserService {
     private readonly skillsRepo: Repository<Skills>,
     @InjectRepository(RaketistaSkill)
     private readonly raketistaSkillRepo: Repository<RaketistaSkill>,
+    @InjectRepository(Raketista)
+    private readonly raketistaRepo: Repository<Raketista>,
   ){}
 
   // --- Basic CRUD operations for USER entity ---
@@ -134,15 +137,13 @@ export class UserService {
   }
 
   // 4. Apply to be a raketista from client
-  async applyForRaketistaRole(userId: number, bio: string, skillId: number): Promise<Users | null> {
-    const user = await this.users.findOne({ 
-      where: { uid: userId },
-      relations: ['raketistaSkills', 'raketistaSkills.skill'],
-    });
-
+  async applyForRaketistaRole(uid: number) {
+    // Find the user (as base class)
+    const user = await this.users.findOne({ where: { uid } });
     if (!user) {
-      throw new NotFoundException(`User with ID ${userId} not found.`);
+      throw new NotFoundException(`User with ID ${uid} not found.`);
     }
+
     // Check if user already has raketista in 'roles'
     if (user.roles && user.roles.includes(userRole.RAKETISTA)) {
       throw new BadRequestException('User is already a raketista.');
@@ -151,36 +152,21 @@ export class UserService {
     if (user.role !== userRole.CLIENT) {
       throw new BadRequestException('Only users with a primary role of "client" can apply to be a raketista.');
     }
+
     // Add raketista to roles
-    user.roles = user.roles ? [...user.roles, userRole.RAKETISTA] : [userRole.RAKETISTA];
+    const updatedRoles = user.roles.includes(userRole.RAKETISTA)
+      ? user.roles
+      : [...user.roles, userRole.RAKETISTA];
 
-    // Set bio
-    const raketista = user as unknown as Raketista;
-    raketista.bio = bio;
+    await this.users
+      .createQueryBuilder()
+      .update(Users)
+      .set({ type: 'Raketista', roles: updatedRoles })
+      .where("uid = :uid", { uid: user.uid })
+      .execute();
 
-    await this.users.save(raketista);
+    const updated = await this.users.findOne({ where: { uid: user.uid }});
 
-    // Assign skill
-    const skill = await this.skillsRepo.findOne({ where: { skill_Id: skillId } });
-    if (!skill) {
-      throw new NotFoundException('Skill not found.');
-    }
-    const existing = await this.raketistaSkillRepo.findOne({
-      where: {
-        raketista: { uid: userId },
-        skill: { skill_Id: skillId },
-      },
-    });
-
-    if (!existing) {
-      const newRelation = this.raketistaSkillRepo.create({ raketista, skill });
-      await this.raketistaSkillRepo.save(newRelation);
-    }
-
-    return this.users.findOne({
-      where: { uid: userId },
-      relations: ['raketistaSkills', 'raketistaSkills.skill'],
-    });
-    
+    return updated;
   }
 }

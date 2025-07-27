@@ -111,9 +111,9 @@ export function useProfile() {
             if (selectedImageFile) {
                 promises.push(uploadProfilePicture(selectedImageFile));
             }
-            if (bio !== user.bio) {
+            // if (bio !== user.bio) {
                 promises.push(updateBio(user.uid, bio));
-            }
+            // }
             skillsToAdd.forEach(skill => {
                 promises.push(addSkill(user.uid, skill.skill.skill_Id));
             });
