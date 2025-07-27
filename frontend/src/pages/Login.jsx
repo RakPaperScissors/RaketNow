@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import EmailInput from "../components/EmailInput";
 import PasswordInput from "../components/PasswordInput";
@@ -11,7 +11,7 @@ import { useAuth } from "../hooks/useAuth";
 function Login() {
   const navigate = useNavigate();
 
-  const { email, password, setEmail, setPassword, handleLogin } = useAuth(); 
+  const { email, password, setEmail, setPassword, handleLogin } = useAuth();
   // const [email, setEmail] = useState("");
   // const [password, setPassword] = useState("");
 
