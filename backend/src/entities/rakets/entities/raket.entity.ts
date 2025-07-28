@@ -1,7 +1,8 @@
 import { RaketPictures } from 'src/entities/raket-pictures/entities/raket-picture.entity';
 import { Users } from 'src/entities/user/entities/user.entity';
 import { RaketApplication } from 'src/entities/raket-application/entities/raket-application.entity';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
+import { Skills } from 'src/entities/skills/entities/skill.entity';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, ManyToMany, JoinColumn, JoinTable } from 'typeorm';
 export enum RaketStatus {
     OPEN = 'open',
     IN_PROGRESS = 'in_progress',
@@ -42,4 +43,17 @@ export class Raket {
     @OneToMany(() => RaketApplication, application => application.raket)
     applications: RaketApplication[];
 
+    @ManyToMany(() => Skills, { eager: true })
+    @JoinTable({
+        name: 'raketSkills',
+        joinColumn: {
+            name: 'raketId',
+            referencedColumnName: 'raketId',
+        },
+        inverseJoinColumn: {
+            name: 'skillId',
+            referencedColumnName: 'skill_Id',
+        },
+    })
+    skills: Skills[];
 }
