@@ -62,6 +62,10 @@ function ProfileCard() {
           <div className="relative">
             <img
               src={selectedImageFile ? URL.createObjectURL(selectedImageFile) : (user.profilePicture || "https://randomuser.me/api/portraits/lego/6.jpg")}
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = "./public/default_profile.jpg"
+              }}
               alt="Profile"
               className="w-20 h-20 rounded-full object-cover border-2 border-orange-300"
             />
