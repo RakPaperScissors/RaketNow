@@ -1,21 +1,22 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from "@nestjs/common";
-import { CreateRaketDto } from "./dto/create-raket.dto";
-import { UpdateRaketDto } from "./dto/update-raket.dto";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Raket } from "./entities/raket.entity";
-import { Repository } from "typeorm";
-import { Users } from "../user/entities/user.entity";
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { CreateRaketDto } from './dto/create-raket.dto';
+import { UpdateRaketDto } from './dto/update-raket.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Raket, RaketStatus } from './entities/raket.entity';
+import { Repository } from 'typeorm';
+import { Users } from '../user/entities/user.entity';
+import { RaketApplication, RaketApplicationStatus } from "../raket-application/entities/raket-application.entity";
 
 @Injectable()
 export class RaketsService {
   constructor(
     @InjectRepository(Raket)
-    private readonly raket: Repository<Raket>
-  ) {}
+    private readonly raket: Repository<Raket>,
+    @InjectRepository(Users)
+    private readonly users: Repository<Users>,
+    @InjectRepository(RaketApplication)
+    private readonly raketApplicationRepository: Repository<RaketApplication>) {
+  }
 
   async create(createRaketDto: CreateRaketDto, creator: Users): Promise<Raket> {
     const raket = this.raket.create({
@@ -130,6 +131,71 @@ export class RaketsService {
   async remove(raketId: number) {
     const raket = await this.getEntityById(raketId);
     return await this.raket.remove(raket);
+  }
+
+  // fetches for get /raket/myrakets
+  async findMyRakets(userId: number) {
+    const rakets = await this.raket.find({
+      where: { user: { uid: userId } },
+      relations: {
+        applications: {
+          raketista: true,
+        },
+      },
+      order: {
+        dateCreated: 'DESC',
+      },
+    });
+    return rakets.map(raket => {
+      const acceptedApp = raket.applications.find(app => app.status === 'ACCEPTED');
+      return {
+        ...raket,
+        acceptedRaketista: acceptedApp?.raketista
+          ? {
+              firstName: acceptedApp.raketista.firstName,
+              lastName: acceptedApp.raketista.lastName,
+            }
+          : null,
+      };
+    });
+  }
+
+  // for updating status
+  async updateRaketStatus(raketId: number, status: RaketStatus) {
+    const raket = await this.getEntityById(raketId);
+    if (!Object.values(RaketStatus).includes(status)) {
+      throw new BadRequestException(`Invalid raket status: ${status}`);
+    }
+    raket.status = status;
+    if (status === RaketStatus.COMPLETED) {
+      raket.completedAt = new Date();
+    }
+    return await this.raket.save(raket);
+  }
+  // fetch all rakets assigned to raketista
+  async getRaketsAssignedToUser(uid: number) {
+    const acceptedApplications = await this.raketApplicationRepository.find({
+      where: {
+        raketista: { uid },
+        status: RaketApplicationStatus.ACCEPTED,
+      },
+      relations: ['raket', 'raket.user'],
+    });
+
+    const assignedRakets = acceptedApplications.map(app => {
+      const raket = app.raket;
+      return {
+        id: raket.raketId,
+        title: raket.title,
+        status: raket.status,
+        completedAt: raket.completedAt,
+        dateCreated: raket.dateCreated,
+        clientUid: raket.user?.uid,
+        clientName: raket.user ? `${raket.user.firstName} ${raket.user.lastName}` : 'Unknown',
+      };
+    });
+
+    return assignedRakets;
   }
 
 }

@@ -15,6 +15,49 @@ export async function getRaketById(id) {
     return response.json();
 }
 
+// fetch my rakets
+export async function fetchMyRakets(accessToken) {
+  const response = await fetch('http://localhost:3000/rakets/myrakets', {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+  if (!response.ok) {
+    throw new Error('Failed to fetch your rakets');
+  }
+  return response.json();
+}
+
+// update raket status (only clients can do this to their raket)
+export async function updateRaketStatus(id, status, token) {
+  const response = await fetch(`http://localhost:3000/rakets/${id}/status`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ status }),
+  });
+  if (!response.ok) throw new Error("Failed to update raket status");
+  return response.json();
+}
+
+// fetch rakets assigned to me
+export async function fetchAssignedRakets(accessToken) {
+  const response = await fetch('http://localhost:3000/rakets/assigned-to-me', {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch assigned rakets');
+  }
+
+  return response.json();
+}
+
+
 // fetching raket applications from the client side
 export async function fetchRaketApplications(accessToken) {
   const response = await fetch('http://localhost:3000/raket-application', {

@@ -12,6 +12,6 @@ import { Users } from '../user/entities/user.entity';
   imports: [TypeOrmModule.forFeature([RaketApplication, Notification, Raket, Users]), UserModule],
   providers: [RaketApplicationService],
   controllers: [RaketApplicationController],
-  exports: [RaketApplicationService],
+  exports: [RaketApplicationService, TypeOrmModule],
 })
 export class RaketApplicationModule {}

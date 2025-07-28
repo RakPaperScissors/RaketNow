@@ -4,9 +4,13 @@ import { RaketsController } from './rakets.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Raket } from './entities/raket.entity';
 import { Users } from '../user/entities/user.entity';
+import { RaketApplicationModule } from '../raket-application/raket-application.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Raket, Users])],
+  imports: [
+    TypeOrmModule.forFeature([Raket, Users]),
+    RaketApplicationModule,
+  ],
   controllers: [RaketsController],
   providers: [RaketsService],
 })
