@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, Not } from 'typeorm';
 import { RaketApplication, RaketApplicationStatus } from './entities/raket-application.entity';
 import { Users } from './../user/entities/user.entity';
 import { Notification } from '../notification/entities/notification.entity';
-import { Raket } from '../rakets/entities/raket.entity';
+import { Raket, RaketStatus } from '../rakets/entities/raket.entity';
 import { CreateRaketApplicationDto } from './dto/create-raket-application.dto';
 import { UpdateRaketApplicationDto } from './dto/update-raket-application.dto';
 import { BadRequestException } from '@nestjs/common';
@@ -14,13 +14,10 @@ export class RaketApplicationService {
   constructor(
     @InjectRepository(RaketApplication)
     private readonly raketApplicationRepository: Repository<RaketApplication>,
-
     @InjectRepository(Notification)
     private readonly notificationRepository: Repository<Notification>,
-
     @InjectRepository(Raket)
     private readonly raketRepository: Repository<Raket>,
-
     @InjectRepository(Users)
     private readonly usersRepository: Repository<Users>,
   ) {}
@@ -131,17 +128,49 @@ export class RaketApplicationService {
       where: { applicationId: id },
       relations: ['raket', 'raket.user', 'raketista'],
     });
-
     if (!application || application.raket.user.uid !== user.uid) {
       throw new BadRequestException('You are not authorized to accept this application.');
     }
-
-    await this.raketApplicationRepository.update(id, {
-      status: RaketApplicationStatus.ACCEPTED,
+    application.status = RaketApplicationStatus.ACCEPTED; //changes the raket application status to ACCEPTED
+    await this.raketApplicationRepository.save(application);
+    const raket = application.raket;
+    raket.status = RaketStatus.IN_PROGRESS; // changes the raket status to IN PROGRESS
+    await this.raketRepository.save(raket);
+    //notifies the accepted raketista
+    await this.notificationRepository.save({
+      user: application.raketista,
+      message: `Your application for "${raket.title}" has been accepted!`,
+      isRead: false,
+      actionable: false,
     });
-
-    return this.findOne(id);
+    // rejects all other application when the client accepts one application
+    const rejectedApplications = await this.raketApplicationRepository.find({
+      where: {
+        raket: { raketId: raket.raketId },
+        applicationId: Not(application.applicationId),
+      },
+      relations: ['raketista'],
+    });
+    await this.raketApplicationRepository
+      .createQueryBuilder()
+      .update(RaketApplication)
+      .set({ status: RaketApplicationStatus.REJECTED })
+      .where('raketId = :raketId AND applicationId != :applicationId', {
+        raketId: raket.raketId,
+        applicationId: application.applicationId,
+      })
+      .execute();
+    //notifies each rejected raketista
+    for (const rejectedApp of rejectedApplications) {
+      await this.notificationRepository.save({
+        user: rejectedApp.raketista,
+        message: `Your application for "${raket.title}" was not accepted.`,
+        isRead: false,
+        actionable: false,
+      });
     }
+    return this.findOne(application.applicationId);
+  }
 
   // reject
   async reject(id: number, user: Users) {
@@ -149,15 +178,19 @@ export class RaketApplicationService {
       where: { applicationId: id },
       relations: ['raket', 'raket.user', 'raketista'],
     });
-
     if (!application || application.raket.user.uid !== user.uid) {
       throw new BadRequestException('You are not authorized to reject this application.');
     }
-
     await this.raketApplicationRepository.update(id, {
       status: RaketApplicationStatus.REJECTED,
     });
-
+    // notificaitons for rejectin g
+    await this.notificationRepository.save({
+      user: application.raketista,
+      message: `Your application for "${application.raket.title}" has been rejected.`,
+      isRead: false,
+      actionable: false,
+    });
     return this.findOne(id);
   }
 

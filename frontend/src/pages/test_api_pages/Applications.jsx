@@ -136,58 +136,60 @@ function Applications() {
         )}
       </section>
       {/* raket a pplications the user (raketista) submitted */}
-      <section style={{ marginTop: 32 }}>
-        <h2>My Submitted Applications</h2>
+      {currentUser?.role !== "client" && (
+        <section style={{ marginTop: 32 }}>
+          <h2>My Submitted Applications</h2>
 
-        {myLoading ? (
-          <div>Loading...</div>
-        ) : myError ? (
-          <div style={{ color: "red" }}>{myError}</div>
-        ) : myApplications && myApplications.length > 0 ? (
-          <ul>
-            {myApplications.map((app) => {
-              const isMine = currentUser?.uid === app.raketista?.uid;
-              const isPending = app.status?.toUpperCase() === "PENDING";
+          {myLoading ? (
+            <div>Loading...</div>
+          ) : myError ? (
+            <div style={{ color: "red" }}>{myError}</div>
+          ) : myApplications && myApplications.length > 0 ? (
+            <ul>
+              {myApplications.map((app) => {
+                const isMine = currentUser?.uid === app.raketista?.uid;
+                const isPending = app.status?.toUpperCase() === "PENDING";
 
-              return (
-                <li
-                  key={app.applicationId}
-                  style={{
-                    marginBottom: 16,
-                    border: "1px solid #eee",
-                    padding: 12,
-                    borderRadius: 6,
-                  }}
-                >
-                  <div>
-                    <strong>Raket:</strong> {app.raket?.title || "No title"}
-                  </div>
-                  <div>
-                    <strong>Proposal:</strong>{" "}
-                    {formatPeso.format(Number(app.priceProposal || 0))}
-                  </div>
-                  <div>
-                    <strong>Status:</strong> {app.status}
-                  </div>
-
-                  {isPending && isMine && (
-                    <div style={{ marginTop: 8 }}>
-                      <button
-                        disabled={actionLoading}
-                        onClick={() => handleWithdraw(app.applicationId)}
-                      >
-                        Withdraw
-                      </button>
+                return (
+                  <li
+                    key={app.applicationId}
+                    style={{
+                      marginBottom: 16,
+                      border: "1px solid #eee",
+                      padding: 12,
+                      borderRadius: 6,
+                    }}
+                  >
+                    <div>
+                      <strong>Raket:</strong> {app.raket?.title || "No title"}
                     </div>
-                  )}
-                </li>
-              );
-            })}
-          </ul>
-        ) : (
-          <p>You haven't applied to any rakets yet.</p>
-        )}
-      </section>
+                    <div>
+                      <strong>Proposal:</strong>{" "}
+                      {formatPeso.format(Number(app.priceProposal || 0))}
+                    </div>
+                    <div>
+                      <strong>Status:</strong> {app.status}
+                    </div>
+
+                    {isPending && isMine && (
+                      <div style={{ marginTop: 8 }}>
+                        <button
+                          disabled={actionLoading}
+                          onClick={() => handleWithdraw(app.applicationId)}
+                        >
+                          Withdraw
+                        </button>
+                      </div>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          ) : (
+            <p>You haven't applied to any rakets yet.</p>
+          )}
+        </section>
+      )}
     </div>
   );
 }
