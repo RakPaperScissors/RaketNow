@@ -4,6 +4,7 @@ import SearchBar from "../components/SearchBar";
 import DashboardCardList from "../components/DashboardCardList";
 import SideNav from "../components/SideNav";
 import PostRaket from "../components/PostRaket";
+import Help from "../components/Help";
 
 const Home = () => {
   const mockUser = {
@@ -24,11 +25,11 @@ const Home = () => {
         </div>
 
         {/* Main content */}
-        <div className="pt-28 px-8 space-y-6">
+        <div className="pt-28 px-8 space-y-6 relative">
           <PostRaket />
+          <Help /> 
           <DashboardCardList />
         </div>
-
       </div>
     </div>
   );
