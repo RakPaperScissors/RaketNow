@@ -9,3 +9,9 @@ export async function fetchUsersByRole(role) {
     if (!response.ok) throw new Error('Failed to fetch users by role');
     return response.json();
 }
+
+export async function fetchRaketistas() {
+    const response = await fetch('http://localhost:3000/raketista');
+    if (!response.ok) throw new Error('Failed to fetch raketistas');
+    return response.json();
+}
