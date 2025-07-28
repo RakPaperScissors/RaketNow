@@ -6,6 +6,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, ManyToMan
 export enum RaketStatus {
     OPEN = 'open',
     IN_PROGRESS = 'in_progress',
+    PENDING_CONFIRMATION = 'pending_confirmation',
     COMPLETED = 'completed',
     CANCELLED = 'cancelled',
 }

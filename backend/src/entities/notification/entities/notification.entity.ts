@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { Users } from '../../user/entities/user.entity';
+import { Raket } from '../../rakets/entities/raket.entity';
 import { RaketApplication } from '../../raket-application/entities/raket-application.entity';
 
 @Entity()
@@ -26,4 +27,11 @@ export class Notification {
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
+
+  @ManyToOne(() => Raket, { nullable: true })
+  @JoinColumn({ name: 'raketId' })
+  raket?: Raket;
+
+  @Column({ nullable: true })
+  raketId?: number;
 }

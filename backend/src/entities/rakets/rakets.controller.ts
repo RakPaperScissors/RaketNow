@@ -4,12 +4,10 @@ import { RaketsService } from './rakets.service';
 import { CreateRaketDto } from './dto/create-raket.dto';
 import { UpdateRaketDto } from './dto/update-raket.dto';
 import { CurrentUser } from 'src/auth/current-user.decorator';
-import { Users } from '../user/entities/user.entity';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { ParseIntPipe } from '@nestjs/common';
 import { Request } from 'express';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { userRole } from 'src/entities/user/entities/user.entity';
+import { ParseIntPipe } from '@nestjs/common';
+import { Users, userRole } from 'src/entities/user/entities/user.entity';
 
 export interface RequestWithUser extends Request {
   user: {
@@ -57,6 +55,27 @@ export class RaketsController {
     return this.raketsService.updateRaketStatus(raketId, status);
   }
 
+  @Patch(':id/request-completion')
+  @UseGuards(JwtAuthGuard)
+  async requestCompletion(
+    @Param('id', ParseIntPipe) raketId: number,
+    @Req() req: Request
+  ) {
+    const userId = req.user?.['uid'];
+    return this.raketsService.raketistaRequestCompletion(raketId, userId);
+  }
+
+  @Patch(':id/cancel-completion-request')
+  @UseGuards(JwtAuthGuard)
+  async cancelCompletionRequest(
+    @Param('id', ParseIntPipe) raketId: number,
+    @Req() req: Request
+  ) {
+    const userId = req.user?.['uid'];
+    return this.raketsService.cancelCompletionRequest(raketId, userId);
+  }
+
+
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.raketsService.findOne(id);
@@ -69,7 +88,10 @@ export class RaketsController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string, @CurrentUser() user: Users) {
-    return this.raketsService.remove(+id);
+  @UseGuards(JwtAuthGuard)
+  remove(@Param('id') id: string, @Req() req: Request) {
+    const userId = (req.user as any)?.uid;
+    return this.raketsService.remove(+id, userId);
   }
+
 }

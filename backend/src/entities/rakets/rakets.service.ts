@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { CreateRaketDto } from './dto/create-raket.dto';
 import { UpdateRaketDto } from './dto/update-raket.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -6,6 +6,7 @@ import { Raket, RaketStatus } from './entities/raket.entity';
 import { Repository } from 'typeorm';
 import { Users } from '../user/entities/user.entity';
 import { RaketApplication, RaketApplicationStatus } from "../raket-application/entities/raket-application.entity";
+import { Notification } from '../notification/entities/notification.entity';
 
 @Injectable()
 export class RaketsService {
@@ -15,7 +16,9 @@ export class RaketsService {
     @InjectRepository(Users)
     private readonly users: Repository<Users>,
     @InjectRepository(RaketApplication)
-    private readonly raketApplicationRepository: Repository<RaketApplication>) {
+    private readonly raketApplicationRepository: Repository<RaketApplication>,
+    @InjectRepository(Notification)
+    private readonly notificationRepository: Repository<Notification>) {
   }
 
   async create(createRaketDto: CreateRaketDto, creator: Users): Promise<Raket> {
@@ -128,10 +131,23 @@ export class RaketsService {
     return await this.raket.save(raket);
   }
 
-  async remove(raketId: number) {
-    const raket = await this.getEntityById(raketId);
+  async remove(raketId: number, userId: number) {
+    const raket = await this.raket.findOne({
+      where: { raketId: raketId },
+      relations: ['user'],
+    });
+
+    if (!raket) {
+      throw new NotFoundException('Raket not found');
+    }
+
+    if (raket.user.uid !== userId) {
+      throw new ForbiddenException('You are not allowed to delete this raket.');
+    }
+
     return await this.raket.remove(raket);
   }
+
 
   // fetches for get /raket/myrakets
   async findMyRakets(userId: number) {
@@ -160,11 +176,20 @@ export class RaketsService {
     });
   }
 
-  // for updating status
   async updateRaketStatus(raketId: number, status: RaketStatus) {
     const raket = await this.getEntityById(raketId);
     if (!Object.values(RaketStatus).includes(status)) {
       throw new BadRequestException(`Invalid raket status: ${status}`);
+    }
+    const previousStatus = raket.status;
+    if (
+      previousStatus === RaketStatus.PENDING_CONFIRMATION &&
+      status === RaketStatus.COMPLETED
+    ) {
+      await this.notificationRepository.delete({
+        raketId: raketId,
+        actionable: true,
+      });
     }
     raket.status = status;
     if (status === RaketStatus.COMPLETED) {
@@ -172,6 +197,8 @@ export class RaketsService {
     }
     return await this.raket.save(raket);
   }
+
+
   // fetch all rakets assigned to raketista
   async getRaketsAssignedToUser(uid: number) {
     const acceptedApplications = await this.raketApplicationRepository.find({
@@ -185,7 +212,7 @@ export class RaketsService {
     const assignedRakets = acceptedApplications.map(app => {
       const raket = app.raket;
       return {
-        id: raket.raketId,
+        raketId: raket.raketId,
         title: raket.title,
         status: raket.status,
         completedAt: raket.completedAt,
@@ -196,6 +223,70 @@ export class RaketsService {
     });
 
     return assignedRakets;
+  }
+
+  // pending confirmation for the raketistas (to be confirmed by the client)
+  async raketistaRequestCompletion(raketId: number, raketistaUid: number) {
+    const raket = await this.raket.findOne({
+      where: { raketId },
+      relations: ['user'],
+    });
+    if (!raket) throw new NotFoundException('Raket not found');
+    // cehcks if the raketista is assigned to this raket
+    const acceptedApplication = await this.raketApplicationRepository.findOne({
+      where: {
+        raket: { raketId },
+        raketista: { uid: raketistaUid },
+        status: RaketApplicationStatus.ACCEPTED,
+      },
+    });
+    if (!acceptedApplication) {
+      throw new ForbiddenException('You are not assigned to this raket');
+    }
+
+    raket.status = RaketStatus.PENDING_CONFIRMATION;
+    await this.raket.save(raket);
+
+    await this.notificationRepository.save({
+      user: raket.user,
+      message: `Your raket "${raket.title}" was marked as completed by the raketista. Please confirm.`,
+      isRead: false,
+      actionable: true,
+      raket: raket,
+    });
+
+
+    return { message: 'Completion request sent to client' };
+  }
+
+  async cancelCompletionRequest(raketId: number, raketistaId: number) {
+    const raket = await this.raket.findOne({
+      where: { raketId },
+      relations: ['applications', 'applications.raketista'],
+    });
+
+    if (!raket) throw new NotFoundException('Raket not found');
+
+    const isAssigned = raket.applications.some(app =>
+      app.raketista.uid === raketistaId && app.status === RaketApplicationStatus.ACCEPTED,
+    );
+
+    if (!isAssigned) {
+      throw new ForbiddenException('You are not assigned to this raket');
+    }
+
+    if (raket.status !== RaketStatus.PENDING_CONFIRMATION) {
+      throw new BadRequestException('Raket is not pending confirmation');
+    }
+
+    raket.status = RaketStatus.IN_PROGRESS;
+    await this.raket.save(raket);
+
+    await this.notificationRepository.delete({
+      raket: { raketId },
+    });
+
+    return { message: 'Completion request cancelled. Back to IN PROGRESS.' };
   }
 
 }
