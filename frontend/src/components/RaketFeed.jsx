@@ -46,7 +46,7 @@ const CATEGORIES = [
 // ];
 
 
-const RaketFeed = () => {
+const RaketFeed = ({ searchTerm }) => {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const { rakets, loading, error } = useRakets();
@@ -63,10 +63,20 @@ const RaketFeed = () => {
 
   const clearAll = () => setSelectedCategories([]);
 
-  const filteredRakets =
-    selectedCategories.length === 0
-      ? rakets
-      : rakets.filter((raket) => selectedCategories.includes(raket.category));
+  const filteredRakets = rakets.filter((raket) => {
+    const matchesCategory =
+      selectedCategories.length === 0 || selectedCategories.includes(raket.category);
+
+    const matchesSearch =
+      !searchTerm ||
+      raket.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      raket.description.toLowerCase().includes(searchTerm.toLowerCase());
+
+    return matchesCategory && matchesSearch;
+  });
+    // selectedCategories.length === 0
+    //   ? rakets
+    //   : rakets.filter((raket) => selectedCategories.includes(raket.category));
 
   return (
     <main className="bg-[#F9FAFB] min-h-screen py-8 px-4">
