@@ -94,6 +94,23 @@ export async function fetchApplicationsForRaket(raketId) {
   return response.json();
 }
 
+// delete rakets
+export async function deleteRaketById(raketId, token) {
+  const response = await fetch(`http://localhost:3000/rakets/${raketId}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to delete raket");
+  }
+
+  return true;
+}
+
+
 // fetch my rakets
 export async function fetchMyRakets(accessToken) {
   const response = await fetch('http://localhost:3000/rakets/myrakets', {

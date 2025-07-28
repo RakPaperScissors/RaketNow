@@ -31,6 +31,10 @@ const UserRakets = () => {
         fetchRaketsData();
     }, [fetchRaketsData]);
 
+    useEffect(() => {
+        fetchRaketsData();
+    }, [fetchRaketsData]);
+
     const handleStatusChange = async (raketId, newStatus) => {
         try {
         setUpdatingId(raketId);
@@ -42,8 +46,48 @@ const UserRakets = () => {
         }
         await fetchRaketsData();
         } catch (err) {
-        console.error("Failed to update status:", err);
-        alert("Failed to update status. Try again.");
+            console.error("Failed to update status:", err);
+            alert("Failed to update status. Try again.");
+        } finally {
+            setUpdatingId(null);
+        }
+    };
+
+
+    const handleMarkCompleted = async (raketId) => {
+        try {
+            setUpdatingId(raketId);
+            await requestCompletion(raketId, token);
+            await fetchRaketsData();
+        } catch (err) {
+            console.error("Failed to mark as completed:", err);
+            alert("Something went wrong. Try again.");
+        } finally {
+            setUpdatingId(null);
+        }
+    };
+
+    const handleCancelConfirmation = async (raketId) => {
+        try {
+            setUpdatingId(raketId);
+            await cancelCompletionRequest(raketId, token);
+            await fetchRaketsData();
+        } catch (err) {
+            console.error("Failed to cancel confirmation:", err);
+            alert("Something went wrong. Try again.");
+        } finally {
+            setUpdatingId(null);
+        }
+    };
+
+    const handleClientConfirmCompleted = async (raketId) => {
+        try {
+        setUpdatingId(raketId);
+        await updateRaketStatus(raketId, "completed", token);
+        await fetchRaketsData();
+        } catch (err) {
+        console.error("Failed to confirm completion:", err);
+        alert("Something went wrong. Try again.");
         } finally {
         setUpdatingId(null);
         }
