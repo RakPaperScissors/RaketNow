@@ -77,7 +77,7 @@ const TopRaketista = () => {
                 {r.img ? (
                   <img src={r.img} 
                   alt={r.name} 
-                  onError={(e) => (e.target.src = "./public/default_profile.jpg")} 
+                  onError={(e) => (e.target.src = "/default_profile.jpg")} 
                   className="w-full h-full object-cover" />
                 ) : (
                   <div className="w-full h-full bg-gray-200" />
