@@ -7,6 +7,7 @@ import { Repository } from 'typeorm';
 import { Users } from '../user/entities/user.entity';
 import { RaketApplication, RaketApplicationStatus } from "../raket-application/entities/raket-application.entity";
 import { Notification } from '../notification/entities/notification.entity';
+import { NotificationService } from '../notification/notification.service';
 
 @Injectable()
 export class RaketsService {
@@ -18,7 +19,8 @@ export class RaketsService {
     @InjectRepository(RaketApplication)
     private readonly raketApplicationRepository: Repository<RaketApplication>,
     @InjectRepository(Notification)
-    private readonly notificationRepository: Repository<Notification>) {
+    private readonly notificationRepository: Repository<Notification>,
+  private readonly notificationService: NotificationService ) {
   }
 
   async create(createRaketDto: CreateRaketDto, creator: Users): Promise<Raket> {
@@ -133,7 +135,7 @@ export class RaketsService {
 
   async remove(raketId: number, userId: number) {
     const raket = await this.raket.findOne({
-      where: { raketId: raketId },
+      where: { raketId },
       relations: ['user'],
     });
 
@@ -145,9 +147,21 @@ export class RaketsService {
       throw new ForbiddenException('You are not allowed to delete this raket.');
     }
 
+    const applications = await this.raketApplicationRepository.find({
+      where: { raket: { raketId: raketId } },
+      relations: ['raketista'],
+    });
+    for (const app of applications) {
+      await this.notificationService.create({
+        user: app.raketista,
+        message: `The raket "${raket.title}" you applied to has been deleted by the client.`,
+        raketId: raket.raketId,
+      });
+    }
+
+    await this.raketApplicationRepository.delete({ raket: { raketId } });
     return await this.raket.remove(raket);
   }
-
 
   // fetches for get /raket/myrakets
   async findMyRakets(userId: number) {

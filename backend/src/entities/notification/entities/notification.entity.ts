@@ -18,7 +18,7 @@ export class Notification {
   @Column({ default: false })
   isRead: boolean;
 
-  @ManyToOne(() => RaketApplication, { nullable: true })
+  @ManyToOne(() => RaketApplication, { nullable: true, onUpdate: 'CASCADE', onDelete: 'CASCADE' })
   @JoinColumn({ name: 'raketApplicationId', referencedColumnName: 'applicationId' })
   raketApplication?: RaketApplication;
 
@@ -28,7 +28,7 @@ export class Notification {
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
-  @ManyToOne(() => Raket, { nullable: true })
+  @ManyToOne(() => Raket, { nullable: true, onDelete: 'SET NULL' })
   @JoinColumn({ name: 'raketId' })
   raket?: Raket;
 
