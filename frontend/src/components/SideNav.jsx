@@ -3,7 +3,6 @@ import {
   Home,
   Star,
   TrendingUp,
-  HelpCircle,
   Bell,
   MessageSquare,
   LogOut,
@@ -40,7 +39,6 @@ function SideNav() {
       {/* BOTTOM SECTION */}
       <div>
         <div className="space-y-2 mb-4">
-          <SideNavItem to="/help" icon={HelpCircle} label="Help" />
           <SideNavItem to="/notifications" icon={Bell} label="Notifications" />
           <SideNavItem to="/message" icon={MessageSquare} label="Messages" />
         </div>
