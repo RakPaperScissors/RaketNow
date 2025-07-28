@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { fetchRaketistas } from "../api/users";
 import { getAllSkills } from "../api/skills";
 
-export function useRakets() {
+export function useRaketistas() {
     const [raketistas, setRaketistas] = useState([]);
     const [loading, setLoading] = useState(true);
     const [message, setMessage] = useState("");

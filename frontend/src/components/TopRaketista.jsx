@@ -3,7 +3,7 @@ import { Star } from "lucide-react";
 import Miguel from "../assets/images/raketnow-logo.png";
 import Ana from "../assets/images/raketnow-logo.png";
 import Maria from "../assets/images/raketnow-logo.png";
-import { useRakets } from "../hooks/useRakets";
+import { useRaketistas } from "../hooks/useRaketistas";
 
 
 // Filler data muna but go backend
@@ -48,7 +48,7 @@ import { useRakets } from "../hooks/useRakets";
 
 
 const TopRaketista = () => {
-  const { raketistas, loading, message } = useRakets();
+  const { raketistas, loading, message } = useRaketistas();
   
   if(loading) return <p className="p-4">Loading top raketistas...</p>;
   if (message) return <p className="p-4 text-red-500">{message}</p>;
