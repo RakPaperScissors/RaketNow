@@ -12,7 +12,7 @@ import { useAuth } from "../context/AuthContext";
 function Login() {
   const navigate = useNavigate();
 
-  const { email, password, setEmail, setPassword, handleLogin } = useLoginForm();
+  const { email, password, setEmail, setPassword, message, messageType, handleLogin } = useLoginForm();
   const { login } = useAuth();
 
   const handleSubmit = (e) => {
@@ -36,6 +36,18 @@ function Login() {
         <p className="text-xs mt-2 text-[#000000] text-center">
           If you are already a member, easily log in
         </p>
+
+        {message && (
+          <div
+            className={`text-sm text-center mt-2 p-2 rounded-md ${
+              messageType === "success"
+                ? "bg-green-100 text-green-700"
+                : "bg-red-100 text-red-700"
+            }`}
+          >
+            {message}
+          </div>
+        )}
 
         <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
           <EmailInput
