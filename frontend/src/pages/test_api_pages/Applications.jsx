@@ -66,6 +66,18 @@ function Applications() {
     [raketista?.firstName, raketista?.lastName].filter(Boolean).join(" ") ||
     "Unknown";
 
+  const myRaketApps = applications?.filter(
+    (app) => app.raket?.user?.uid === currentUser?.uid
+  ) || [];
+
+  const pendingApps = myRaketApps.filter(
+    (app) => app.status?.toUpperCase() === "PENDING"
+  );
+
+  const otherApps = myRaketApps.filter(
+    (app) => app.status?.toUpperCase() !== "PENDING"
+  );
+
   return (
     <div style={{ maxWidth: 720, margin: "40px auto", padding: 24 }}>
       <DebugPanel user={currentUser} />
@@ -80,57 +92,101 @@ function Applications() {
         ) : error ? (
           <div style={{ color: "red" }}>{error}</div>
         ) : applications && applications.length > 0 ? (
-          <ul>
-            {applications.map((app) => {
-              const raketistaName = renderRaketistaName(app.raketista);
-              const isOwner = currentUser?.uid === app.raket?.user?.uid;
-              const isPending = app.status?.toUpperCase() === "PENDING";
+          <>
+          {pendingApps?.length > 0 && (
+            <>
+              <h3 style={{ marginTop: 16 }}>🟡 Pending Applications</h3>
+              <ul>
+                {pendingApps.map((app) => {
+                  const raketistaName = renderRaketistaName(app.raketista);
+                  const isOwner = currentUser?.uid === app.raket?.user?.uid;
 
-              return (
-                <li
-                  key={app.applicationId}
-                  style={{
-                    marginBottom: 16,
-                    border: "1px solid #eee",
-                    padding: 12,
-                    borderRadius: 6,
-                  }}
-                >
-                  <div>
-                    <strong>Raket:</strong> {app.raket?.title || "No title"}
-                  </div>
-                  <div>
-                    <strong>Raketista:</strong> {raketistaName}
-                  </div>
-                  <div>
-                    <strong>Proposal:</strong>{" "}
-                    {formatPeso.format(Number(app.priceProposal || 0))}
-                  </div>
-                  <div>
-                    <strong>Status:</strong> {app.status}
-                  </div>
+                  return (
+                    <li
+                      key={app.applicationId}
+                      style={{
+                        marginBottom: 16,
+                        border: "1px solid #eee",
+                        padding: 12,
+                        borderRadius: 6,
+                      }}
+                    >
+                      <div>
+                        <strong>Raket:</strong> {app.raket?.title || "No title"}
+                      </div>
+                      <div>
+                        <strong>Raketista:</strong> {raketistaName}
+                      </div>
+                      <div>
+                        <strong>Proposal:</strong>{" "}
+                        {formatPeso.format(Number(app.priceProposal || 0))}
+                      </div>
+                      <div>
+                        <strong>Status:</strong> {app.status}
+                      </div>
 
-                  {isPending && isOwner && (
-                    <div style={{ marginTop: 8 }}>
-                      <button
-                        disabled={actionLoading}
-                        onClick={() => handleAccept(app.applicationId)}
-                        style={{ marginRight: 8 }}
-                      >
-                        Accept
-                      </button>
-                      <button
-                        disabled={actionLoading}
-                        onClick={() => handleReject(app.applicationId)}
-                      >
-                        Reject
-                      </button>
-                    </div>
-                  )}
-                </li>
-              );
-            })}
-          </ul>
+                      {isOwner && (
+                        <div style={{ marginTop: 8 }}>
+                          <button
+                            disabled={actionLoading}
+                            onClick={() => handleAccept(app.applicationId)}
+                            style={{ marginRight: 8 }}
+                          >
+                            Accept
+                          </button>
+                          <button
+                            disabled={actionLoading}
+                            onClick={() => handleReject(app.applicationId)}
+                          >
+                            Reject
+                          </button>
+                        </div>
+                      )}
+                    </li>
+                  );
+                })}
+              </ul>
+            </>
+          )}
+
+          {otherApps?.length > 0 && (
+            <>
+              <h3 style={{ marginTop: 32 }}>📄 Other Applications</h3>
+              <ul>
+                {otherApps.map((app) => {
+                  const raketistaName = renderRaketistaName(app.raketista);
+
+                  return (
+                    <li
+                      key={app.applicationId}
+                      style={{
+                        marginBottom: 16,
+                        border: "1px solid #eee",
+                        padding: 12,
+                        borderRadius: 6,
+                      }}
+                    >
+                      <div>
+                        <strong>Raket:</strong> {app.raket?.title || "No title"}
+                      </div>
+                      <div>
+                        <strong>Raketista:</strong> {raketistaName}
+                      </div>
+                      <div>
+                        <strong>Proposal:</strong>{" "}
+                        {formatPeso.format(Number(app.priceProposal || 0))}
+                      </div>
+                      <div>
+                        <strong>Status:</strong> {app.status}
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            </>
+          )}
+        </>
+
         ) : (
           <p>No applications to your rakets.</p>
         )}

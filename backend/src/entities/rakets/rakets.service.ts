@@ -343,6 +343,26 @@ export class RaketsService {
       actionable: false,
     });
 
+    // for rejected applicants: reset rejected applicants to pending & notify
+    const rejectedApps = raket.applications.filter(app =>
+      app.status === RaketApplicationStatus.REJECTED
+    );
+
+    for (const app of rejectedApps) {
+      app.status = RaketApplicationStatus.PENDING;
+
+      await this.raketApplicationRepository.save(app);
+
+      if (app.raketista) {
+        await this.notificationService.create({
+          user: app.raketista,
+          message: `The raket "${raket.title}" is open again. Your application has been reopened.`,
+          raketId: raket.raketId,
+          actionable: false,
+        });
+      }
+    }
+
     return { message: 'Successfully withdrawn from raket' };
   }
 
