@@ -15,6 +15,6 @@ import { NotificationModule } from '../notification/notification.module';
     RaketApplicationModule, NotificationModule,
   ],
   controllers: [RaketsController],
-  providers: [RaketsService],
+  providers: [RaketsService, TypeOrmModule],
 })
 export class RaketsModule {}

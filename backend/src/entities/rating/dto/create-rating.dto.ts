@@ -1,15 +1,12 @@
-import { IsInt, IsOptional, IsString, Min, Max } from 'class-validator';
+import { IsInt, Min, Max, IsOptional, IsString } from 'class-validator';
 
 export class CreateRatingDto {
-  @IsInt()
-  raketId: number;
-
   @IsInt()
   @Min(1)
   @Max(5)
   rating: number;
 
-  @IsString()
   @IsOptional()
-  review?: string;
+  @IsString()
+  comment?: string;
 }
