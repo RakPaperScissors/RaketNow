@@ -1,5 +1,6 @@
 import React from "react";
 import { Star } from "lucide-react";
+import LoadingSpinner from "./LoadingSpinner";
 import Miguel from "../assets/images/raketnow-logo.png";
 import Ana from "../assets/images/raketnow-logo.png";
 import Maria from "../assets/images/raketnow-logo.png";
@@ -50,7 +51,7 @@ import { useRaketistas } from "../hooks/useRaketistas";
 const TopRaketista = () => {
   const { raketistas, loading, message } = useRaketistas();
   
-  if(loading) return <p className="p-4">Loading top raketistas...</p>;
+  if (loading) return <LoadingSpinner />;
   if (message) return <p className="p-4 text-red-500">{message}</p>;
 
   return (

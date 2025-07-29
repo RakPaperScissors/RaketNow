@@ -10,6 +10,7 @@ import {
   Users,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
+import LoadingSpinner from "./LoadingSpinner";
 import SideNavItem from "./SideNavItem";
 import SideNavUser from "./SideNavUser";
 import logo from "../assets/images/raketnow-blue-logo.png";
@@ -25,8 +26,9 @@ function SideNav() {
     window.location.href = "/login";
   };
 
-  if (loading) return <p>Loading...</p>
-  if (!user && !isLoggingOut) return <p>You are not logged in.</p>
+  if (loading) return <LoadingSpinner fullScreen/>;
+  if (isLoggingOut) return <LoadingSpinner fullScreen/>
+  if (!user) return <p>You are not logged in.</p>
 
   return (
     <aside className="h-screen w-64 bg-white border-r border-gray-200 flex flex-col justify-between py-6 px-4">
@@ -83,10 +85,7 @@ function SideNav() {
 
         <div className="mt-4">
           {loading ? (
-            <div className="flex flex-col items-center justify-center text-gray-500">
-              <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mb-1" />
-              <p className="text-sm">Logging out...</p>
-            </div>
+            <LoadingSpinner />
           ) : (
             <div onClick={handleLogout} style={{ cursor: 'pointer' }}>
               <SideNavItem to="#" icon={LogOut} label="Logout" />

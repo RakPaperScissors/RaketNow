@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Mail, User, Hammer, Pencil, X } from "lucide-react";
+import LoadingSpinner from "./LoadingSpinner";
 import { useProfile } from "../hooks/useProfile";
 import { useAuth } from "../context/AuthContext";
 
@@ -27,18 +28,13 @@ function ProfileCard() {
     handleSaveChanges,
   } = useProfile();
 
-  const { user, loading, error } = useAuth();
+  const { user, loading: authLoading, error } = useAuth();
 
   // Local state for the dropdown, managed by the component itself
   const [selectedSkillId, setSelectedSkillId] = useState("");
-  if (loading) {
-  return (
-      <div className="flex flex-col items-center justify-center mt-20 text-gray-500">
-        <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-3" />
-        <p>Loading profile...</p>
-      </div>
-    );
-  }
+  
+  const isPageLoading = authLoading || skillsLoading;
+  if (isPageLoading) return <LoadingSpinner />;
   if (error) return <div className="text-center p-10 text-red-500">Error: {error}</div>;
   if (!user) return <div className="text-center p-10">No user data found. Please log in.</div>;
 
@@ -64,7 +60,7 @@ function ProfileCard() {
               src={selectedImageFile ? URL.createObjectURL(selectedImageFile) : (user.profilePicture || "https://randomuser.me/api/portraits/lego/6.jpg")}
               onError={(e) => {
                 e.target.onerror = null;
-                e.target.src = "./public/default_profile.jpg"
+                e.target.src = "/default_profile.jpg"
               }}
               alt="Profile"
               className="w-20 h-20 rounded-full object-cover border-2 border-orange-300"
@@ -113,9 +109,8 @@ function ProfileCard() {
           <h3 className="text-lg font-semibold mb-2 text-orange-500 flex items-center gap-2"><Hammer className="w-5 h-5" /> Skills</h3>
           <div className="flex flex-wrap gap-2">
             {skillsLoading ? (
-              <div className="flex items-center gap-2 text-gray-500 text-sm">
-                <div className="w-4 h-4 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />
-                <span>Loading skills...</span>
+              <div className="flex justify-center items-center w-full">
+                <LoadingSpinner size={30}/>
               </div>
             ) : currentSkills && currentSkills.length > 0 ? (
               currentSkills.map((raketistaSkill) => (

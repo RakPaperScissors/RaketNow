@@ -5,10 +5,15 @@ import RaketFeed from "../components/RaketFeed";
 import TopRaketista from "../components/TopRaketista";
 import PostRaket from "../components/PostRaket";
 import Help from "../components/Help";
+import { useAuth } from "../context/AuthContext";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 
 const ForYou = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const { loading } = useAuth();
+
+  if (loading) return <LoadingSpinner fullScreen />;
 
   return (
     <div className="flex h-screen bg-[#f9fafb]">

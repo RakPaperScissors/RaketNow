@@ -12,7 +12,7 @@ const SideNavUser = ({ name, role, image }) => {
         src={image}
         onError={(e) => {
                 e.target.onerror = null;
-                e.target.src = "./public/default_profile.jpg"
+                e.target.src = "/default_profile.jpg"
               }}
         alt={name}
         className="w-10 h-10 rounded-full object-cover"

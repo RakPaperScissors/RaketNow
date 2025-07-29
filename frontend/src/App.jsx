@@ -1,6 +1,6 @@
 // changed some format coz deins ko gets pano naga work yung root layout HASHDHASD
 
-import React from "react";
+import React, { Suspense } from "react";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 
 import Header from "./components/Header";
@@ -19,6 +19,7 @@ import BecomeRaketista from "./pages/BecomeRaketista";
 import UserRakets from "./pages/MyRakets";
 import BoostPost from "./pages/Boost";
 import { AuthProvider } from "./context/AuthContext";
+import LoadingSpinner from "./components/LoadingSpinner";
 
 function AppContent() {
   const location = useLocation();
@@ -35,27 +36,29 @@ function AppContent() {
 
   return (
     <>
-      {showHeader && <Header />}
+      <Suspense fallback={<LoadingSpinner fullScreen />}>
+        {showHeader && <Header />}
 
-      <Routes>
-        {/* public pages -- LANDING */}
-        <Route path="/" element={<Landing />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/faqs" element={<Faqs />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
+        <Routes>
+          {/* public pages -- LANDING */}
+          <Route path="/" element={<Landing />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/faqs" element={<Faqs />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
 
-        {/* authenticated pages -- AFTER LOG IN */}
-        <Route path="/home" element={<Home />} />
-        <Route path="/rakets" element={<ForYou />} />
-        <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/message" element={<MessagePage />} />
-        <Route path="/become-raketista" element={<BecomeRaketista />} />
-        <Route path="/my-rakets" element={<UserRakets />} />
-        <Route path="/boost" element={<BoostPost />} />
-      </Routes>
+          {/* authenticated pages -- AFTER LOG IN */}
+          <Route path="/home" element={<Home />} />
+          <Route path="/rakets" element={<ForYou />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/message" element={<MessagePage />} />
+          <Route path="/become-raketista" element={<BecomeRaketista />} />
+          <Route path="/my-rakets" element={<UserRakets />} />
+          <Route path="/boost" element={<BoostPost />} />
+        </Routes>
 
-      {showFooter && <Footer />}
+        {showFooter && <Footer />}
+      </Suspense>
     </>
   );
 }

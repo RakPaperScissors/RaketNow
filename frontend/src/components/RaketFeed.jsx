@@ -5,6 +5,7 @@ import { formatDistanceToNow } from "date-fns";
 import Mockup from "../assets/images/raketnow-mockup.png";
 import Sample from "../assets/images/raketnow-logo.png";
 import { useRakets } from "../hooks/useRakets";
+import LoadingSpinner from "./LoadingSpinner";
 
 const CATEGORIES = [
   "Maintenance & Repair",
@@ -167,7 +168,7 @@ const RaketFeed = ({ searchTerm }) => {
 
         {/* Feed */}
         {loading ? (
-          <p className="text-center text-sm text-gray-500">Loading rakets...</p>
+          <LoadingSpinner />
         ) : error ? (
           <p className="text-center text-sm text-red-500">{error}</p>
         ) : filteredRakets.length > 0 ? (
