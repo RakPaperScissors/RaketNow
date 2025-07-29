@@ -3,7 +3,7 @@ import { fetchMyRakets, updateRaketStatus, fetchAssignedRakets, requestCompletio
 import { useCurrentUser } from "../../hooks/useCurrentUser";
 import DebugPanel from "../../components/DebugPanel"; 
 
-const MyRakets = () => {
+const UserRakets = () => {
     const currentUser = useCurrentUser();
     const [rakets, setRakets] = useState([]);
     const [assignedRakets, setAssignedRakets] = useState([]);
@@ -368,5 +368,5 @@ const MyRakets = () => {
     );
 };
 
-export default MyRakets;
+export default UserRakets;
 

@@ -27,6 +27,7 @@ import { Conversation } from './entities/conversation/entities/conversation.enti
 import { RaketApplicationModule } from './entities/raket-application/raket-application.module';
 import { NotificationModule } from './entities/notification/notification.module';
 import { ProfileModule } from './profile/profile.module';
+import { RatingModule } from './entities/rating/rating.module';
 
 @Module({
   imports: [
@@ -63,7 +64,8 @@ import { ProfileModule } from './profile/profile.module';
     RaketApplicationModule,
     NotificationModule,
     MessageModule,
-    ProfileModule
+    ProfileModule,
+    RatingModule
   ],
   controllers: [AppController],
   providers: [AppService],
