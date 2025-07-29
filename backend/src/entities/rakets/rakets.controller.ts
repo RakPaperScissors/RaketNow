@@ -44,14 +44,24 @@ export class RaketsController {
     return this.raketsService.updateRaketStatus(id, status, req.user.uid);
   }
 
-  @Patch(':raketId/reject-completion-request')
+  @Patch(':id/reject-completion-request')
   @UseGuards(JwtAuthGuard)
   async clientRejectCompletion(
-    @Param('raketId', ParseIntPipe) raketId: number,
+    @Param('id', ParseIntPipe) raketId: number,
     @Req() req: any,
   ) {
     const clientId = req.user.uid;
     return this.raketsService.clientRejectsCompletionRequest(raketId, clientId);
+  }
+
+  @Patch(':id/withdraw')
+  @UseGuards(JwtAuthGuard)
+  async withdrawFromRaket(
+    @Param('id') raketId: number,
+    @Req() req: any,
+  ) {
+    const raketistaUid = req.user.uid;
+    return this.raketsService.withdrawRaket(raketId, raketistaUid);
   }
 
   @Get(':id')
