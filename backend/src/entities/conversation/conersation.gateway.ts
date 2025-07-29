@@ -12,6 +12,7 @@ import { Logger } from "@nestjs/common";
 import { MessageService } from "../message/message.service";
 import { CreateMessageDto } from "../message/dto/create-message.dto";
 import { AuthService } from "src/auth/auth.service";
+import * as cookie from 'cookie';
 
 interface AuthenticatedSocket extends Socket {
   user: {
@@ -21,9 +22,11 @@ interface AuthenticatedSocket extends Socket {
 
 @WebSocketGateway({
   cors: {
-    origin: "*",
+    origin: "http://localhost:5173",
+    credentials: true,
   },
 })
+
 export class ConversationGateway
   implements OnGatewayConnection, OnGatewayDisconnect
 {
@@ -39,12 +42,17 @@ export class ConversationGateway
 
   async handleConnection(socket: AuthenticatedSocket) {
     try {
-      const token = socket.handshake.auth.token;
+      const rawCookie = socket.handshake.headers.cookie;
+      const cookies = rawCookie ? cookie.parse(rawCookie) : {};
+      const token = cookies['access_token'];
       if (!token) {
         throw new Error("Authentication token not found");
       }
       const userPayload = await this.authService.verifyJwt(token);
-      socket.user = userPayload;
+      if (!userPayload) {
+        throw new Error('Invalid authentication token');
+      }
+      socket.user = { id: String(userPayload.id) };
       this.logger.log(
         `Client connected: ${socket.id} - User ID: ${socket.user.id}`
       );
@@ -80,7 +88,7 @@ export class ConversationGateway
       createMessageDto,
       senderId
     );
-
+    this.logger.log(`Broadcasting new message ${message.id} to conversation room: ${createMessageDto.conversationId}`);
     this.server.to(createMessageDto.conversationId).emit("newMessage", message);
 
     return message;
