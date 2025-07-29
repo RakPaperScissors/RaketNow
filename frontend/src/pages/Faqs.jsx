@@ -1,4 +1,6 @@
 import React from 'react';
+import { ArrowLeft } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const faqsData = [
   {
@@ -12,6 +14,14 @@ const faqsData = [
         q: 'Who can use RaketNow?',
         a: 'Anyone! Whether you’re looking to hire someone (clients) or offer services (Raketistas), RaketNow is for you.',
       },
+      {
+        q: 'Can I post a raket as a client or Raketista?',
+        a: 'Absolutely! Clients can post jobs they need help with, and can still apply to jobs they are interested by clicking "Apply as a raketista". Similarly, Raketistas can post their services and apply to jobs posted by clients.',
+      },
+      {
+        q: 'How does a rating system work?',
+        a: 'Clients are given the feature to update the status of a raket and rate Raketistas after a job is completed. This helps maintain quality and trust within the community. Their rating are then displayed on the respective raketista profiles.',
+      },
     ],
   },
   {
@@ -20,6 +30,10 @@ const faqsData = [
       {
         q: 'How do I find a Raketista?',
         a: 'Browse our categorized service listings or use the search function. You can view freelancer profiles, ratings, skills, and certifications.',
+      },
+      {
+        q: 'How do I post a Raket?',
+        a: 'By simply clicking the "+" icon on the bottom corner of your dashboard, you can post a job with details like title, description, budget, and deadline.',
       },
       {
         q: 'How do I know if a Raketista is trustworthy?',
@@ -37,6 +51,10 @@ const faqsData = [
       {
         q: 'How do I sign up as a Raketista?',
         a: 'Create an account, select your skillsets, upload work photos, and optionally add certifications.',
+      },
+      {
+        q: 'How can I apply as a Rakets?',
+        a: 'After setting up your profile, you can now browse through the "For You" page and apply to jobs that interest you by clicking the "Apply Raket" button.',
       },
       {
         q: 'What if I don’t have certifications?',
@@ -71,7 +89,7 @@ const faqsData = [
       {
         q: 'What types of services are supported?',
         a: `We support 50+ categories including:
-        Home Repairs (Plumbing, Carpentry, Electrician), Tech Support (Computer Repair, Network Setup), Personal Care (Makeup, Hair, Massage), Tutoring (Academic, Music, Language), Creative Services (Graphic Design, Video Editing), Food & Beverage (Catering, Baking), Automotive (Car Wash, Mechanic), Delivery & Moving Services and many more.`,
+Home Repairs (Plumbing, Carpentry, Electrician), Tech Support (Computer Repair, Network Setup), Personal Care (Makeup, Hair, Massage), Tutoring (Academic, Music, Language), Creative Services (Graphic Design, Video Editing), Food & Beverage (Catering, Baking), Automotive (Car Wash, Mechanic), Delivery & Moving Services and many more.`,
       },
       {
         q: 'Can organizations use RaketNow?',
@@ -86,10 +104,22 @@ const faqsData = [
 ];
 
 const Faqs = () => {
+  const navigate = useNavigate();
+
   return (
-    // heading
     <section className="px-6 py-16 bg-[#FFFFFF]">
       <div className="max-w-5xl mx-auto">
+
+        {/* Back Button */}
+        <button
+          onClick={() => navigate(-1)}
+          className="flex items-center text-[#FF7C2B] mb-6 hover:text-orange-600 transition"
+        >
+          <ArrowLeft className="w-5 h-5 mr-1" />
+          Back
+        </button>
+
+        {/* Heading */}
         <div className="text-center mb-12">
           <p className="text-sm font-semibold text-[#FF7C2B] mb-2">FAQs</p>
           <h1 className="text-3xl sm:text-4xl font-bold text-[#0C2C57] mb-2">

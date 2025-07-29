@@ -1,7 +1,8 @@
 import React from "react";
 import SearchBar from "../components/SearchBar";
 import SideNav from "../components/SideNav";
-import UserRakets from "../components/UserRakets"; // Import the UserRakets component
+import UserRakets from "../components/UserRakets"; 
+import RaketStatus from "../components/RaketStatus";
 
 const MyRakets = () => {
   return (
@@ -21,6 +22,7 @@ const MyRakets = () => {
         {/* Scrollable Content */}
         <div className="flex-1 overflow-y-auto px-8 py-6 space-y-6">
           <UserRakets />
+          <RaketStatus />
         </div>
       </div>
     </div>

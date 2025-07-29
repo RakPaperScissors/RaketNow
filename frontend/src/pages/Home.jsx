@@ -6,6 +6,8 @@ import SideNav from "../components/SideNav";
 import { useAuth } from "../context/AuthContext";
 import { useRakets } from "../hooks/useRakets";
 import RaketCard from "../components/RaketCard";
+import PostRaket from "../components/PostRaket";
+import Help from "../components/Help";
 
 const Home = () => {
   const { user, loading: authLoading } = useAuth();
@@ -43,9 +45,10 @@ const Home = () => {
         </div>
 
         {/* Main content */}
-        <div className="pt-28 px-8 space-y-6">
+        <div className="pt-28 px-8 space-y-6 relative">
+          <PostRaket />
+          <Help /> 
           <DashboardCardList />
-
           {/* Show filtered rakets */}
           {searchTerm && (
             <div className="mt-5 mb-10">

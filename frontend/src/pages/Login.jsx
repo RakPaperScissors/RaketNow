@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import EmailInput from "../components/EmailInput";
 import PasswordInput from "../components/PasswordInput";
@@ -11,7 +11,6 @@ import { useAuth } from "../context/AuthContext";
 
 function Login() {
   const navigate = useNavigate();
-
   const { email, password, setEmail, setPassword, message, messageType, handleLogin } = useLoginForm();
   const { login } = useAuth();
 
