@@ -110,6 +110,20 @@ export async function deleteRaketById(raketId, token) {
   return true;
 }
 
+// cancel ongoing rakets
+export async function cancelRaket(raketId, accessToken) {
+  const response = await fetch(`http://localhost:3000/rakets/${raketId}/cancel`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+  if (!response.ok) {
+    throw new Error("Failed to cancel raket");
+  }
+  return response.json();
+}
 
 // fetch my rakets
 export async function fetchMyRakets(accessToken) {

@@ -53,7 +53,6 @@ const UserRakets = () => {
         }
     };
 
-
     const handleMarkCompleted = async (raketId) => {
         try {
             setUpdatingId(raketId);
