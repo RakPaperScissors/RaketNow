@@ -16,6 +16,8 @@ import ForYou from "./pages/ForYou";
 import ProfilePage from "./pages/ProfilePage";
 import MessagePage from "./pages/MessagePage";
 import BecomeRaketista from "./pages/BecomeRaketista";
+import UserRakets from "./pages/MyRakets";
+import BoostPost from "./pages/Boost";
 
 function AppContent() {
   const location = useLocation();
@@ -48,6 +50,8 @@ function AppContent() {
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/message" element={<MessagePage />} />
         <Route path="/become-raketista" element={<BecomeRaketista />} />
+        <Route path="/my-rakets" element={<UserRakets />} />
+        <Route path="/boost" element={<BoostPost />} />
       </Routes>
 
       {showFooter && <Footer />}
