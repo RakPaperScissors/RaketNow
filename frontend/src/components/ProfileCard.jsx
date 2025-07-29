@@ -42,7 +42,7 @@ function ProfileCard() {
   if (error) return <div className="text-center p-10 text-red-500">Error: {error}</div>;
   if (!user) return <div className="text-center p-10">No user data found. Please log in.</div>;
 
-  const isRaketista = user?.role === "raketista" ||  user?.roles?.includes("raketista");
+  const isRaketista = user?.type === "Raketista";
   console.log("Is user raketista?", isRaketista);
   console.log("bio:", user.bio);
   console.log("currentSkills:", currentSkills);
@@ -79,7 +79,7 @@ function ProfileCard() {
           <div>
             <h2 className="text-xl font-bold">{`${user.firstName} ${user.lastName}`}</h2>
             <div className="flex items-center gap-2 text-sm text-gray-600 mt-1">
-              <span className="bg-orange-100 text-orange-600 px-2 py-0.5 rounded-full text-xs font-medium capitalize">{user.role}</span>
+              <span className="bg-orange-100 text-orange-600 px-2 py-0.5 rounded-full text-xs font-medium capitalize">{user.type}</span>
               <span>• Joined {formatDate(user.createdAt)}</span>
             </div>
             <div className="flex items-center text-gray-600 mt-1">

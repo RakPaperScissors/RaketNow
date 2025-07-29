@@ -66,7 +66,7 @@ function SideNav() {
           <NavLink to="/profile">
             <SideNavUser
               name={`${user.firstName} ${user.lastName}`}
-              role={user.role.charAt(0).toUpperCase() + user.role.slice(1)}
+              role={user.type}
               image={user?.profilePicture} // Fallback image
             />
           </NavLink>
