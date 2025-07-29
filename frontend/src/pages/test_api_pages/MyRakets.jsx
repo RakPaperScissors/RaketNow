@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import { fetchMyRakets, updateRaketStatus, fetchAssignedRakets, requestCompletion, cancelCompletionRequest, deleteRaketById, cancelRaket, rejectCompletionRequest } from "../../api/rakets";
+import { fetchMyRakets, updateRaketStatus, fetchAssignedRakets, requestCompletion, cancelCompletionRequest, deleteRaketById, cancelRaket, rejectCompletionRequest, withdrawFromRaket } from "../../api/rakets";
 import { useCurrentUser } from "../../hooks/useCurrentUser";
 import DebugPanel from "../../components/DebugPanel"; 
 
@@ -137,6 +137,22 @@ const MyRakets = () => {
         } catch (err) {
             console.error("Failed to reject completion request:", err);
             alert("Something went wrong. Try again.");
+        } finally {
+            setUpdatingId(null);
+        }
+    };
+
+    const handleWithdraw = async (raketId) => {
+        const confirm = window.confirm("Are you sure you want to withdraw? The raket will return to open status.");
+        if (!confirm) return;
+
+        try {
+            setUpdatingId(raketId);
+            await withdrawFromRaket(raketId, token);
+            await fetchRaketsData();
+        } catch (err) {
+            console.error("Failed to withdraw:", err);
+            alert("Failed to withdraw from raket.");
         } finally {
             setUpdatingId(null);
         }
@@ -306,15 +322,24 @@ const MyRakets = () => {
                     )}
                     <div style={{ marginTop: 8 }}>
                         {raket.status === "in_progress" && (
-                        <button
+                        <>
+                            <button
                             onClick={() => handleMarkCompleted(raket.raketId)}
                             disabled={updatingId === raket.raketId}
-                        >
-                            {updatingId === raket.raketId
-                            ? "Processing..."
-                            : "Mark as Completed"}
-                        </button>
+                            >
+                            {updatingId === raket.raketId ? "Processing..." : "Mark as Completed"}
+                            </button>
+
+                            <button
+                            onClick={() => handleWithdraw(raket.raketId)}
+                            disabled={updatingId === raket.raketId}
+                            style={{ marginLeft: 8, backgroundColor: "#f44336", color: "white", border: "none", padding: "6px 12px", borderRadius: 4 }}
+                            >
+                            {updatingId === raket.raketId ? "Processing..." : "Withdraw"}
+                            </button>
+                        </>
                         )}
+
                         {raket.status === "pending_confirmation" && (
                         <>
                             <button disabled>

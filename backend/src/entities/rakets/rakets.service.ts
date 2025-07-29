@@ -288,7 +288,6 @@ export class RaketsService {
     return await this.raket.save(raket);
   }
 
-
   // fetch all rakets assigned to raketista
   async getRaketsAssignedToUser(uid: number) {
     const acceptedApplications = await this.raketApplicationRepository.find({
@@ -313,6 +312,38 @@ export class RaketsService {
     });
 
     return assignedRakets;
+  }
+
+  // withdrawal from ongoing raket
+  async withdrawRaket(raketId: number, raketistaUid: number) {
+    const raket = await this.raket.findOne({
+      where: { raketId },
+      relations: ['applications', 'user', 'applications.raketista'],
+    });
+    if (!raket) {
+      throw new NotFoundException('Raket not found');
+    }
+    const acceptedApp = raket.applications.find(app =>
+      app.raketista?.uid === raketistaUid && app.status === RaketApplicationStatus.ACCEPTED,
+    );
+
+    if (!acceptedApp) {
+      throw new ForbiddenException('You are not the assigned raketista');
+    }
+    acceptedApp.status = RaketApplicationStatus.WITHDRAWN;
+    raket.status = RaketStatus.OPEN;
+
+    await this.raketApplicationRepository.save(acceptedApp);
+    await this.raket.save(raket);
+
+    await this.notificationService.create({
+      user: raket.user,
+      message: `The raketista has withdrawn from your raket "${raket.title}". It is now open again.`,
+      raketId: raket.raketId,
+      actionable: false,
+    });
+
+    return { message: 'Successfully withdrawn from raket' };
   }
 
   // pending confirmation for the raketistas (to be confirmed by the client)

@@ -4,7 +4,8 @@ import { Raket } from '../../rakets/entities/raket.entity';
 export enum RaketApplicationStatus {
   PENDING = 'PENDING',
   ACCEPTED = 'ACCEPTED',
-  REJECTED = 'REJECTED'
+  REJECTED = 'REJECTED',
+  WITHDRAWN = 'WITHDRAWN',
 }
 
 @Entity()

@@ -195,3 +195,16 @@ export async function rejectCompletionRequest(raketId, token) {
   if (!res.ok) throw new Error("Failed to reject completion request");
   return res.json();
 }
+
+//withdrawing from the ongoing raket (raketista withdraws)
+export async function withdrawFromRaket(raketId, accessToken) {
+  const response = await fetch(`http://localhost:3000/rakets/${raketId}/withdraw`, {
+    method: 'PATCH',
+    headers: {
+      'Authorization': `Bearer ${accessToken}`,
+    },
+  });
+
+  if (!response.ok) throw new Error('Failed to withdraw');
+  return await response.json();
+}
