@@ -3,11 +3,11 @@ import {
   Home,
   Star,
   TrendingUp,
-  HelpCircle,
   Bell,
   MessageSquare,
   LogOut,
   Package,
+  Users,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import SideNavItem from "./SideNavItem";
@@ -47,7 +47,14 @@ function SideNav() {
       {/* BOTTOM SECTION */}
       <div>
         <div className="space-y-2 mb-4">
-          <SideNavItem to="/help" icon={HelpCircle} label="Help" />
+          {/* APPLY LOGIC HERE, WILL ONLY APPEAR IF CLIENT SI USER */}
+          <SideNavItem
+            to="/become-raketista"
+            icon={Users}
+            label="Become a Raketista"
+          />
+
+          {/* always visible */}
           <SideNavItem to="/notifications" icon={Bell} label="Notifications" />
           <SideNavItem to="/message" icon={MessageSquare} label="Messages" />
         </div>

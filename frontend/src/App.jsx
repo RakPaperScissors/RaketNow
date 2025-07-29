@@ -14,8 +14,8 @@ import Faqs from "./pages/Faqs";
 import Home from "./pages/Home";
 import ForYou from "./pages/ForYou";
 import ProfilePage from "./pages/ProfilePage";
-import Message from "./pages/Message";
-import UserNotifications from "./pages/Notifications";
+import MessagePage from "./pages/MessagePage";
+import BecomeRaketista from "./pages/BecomeRaketista";
 import UserRakets from "./pages/MyRakets";
 import BoostPost from "./pages/Boost";
 
@@ -48,8 +48,8 @@ function AppContent() {
         <Route path="/home" element={<Home />} />
         <Route path="/rakets" element={<ForYou />} />
         <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/message" element={<Message />} />
-        <Route path="/notifications" element={<UserNotifications />} />
+        <Route path="/message" element={<MessagePage />} />
+        <Route path="/become-raketista" element={<BecomeRaketista />} />
         <Route path="/my-rakets" element={<UserRakets />} />
         <Route path="/boost" element={<BoostPost />} />
       </Routes>

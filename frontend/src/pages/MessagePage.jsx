@@ -1,30 +1,24 @@
 import React from "react";
-import SearchBar from "../components/SearchBar";
 import SideNav from "../components/SideNav";
 import Message from "../components/Message";
 
-const MyRakets = () => {
+const MessagePage = () => {
   return (
     <div className="flex h-screen bg-[#f9fafb]">
-      {/* Fixed Sidebar */}
+      {/* SIDENAV */}
       <div className="fixed inset-y-0 left-0 w-64 z-20 bg-white border-r">
         <SideNav />
       </div>
 
-      {/* Main Content */}
+      {/* MAIN */}
       <div className="ml-64 flex-1 flex flex-col h-screen overflow-hidden">
-        {/* Top Section */}
-        <div className="sticky top-0 z-10 bg-white">
-          <SearchBar />
-        </div>
-
-        {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto px-8  space-y-6">
-            <Message />
+        {/* diri tong main page oo sige */}
+        <div className="flex-1 overflow-y-auto p-6">
+          <Message />
         </div>
       </div>
     </div>
   );
 };
 
-export default MyRakets;
+export default MessagePage;

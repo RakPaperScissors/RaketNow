@@ -3,6 +3,9 @@ import SearchBar from "../components/SearchBar";
 import SideNav from "../components/SideNav";
 import RaketFeed from "../components/RaketFeed";
 import TopRaketista from "../components/TopRaketista";
+import PostRaket from "../components/PostRaket";
+import Help from "../components/Help";
+
 
 const ForYou = () => {
 
@@ -22,8 +25,12 @@ const ForYou = () => {
 
         {/* Scrollable Content */}
         <div className="flex-1 overflow-y-auto px-8 py-6 space-y-6">
+          <PostRaket />
+          <Help /> 
           <TopRaketista />
           <RaketFeed />
+          
+
         </div>
       </div>
     </div>
