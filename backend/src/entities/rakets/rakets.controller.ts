@@ -75,6 +75,15 @@ export class RaketsController {
     return this.raketsService.cancelCompletionRequest(raketId, userId);
   }
 
+  @Patch(':raketId/reject-completion-request')
+  @UseGuards(JwtAuthGuard)
+  async clientRejectCompletion(
+    @Param('raketId', ParseIntPipe) raketId: number,
+    @Req() req: any,
+  ) {
+    const clientId = req.user.uid;
+    return this.raketsService.clientRejectsCompletionRequest(raketId, clientId);
+  }
 
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
@@ -94,4 +103,13 @@ export class RaketsController {
     return this.raketsService.remove(+id, userId);
   }
 
+  @Patch(':id/cancel')
+  @UseGuards(JwtAuthGuard)
+  async cancelRaket(
+    @Param('id', ParseIntPipe) raketId: number,
+    @Req() req: any,
+  ) {
+    const userId = req.user.uid;
+    return this.raketsService.cancelRaket(raketId, userId);
+  }
 }

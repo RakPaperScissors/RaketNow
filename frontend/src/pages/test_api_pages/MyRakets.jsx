@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import { fetchMyRakets, updateRaketStatus, fetchAssignedRakets, requestCompletion, cancelCompletionRequest, deleteRaketById } from "../../api/rakets";
+import { fetchMyRakets, updateRaketStatus, fetchAssignedRakets, requestCompletion, cancelCompletionRequest, deleteRaketById, cancelRaket, rejectCompletionRequest } from "../../api/rakets";
 import { useCurrentUser } from "../../hooks/useCurrentUser";
 import DebugPanel from "../../components/DebugPanel"; 
 
@@ -47,7 +47,7 @@ const MyRakets = () => {
             const wasPending = raket.status === "pending_confirmation";
             await updateRaketStatus(raketId, newStatus, token);
             if (wasPending && newStatus === "in_progress") {
-            await cancelCompletionRequest(raketId, token); // optional: backend cleanup
+            await cancelCompletionRequest(raketId, token);
             }
             await fetchRaketsData();
         } catch (err) {
@@ -57,7 +57,6 @@ const MyRakets = () => {
             setUpdatingId(null);
         }
     };
-
 
     const handleMarkCompleted = async (raketId) => {
         try {
@@ -111,6 +110,38 @@ const MyRakets = () => {
         }
     };
 
+    const handleCancel = async (raketId) => {
+        const confirmCancel = window.confirm("Are you sure you want to cancel this ongoing raket?");
+        if (!confirmCancel) return;
+
+        try {
+            setUpdatingId(raketId);
+            await cancelRaket(raketId, token);
+            await fetchRaketsData();
+        } catch (err) {
+            console.error("Failed to cancel raket:", err);
+            alert("Failed to cancel raket. Please try again.");
+        } finally {
+            setUpdatingId(null);
+        }
+    };
+
+    const handleRejectCompletionRequest = async (raketId) => {
+        const confirmReject = window.confirm("Are you sure you want to reject the completion request?");
+        if (!confirmReject) return;
+
+        try {
+            setUpdatingId(raketId);
+            await rejectCompletionRequest(raketId, token);
+            await fetchRaketsData();
+        } catch (err) {
+            console.error("Failed to reject completion request:", err);
+            alert("Something went wrong. Try again.");
+        } finally {
+            setUpdatingId(null);
+        }
+    };
+
 
     const formatStatus = (status) =>
         status
@@ -135,7 +166,7 @@ const MyRakets = () => {
         <h1>My Rakets</h1>
 
         {/* Grouped Rakets by Status */}
-        {["open", "in_progress", "completed"].map((status) => {
+        {["open", "in_progress", "completed", 'cancelled'].map((status) => {
             const statusRakets =
             status === "in_progress"
                 ? rakets.filter(
@@ -169,62 +200,61 @@ const MyRakets = () => {
                         </div>
                         {/*for open rakets */}
                         {raket.status === "open" && (
-                        <div style={{ marginTop: 8 }}>
+                        <div style={{ marginTop: 12 }}>
                             <button
-                            onClick={() => handleDeleteRaket(raket.raketId)}
                             disabled={updatingId === raket.raketId}
+                            onClick={() => handleDeleteRaket(raket.raketId)}
                             >
-                            {updatingId === raket.raketId ? "Deleting..." : "Delete"}
+                            🗑️ Delete
                             </button>
                         </div>
                         )}
-                        {/*for in progress and pending confirmation rakets */}
-                        {raket.status !== "completed" && raket.status !== "open" && (
-                        <>
-                            <div style={{ marginTop: 8 }}>
-                            <select
-                                disabled={updatingId === raket.raketId}
-                                value={raket.status}
-                                onChange={(e) =>
-                                handleStatusChange(raket.raketId, e.target.value)
-                                }
+                        {/*for pending and ongoing rakets */}
+                        {raket.status === "pending_confirmation" && (
+                        <div style={{ marginTop: 12 }}>
+                            <button
+                            disabled={updatingId === raket.raketId}
+                            onClick={() => handleClientConfirmCompleted(raket.raketId)}
                             >
-                                <option value="in_progress">In Progress</option>
-                                {raket.status === "pending_confirmation" && (
-                                <option value="pending_confirmation" disabled>
-                                    Pending Confirmation
-                                </option>
-                                )}
-                                <option value="completed">Completed</option>
-                            </select>
-                            </div>
-
-                            {raket.status === "pending_confirmation" && (
-                            <div style={{ marginTop: 8 }}>
-                                <button
-                                onClick={() => handleClientConfirmCompleted(raket.raketId)}
-                                disabled={updatingId === raket.raketId}
-                                >
-                                {updatingId === raket.raketId
-                                    ? "Processing..."
-                                    : "Confirm Completion"}
-                                </button>
-                            </div>
-                            )}
-                        </>
-                        )}
-
-                        {raket.acceptedRaketista && (
-                        <div style={{ marginTop: 8 }}>
-                            Assigned Raketista:{" "}
-                            {`${raket.acceptedRaketista.firstName} ${raket.acceptedRaketista.lastName}`}
+                            Confirm Completion
+                            </button>
+                            <button
+                            disabled={updatingId === raket.raketId}
+                            onClick={() => handleRejectCompletionRequest(raket.raketId)}
+                            >
+                            Still Ongoing
+                            </button>
                         </div>
                         )}
-                        {/*for completed rakets */}
+                        {raket.status === "in_progress" && (
+                        <div style={{ marginTop: 12 }}>
+                            <select
+                            disabled={updatingId === raket.raketId}
+                            value="in_progress"
+                            onChange={(e) => handleStatusChange(raket.raketId, e.target.value)}
+                            >
+                            <option value="in_progress">In Progress</option>
+                            <option value="completed">Completed</option>
+                            </select>
+                            <button
+                            style={{ marginLeft: 8 }}
+                            disabled={updatingId === raket.raketId}
+                            onClick={() => handleCancel(raket.raketId)}
+                            >
+                            Cancel
+                            </button>
+                        </div>
+                        )}
+                        {/*for cancelled and completed rakets */}
                         {raket.status === "completed" && raket.completedAt && (
                         <div style={{ marginTop: 8 }}>
-                            Date Completed:{" "}
-                            {new Date(raket.completedAt).toLocaleString()}
+                            Date Completed: {new Date(raket.completedAt).toLocaleString()}
+                        </div>
+                        )}
+
+                        {raket.status === "cancelled" && raket.updatedAt && (
+                        <div style={{ marginTop: 8 }}>
+                            Date Cancelled: {new Date(raket.updatedAt).toLocaleString()}
                         </div>
                         )}
                     </li>

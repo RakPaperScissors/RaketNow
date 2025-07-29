@@ -31,6 +31,20 @@ export async function deleteRaketById(raketId, token) {
   return true;
 }
 
+// cancel ongoing rakets
+export async function cancelRaket(raketId, accessToken) {
+  const response = await fetch(`http://localhost:3000/rakets/${raketId}/cancel`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+  if (!response.ok) {
+    throw new Error("Failed to cancel raket");
+  }
+  return response.json();
+}
 
 // fetch my rakets
 export async function fetchMyRakets(accessToken) {
@@ -168,3 +182,16 @@ export const cancelCompletionRequest = async (raketId, token) => {
   if (!res.ok) throw new Error("Failed to cancel confirmation request");
   return res.json();
 };
+
+// client rejects request confirmation (bro it's still ongoing)
+export async function rejectCompletionRequest(raketId, token) {
+  const res = await fetch(`http://localhost:3000/rakets/${raketId}/reject-completion-request`, {
+    method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!res.ok) throw new Error("Failed to reject completion request");
+  return res.json();
+}
