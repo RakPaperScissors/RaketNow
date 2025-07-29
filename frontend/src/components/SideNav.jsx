@@ -13,14 +13,20 @@ import { NavLink } from "react-router-dom";
 import SideNavItem from "./SideNavItem";
 import SideNavUser from "./SideNavUser";
 import logo from "../assets/images/raketnow-blue-logo.png";
-import { useUser } from "../hooks/useUsers";
+import { useAuth } from "../context/AuthContext";
 
 function SideNav() {
-  const { user, loading } = useUser();
+  const { user, loading, logout } = useAuth();
+  const [isLoggingOut, setIsLoggingOut] = React.useState(false);
 
-    const handleLogout = () => {
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+    await logout();
     window.location.href = "/login";
   };
+
+  if (loading) return <p>Loading...</p>
+  if (!user && !isLoggingOut) return <p>You are not logged in.</p>
 
   return (
     <aside className="h-screen w-64 bg-white border-r border-gray-200 flex flex-col justify-between py-6 px-4">
@@ -67,16 +73,25 @@ function SideNav() {
           <NavLink to="/profile">
             <SideNavUser
               name={`${user.firstName} ${user.lastName}`}
-              role={user.role}
-              image={user.profilePicture || 'https://randomuser.me/api/portraits/lego/6.jpg'} // Fallback image
+              role={user.type}
+              image={user?.profilePicture} // Fallback image
             />
           </NavLink>
         ) : (
           <p>Not logged in.</p>
         )}
 
-        <div className="mt-4" onClick={handleLogout} style={{ cursor: 'pointer' }}>
-          <SideNavItem to="#" icon={LogOut} label="Logout" />
+        <div className="mt-4">
+          {loading ? (
+            <div className="flex flex-col items-center justify-center text-gray-500">
+              <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mb-1" />
+              <p className="text-sm">Logging out...</p>
+            </div>
+          ) : (
+            <div onClick={handleLogout} style={{ cursor: 'pointer' }}>
+              <SideNavItem to="#" icon={LogOut} label="Logout" />
+            </div>
+          )}
         </div>
       </div>
     </aside>

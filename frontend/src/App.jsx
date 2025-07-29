@@ -18,6 +18,7 @@ import MessagePage from "./pages/MessagePage";
 import BecomeRaketista from "./pages/BecomeRaketista";
 import UserRakets from "./pages/MyRakets";
 import BoostPost from "./pages/Boost";
+import { AuthProvider } from "./context/AuthContext";
 
 function AppContent() {
   const location = useLocation();
@@ -62,7 +63,9 @@ function AppContent() {
 function App() {
   return (
     <BrowserRouter>
-      <AppContent />
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
     </BrowserRouter>
   );
 }

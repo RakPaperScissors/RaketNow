@@ -1,12 +1,22 @@
-import { useAuth } from "../../hooks/useAuth";
+import { useLoginForm } from "../../hooks/useLoginForm";
+import { useAuth } from "../../context/AuthContext";
 
 function Login() {
-    const { email, password, setEmail, setPassword, message, handleLogin } = useAuth();
+    const { email, password, setEmail, setPassword, message, handleLogin } = useLoginForm();
+    const { login } = useAuth();
+
+    const handleSubmit = (e) => {
+        handleLogin(e, async () => {
+            await login();
+            window.location.href = "/home";
+        });
+    };
+
 
     return (
         <div style={{ maxWidth: 400, margin: '40px auto', border: "1px solid #ccc", padding: 24, borderRadius: 8 }}>
             <h2>Login</h2>
-            <form onSubmit={handleLogin}>
+            <form onSubmit={handleSubmit}>
                 <div style={{ marginBottom: 12 }}>
                     <label>Email:</label>
                     <input
@@ -34,6 +44,6 @@ function Login() {
             {message}
         </div>
     );
-}
+};
 
 export default Login;

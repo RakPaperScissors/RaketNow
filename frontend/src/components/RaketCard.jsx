@@ -134,7 +134,7 @@ const RaketCard = ({
                         {user && (
                             <p>
                                 Posted by:{" "}
-                                <span className="font-medium text-[#0C2C57]">{user}</span>
+                                <span className="font-medium text-[#0C2C57]">{user.firstName} {user.lastName}</span>
                             </p>
                         )}
                         {(postedAt || location) && (

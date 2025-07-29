@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Mail, User, Hammer, Pencil, X } from "lucide-react";
 import { useProfile } from "../hooks/useProfile";
-import { useUser } from "../hooks/useUsers";
+import { useAuth } from "../context/AuthContext";
 
 // A simple utility to format dates
 const formatDate = (dateString) => {
@@ -12,6 +12,7 @@ const formatDate = (dateString) => {
 
 function ProfileCard() {
   const {
+    skillsLoading,
     message,
     isEditing,
     bio,
@@ -26,20 +27,29 @@ function ProfileCard() {
     handleSaveChanges,
   } = useProfile();
 
-  const { user, loading, error } = useUser();
+  const { user, loading, error } = useAuth();
 
   // Local state for the dropdown, managed by the component itself
   const [selectedSkillId, setSelectedSkillId] = useState("");
-
-  if (loading) return <div className="text-center p-10">Loading profile...</div>;
+  if (loading) {
+  return (
+      <div className="flex flex-col items-center justify-center mt-20 text-gray-500">
+        <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-3" />
+        <p>Loading profile...</p>
+      </div>
+    );
+  }
   if (error) return <div className="text-center p-10 text-red-500">Error: {error}</div>;
   if (!user) return <div className="text-center p-10">No user data found. Please log in.</div>;
 
-  const isRaketista = user.role === "raketista";
+  const isRaketista = user?.type === "Raketista";
+  console.log("Is user raketista?", isRaketista);
+  console.log("bio:", user.bio);
+  console.log("currentSkills:", currentSkills);
 
   // Filter out skills that are already in the user's list for the dropdown
   const availableSkills = allSkills.filter(
-    skill => !currentSkills.some(rs => rs.skill.id === skill.id)
+    skill => !currentSkills.some(rs => rs.skill.skill_Id === skill.skill_Id)
   );
 
   return (
@@ -52,6 +62,10 @@ function ProfileCard() {
           <div className="relative">
             <img
               src={selectedImageFile ? URL.createObjectURL(selectedImageFile) : (user.profilePicture || "https://randomuser.me/api/portraits/lego/6.jpg")}
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = "./public/default_profile.jpg"
+              }}
               alt="Profile"
               className="w-20 h-20 rounded-full object-cover border-2 border-orange-300"
             />
@@ -65,7 +79,7 @@ function ProfileCard() {
           <div>
             <h2 className="text-xl font-bold">{`${user.firstName} ${user.lastName}`}</h2>
             <div className="flex items-center gap-2 text-sm text-gray-600 mt-1">
-              <span className="bg-orange-100 text-orange-600 px-2 py-0.5 rounded-full text-xs font-medium capitalize">{user.role}</span>
+              <span className="bg-orange-100 text-orange-600 px-2 py-0.5 rounded-full text-xs font-medium capitalize">{user.type}</span>
               <span>• Joined {formatDate(user.createdAt)}</span>
             </div>
             <div className="flex items-center text-gray-600 mt-1">
@@ -98,21 +112,26 @@ function ProfileCard() {
         <div className="mt-6">
           <h3 className="text-lg font-semibold mb-2 text-orange-500 flex items-center gap-2"><Hammer className="w-5 h-5" /> Skills</h3>
           <div className="flex flex-wrap gap-2">
-            {/* Check if raketistaSkills exists and has items */}
-            {user.raketistaSkills && user.raketistaSkills.length > 0 ? (
-              // Map over the array
-              user.raketistaSkills.map((raketistaSkill) => (
-                <span
-                  // THE FIX #1: Use the unique ID of the relationship for the key.
-                  key={raketistaSkill.id}
-                  className="bg-gray-100 text-gray-700 text-sm px-3 py-1 rounded-full"
-                >
-                  {/* THE FIX #2: Access skill.skillName (capital N) */}
+            {skillsLoading ? (
+              <div className="flex items-center gap-2 text-gray-500 text-sm">
+                <div className="w-4 h-4 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />
+                <span>Loading skills...</span>
+              </div>
+            ) : currentSkills && currentSkills.length > 0 ? (
+              currentSkills.map((raketistaSkill) => (
+                <span key={raketistaSkill.id} className="bg-gray-100 text-gray-700 text-sm px-3 py-1 rounded-full flex items-center gap-2">
                   {raketistaSkill.skill.skillName}
+                  {isEditing && (
+                    <button
+                      onClick={() => handleDeleteSkill(raketistaSkill.id)}
+                      className="text-red-500 hover:text-red-700"
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  )}
                 </span>
               ))
             ) : (
-              // If no skills, show a message
               <p className="text-gray-500 text-sm">No skills have been added yet.</p>
             )}
           </div>
@@ -121,7 +140,7 @@ function ProfileCard() {
               <select value={selectedSkillId} onChange={(e) => setSelectedSkillId(e.target.value)} className="flex-grow p-2 border rounded-md bg-white">
                 <option value="">-- Select a skill to add --</option>
                 {availableSkills.map(skill => (
-                  <option key={skill.id} value={skill.id}>{skill.name} ({skill.category})</option>
+                  <option key={skill.skill_Id} value={skill.skill_Id}>{skill.skillName} ({skill.category})</option>
                 ))}
               </select>
               <button onClick={() => { handleAddSkill(selectedSkillId); setSelectedSkillId(""); }} disabled={!selectedSkillId} className="px-4 py-2 bg-gray-600 text-white font-semibold rounded-md hover:bg-gray-700 disabled:opacity-50">
