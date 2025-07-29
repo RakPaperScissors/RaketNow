@@ -33,23 +33,25 @@ function Raket() {
             </div>
 
             {/* apply to raket */}
-            <div>
-                <h2>Apply to this Raket</h2>
-                <input
+            {raket.status === "open" && (
+                <div>
+                    <h2>Apply to this Raket</h2>
+                    <input
                     type="number"
                     placeholder="Your Price Proposal"
                     value={priceProposal}
                     onChange={e => setPriceProposal(e.target.value)}
-                />
-                <button
+                    />
+                    <button
                     onClick={() => apply(raketistaId, Number(priceProposal))}
                     disabled={applyLoading}
-                >
+                    >
                     {applyLoading ? "Applying..." : "Apply"}
-                </button>
-                {applyError && <p style={{ color: "red" }}>{applyError}</p>}
-                {applySuccess && <p style={{ color: "green" }}>Application successful!</p>}
-            </div>
+                    </button>
+                    {applyError && <p style={{ color: "red" }}>{applyError}</p>}
+                    {applySuccess && <p style={{ color: "green" }}>Application successful!</p>}
+                </div>
+                )}
         </div>
     );
 }

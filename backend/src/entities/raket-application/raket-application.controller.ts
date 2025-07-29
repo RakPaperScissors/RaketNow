@@ -61,6 +61,16 @@ export class RaketApplicationController {
     return this.raketApplicationService.reject(+id, req.user);
   }
 
+  @Patch(':id/withdraw')
+  @UseGuards(JwtAuthGuard)
+  async withdraw(
+    @Param('id') id: number,
+    @Req() req: any
+  ) {
+    const user = req.user;
+    return this.raketApplicationService.withdraw(id, user);
+  }
+
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {

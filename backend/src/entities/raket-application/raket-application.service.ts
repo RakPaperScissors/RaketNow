@@ -194,6 +194,36 @@ export class RaketApplicationService {
     return this.findOne(id);
   }
 
+  //withdraw from the application
+  async withdraw(applicationId: number, user: Users) {
+    const application = await this.raketApplicationRepository.findOne({
+      where: { applicationId },
+      relations: ['raket', 'raket.user', 'raketista'],
+    });
+
+    if (!application) {
+      throw new BadRequestException('Application not found.');
+    }
+    if (application.raketista.uid !== user.uid) {
+      throw new BadRequestException('You are not authorized to withdraw this application.');
+    }
+    if (application.status === RaketApplicationStatus.ACCEPTED) {
+      throw new BadRequestException('Cannot withdraw an accepted application.');
+    }
+    application.status = RaketApplicationStatus.WITHDRAWN;
+    await this.raketApplicationRepository.save(application);
+
+    await this.notificationRepository.save({
+      user: application.raket.user,
+      message: `A raketista has withdrawn their application for "${application.raket.title}".`,
+      isRead: false,
+      actionable: false,
+    });
+
+    return { message: 'Application withdrawn successfully.' };
+  }
+
+
   async remove(id: number) {
     await this.raketApplicationRepository.delete(id);
   }

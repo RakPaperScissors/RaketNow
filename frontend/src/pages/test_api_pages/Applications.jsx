@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { withdrawMyApplication } from "../../api/rakets";
 import { useRaketApplications } from "../../hooks/useRaketApplications";
 import { useMyRaketApplications } from "../../hooks/useMyRaketApplications";
 import { acceptApplication, rejectApplication } from "../../api/notifications";
@@ -37,21 +38,12 @@ function Applications() {
     }
   };
   const handleWithdraw = async (id) => {
+    const confirmed = window.confirm("Are you sure you want to withdraw your application?");
+    if (!confirmed) return;
+
     try {
       setActionLoading(true);
-      const res = await fetch(
-        `http://localhost:3000/raket-application/${id}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      if (!res.ok) {
-        const text = await res.text().catch(() => "");
-        throw new Error(`(${res.status}) ${text || res.statusText}`);
-      }
+      await withdrawMyApplication(id, token);
       await refresh?.();
       await refreshMine?.();
     } catch (e) {
@@ -61,6 +53,7 @@ function Applications() {
       setActionLoading(false);
     }
   };
+
 
   const renderRaketistaName = (raketista) =>
     [raketista?.firstName, raketista?.lastName].filter(Boolean).join(" ") ||
@@ -203,9 +196,6 @@ function Applications() {
           ) : myApplications && myApplications.length > 0 ? (
             <ul>
               {myApplications.map((app) => {
-                const isMine = currentUser?.uid === app.raketista?.uid;
-                const isPending = app.status?.toUpperCase() === "PENDING";
-
                 return (
                   <li
                     key={app.applicationId}
@@ -227,16 +217,16 @@ function Applications() {
                       <strong>Status:</strong> {app.status}
                     </div>
 
-                    {isPending && isMine && (
-                      <div style={{ marginTop: 8 }}>
-                        <button
-                          disabled={actionLoading}
-                          onClick={() => handleWithdraw(app.applicationId)}
-                        >
-                          Withdraw
-                        </button>
-                      </div>
-                    )}
+                    {app.status?.toUpperCase() === "PENDING" && (
+                    <div style={{ marginTop: 8 }}>
+                      <button
+                        disabled={actionLoading}
+                        onClick={() => handleWithdraw(app.applicationId)}
+                      >
+                        Withdraw
+                      </button>
+                    </div>
+                  )}
                   </li>
                 );
               })}

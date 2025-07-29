@@ -208,3 +208,20 @@ export async function withdrawFromRaket(raketId, accessToken) {
   if (!response.ok) throw new Error('Failed to withdraw');
   return await response.json();
 }
+
+// wtihdrawing from the raket application
+export async function withdrawMyApplication(applicationId, token) {
+  const res = await fetch(`http://localhost:3000/raket-application/${applicationId}/withdraw`, {
+    method: 'PATCH',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!res.ok) {
+    const text = await res.text().catch(() => '');
+    throw new Error(`(${res.status}) ${text || res.statusText}`);
+  }
+
+  return res.json();
+}
