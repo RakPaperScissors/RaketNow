@@ -60,4 +60,10 @@ export class Users {
 
     @OneToMany(() => Message, message => message.sender)
     messages: Message[];
+
+    @OneToMany(() => Rating, rating => rating.poster)
+    givenRatings: Rating[];
+
+    @OneToMany(() => Rating, rating => rating.raketista)
+    receivedRatings: Rating[];
 }
