@@ -1,5 +1,6 @@
 import { IsDate, isDate, IsEmail, IsEnum, IsOptional, IsString } from "class-validator";
 import { userRole } from "../entities/user.entity";
+import { Type } from "class-transformer";
 
 export class CreateUserDto {
     @IsEmail()
@@ -35,8 +36,10 @@ export class CreateUserDto {
     @IsOptional()
     lastActive?: Date
 
+    @IsOptional()
     @IsDate()
-    createdAt: Date
+    @Type(() => Date)
+    createdAt?: Date
 
     @IsOptional()
     @IsDate()
