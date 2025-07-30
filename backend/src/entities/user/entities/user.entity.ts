@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, TableInheritance, OneToMany, ManyToMany, ManyToOne } from 'typeorm';
-import { Conversation } from 'src/entities/conversation/entities/conversation.entity';
-import { Message } from 'src/entities/message/entities/message.entity';
+import { Conversation } from '../../conversation/entities/conversation.entity';
+import { Message } from '../../message/entities/message.entity';
 export enum userRole {
     CLIENT = 'client',
     RAKETISTA = 'raketista',
