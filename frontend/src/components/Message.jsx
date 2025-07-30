@@ -1,14 +1,15 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { SendHorizontal, Image as ImageIcon, ArrowLeft } from "lucide-react";
-import { useMessages } from '../hooks/useMessages';
-import { useUser } from '../hooks/useUsers';
+import { useMessages } from "../hooks/useMessages";
+import { useUser } from "../hooks/useUsers";
+import JobInfoBanner from "../components/JobInfoBanner";
 
-const DEFAULT_AVATAR = "https://randomuser.me/api/portraits/lego/1.jpg"; 
-const USER_PROFILE_PIC_BASE_URL = "http://localhost:9000/user-profile-pictures/";  //recheck sa future
-
+const DEFAULT_AVATAR = "https://randomuser.me/api/portraits/lego/1.jpg";
+const USER_PROFILE_PIC_BASE_URL =
+  "http://localhost:9000/user-profile-pictures/"; //recheck sa future
 
 function Message() {
-  const { user: currentUser, loading: userLoading } = useUser(); 
+  const { user: currentUser, loading: userLoading } = useUser();
   const {
     conversations,
     selectedConversation,
@@ -24,8 +25,8 @@ function Message() {
   } = useMessages();
 
   const [messageInput, setMessageInput] = useState("");
-  const [search, setSearch] = useState(""); 
-  const [showChatPanel, setShowChatPanel] = useState(false); 
+  const [search, setSearch] = useState("");
+  const [showChatPanel, setShowChatPanel] = useState(false);
 
   const messagesEndRef = useRef(null);
   const messagesContainerRef = useRef(null);
@@ -35,11 +36,14 @@ function Message() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const getOtherParticipant = useCallback((conv) => {
-    if (!currentUser || !conv?.participants) return null;
-    // Find the participant whose UID is NOT the current user's UID
-    return conv.participants.find((p) => p.uid !== currentUser.uid);
-  }, [currentUser]);
+  const getOtherParticipant = useCallback(
+    (conv) => {
+      if (!currentUser || !conv?.participants) return null;
+      // Find the participant whose UID is NOT the current user's UID
+      return conv.participants.find((p) => p.uid !== currentUser.uid);
+    },
+    [currentUser]
+  );
 
   const handleSelectConversation = (conv) => {
     selectConversation(conv);
@@ -48,7 +52,7 @@ function Message() {
     }
   };
 
-  // --- Effects ---
+  // EFFECTSSSSSSSSSSS
   useEffect(() => {
     if (selectedConversation && !loading) {
       scrollToBottom();
@@ -58,11 +62,11 @@ function Message() {
   const handleMessageInputChange = (e) => {
     setMessageInput(e.target.value);
     if (selectedConversation) {
-        if (e.target.value.length > 0) {
-            emitTyping(true);
-        } else {
-            emitTyping(false);
-        }
+      if (e.target.value.length > 0) {
+        emitTyping(true);
+      } else {
+        emitTyping(false);
+      }
     }
   };
 
@@ -72,40 +76,56 @@ function Message() {
 
     await sendTextMessage(messageInput);
     setMessageInput("");
-    emitTyping(false); 
+    emitTyping(false);
   };
 
   const handleScroll = useCallback(() => {
     if (messagesContainerRef.current) {
-        const { scrollTop, scrollHeight, clientHeight } = messagesContainerRef.current;
-        if (scrollTop < 100 && hasMoreMessages && !loading) {
-            loadMoreMessages();
-        }
+      const { scrollTop, scrollHeight, clientHeight } =
+        messagesContainerRef.current;
+      if (scrollTop < 100 && hasMoreMessages && !loading) {
+        loadMoreMessages();
+      }
     }
   }, [hasMoreMessages, loading, loadMoreMessages]);
 
   useEffect(() => {
-      const container = messagesContainerRef.current;
-      if (container) {
-          container.addEventListener('scroll', handleScroll);
-          return () => container.removeEventListener('scroll', handleScroll);
-      }
+    const container = messagesContainerRef.current;
+    if (container) {
+      container.addEventListener("scroll", handleScroll);
+      return () => container.removeEventListener("scroll", handleScroll);
+    }
   }, [handleScroll]);
 
   // --- Loading and Error States ---
   if (userLoading) {
-      return <div className="text-center p-4 min-h-screen flex items-center justify-center">Loading user data...</div>;
+    return (
+      <div className="text-center p-4 min-h-screen flex items-center justify-center">
+        Loading user data...
+      </div>
+    );
   }
   if (!currentUser) {
-      return <div className="text-center p-4 min-h-screen flex items-center justify-center">Please log in to view messages.</div>;
+    return (
+      <div className="text-center p-4 min-h-screen flex items-center justify-center">
+        Please log in to view messages.
+      </div>
+    );
   }
   if (loading && conversations.length === 0 && !selectedConversation) {
-    return <div className="text-center p-4 min-h-screen flex items-center justify-center">Loading conversations...</div>;
+    return (
+      <div className="text-center p-4 min-h-screen flex items-center justify-center">
+        Loading conversations...
+      </div>
+    );
   }
   if (error) {
-    return <div className="text-center p-4 text-red-500 min-h-screen flex items-center justify-center">Error: {error}</div>;
+    return (
+      <div className="text-center p-4 text-red-500 min-h-screen flex items-center justify-center">
+        Error: {error}
+      </div>
+    );
   }
-
 
   return (
     <div className="flex flex-1 flex-col md:flex-row gap-4 p-4 min-h-[calc(100vh-5rem)] bg-[#f9fafb]">
@@ -125,45 +145,50 @@ function Message() {
         />
         <div className="overflow-y-auto flex-1">
           {conversations.length === 0 ? (
-            <p className="p-4 text-gray-500">No conversations yet. Start one by searching a user!</p>
+            <p className="p-4 text-gray-500">
+              No conversations yet. Start one by searching a user!
+            </p>
           ) : (
-            conversations
-              .map((conv) => {
-                const otherParticipant = getOtherParticipant(conv);
-                // Ensure profilePicture is correctly formatted to full URL if stored as path
-                const otherParticipantProfilePic = otherParticipant?.profilePicture
-                    ? `${USER_PROFILE_PIC_BASE_URL}${otherParticipant.profilePicture}`
-                    : DEFAULT_AVATAR;
+            conversations.map((conv) => {
+              const otherParticipant = getOtherParticipant(conv);
+              const otherParticipantProfilePic =
+                otherParticipant?.profilePicture
+                  ? `${USER_PROFILE_PIC_BASE_URL}${otherParticipant.profilePicture}`
+                  : DEFAULT_AVATAR;
 
-                return (
-                  <div
-                    key={conv.id}
-                    onClick={() => handleSelectConversation(conv)}
-                    className={`flex items-center gap-3 px-4 py-3 cursor-pointer transition-all mb-2 rounded-md ${
-                      selectedConversation?.id === conv.id
-                        ? "bg-[#FFF6F2] border-l-4 border-[#FF7C2B]"
-                        : "hover:bg-gray-100"
-                    }`}
-                  >
-                    <div className="relative">
-                      <img
-                        src={otherParticipantProfilePic} // Use the correctly formatted URL
-                        alt={otherParticipant?.firstName}
-                        className="w-10 h-10 rounded-full object-cover"
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <p className="font-semibold text-sm">{otherParticipant?.firstName || "Unknown User"}</p>
-                      {conv.lastMessage && (
-                        <p className="text-xs text-gray-500 truncate w-40">
-                          {conv.lastMessage.sender?.uid === currentUser.uid ? 'You: ' : `${conv.lastMessage.sender?.name || 'They'}: `}
-                          {conv.lastMessage.text}
-                        </p>
-                      )}
-                    </div>
+              return (
+                <div
+                  key={conv.id}
+                  onClick={() => handleSelectConversation(conv)}
+                  className={`flex items-center gap-3 px-4 py-3 cursor-pointer transition-all mb-2 rounded-md ${
+                    selectedConversation?.id === conv.id
+                      ? "bg-[#FFF6F2] border-l-4 border-[#FF7C2B]"
+                      : "hover:bg-gray-100"
+                  }`}
+                >
+                  <div className="relative">
+                    <img
+                      src={otherParticipantProfilePic}
+                      alt={otherParticipant?.firstName}
+                      className="w-10 h-10 rounded-full object-cover"
+                    />
                   </div>
-                );
-              })
+                  <div className="flex-1">
+                    <p className="font-semibold text-sm">
+                      {otherParticipant?.firstName || "Unknown User"}
+                    </p>
+                    {conv.lastMessage && (
+                      <p className="text-xs text-gray-500 truncate w-40">
+                        {conv.lastMessage.sender?.uid === currentUser.uid
+                          ? "You: "
+                          : `${conv.lastMessage.sender?.name || "They"}: `}
+                        {conv.lastMessage.text}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              );
+            })
           )}
         </div>
       </div>
@@ -180,7 +205,7 @@ function Message() {
       >
         {selectedConversation ? (
           <>
-            {/* Conversation Header */}
+            {/* CONVERSATION HEADER (includes kausap na name) */}
             <div className="p-4 border-b border-gray-100 flex items-center gap-3">
               <button
                 className="md:hidden text-gray-500"
@@ -189,54 +214,94 @@ function Message() {
                 <ArrowLeft size={20} />
               </button>
               <img
-                src={getOtherParticipant(selectedConversation)?.profilePicture || DEFAULT_AVATAR}
+                src={
+                  getOtherParticipant(selectedConversation)?.profilePicture ||
+                  DEFAULT_AVATAR
+                }
                 alt={getOtherParticipant(selectedConversation)?.firstName}
                 className="w-10 h-10 rounded-full object-cover"
               />
               <div>
-                <p className="font-semibold text-sm">{getOtherParticipant(selectedConversation)?.firstName || "Chat"}</p>
-                {Object.values(isTyping).some(val => val) && 
-                 Object.keys(isTyping).filter(k => isTyping[k]).some(typingUserId => {
-                     const participant = selectedConversation.participants.find(p => p.uid === typingUserId);
-                     return participant && participant.uid !== currentUser.uid;
-                 }) ? (
-                    <p className="font-medium text-xs text-[#ff7c2b]">Typing...</p>
+                <p className="font-semibold text-sm">
+                  {getOtherParticipant(selectedConversation)?.firstName ||
+                    "Chat"}
+                </p>
+                {Object.values(isTyping).some((val) => val) &&
+                Object.keys(isTyping)
+                  .filter((k) => isTyping[k])
+                  .some((typingUserId) => {
+                    const participant = selectedConversation.participants.find(
+                      (p) => p.uid === typingUserId
+                    );
+                    return participant && participant.uid !== currentUser.uid;
+                  }) ? (
+                  <p className="font-medium text-xs text-[#ff7c2b]">
+                    Typing...
+                  </p>
                 ) : (
-                    <p className="font-medium text-xs text-gray-500">Online</p>
+                  <p className="font-medium text-xs text-gray-500">Online</p>
                 )}
               </div>
             </div>
 
+            {/* JOB INFO BANNER */}
+            {selectedConversation.job && (
+              <JobInfoBanner
+                title="NEED VIDEO EDITOR"
+                description="In need of Video Editor for Wedding Event. SDE and Drone shots..."
+                budget={8000}
+                onMarkDone={() => alert("Job marked as done!")}
+              />
+            )}
+
             {/* MESSAGES DISPLAY AREA */}
-            <div ref={messagesContainerRef} className="flex-1 overflow-y-auto px-6 py-4 flex flex-col custom-scrollbar">
-              {hasMoreMessages && (loading ? (
-                  <div className="text-center text-blue-500 text-sm mb-2">Loading more messages...</div>
-              ) : (
-                  <div className="text-center text-blue-500 cursor-pointer text-sm mb-2" onClick={loadMoreMessages}>
-                      Load More Messages
+            <div
+              ref={messagesContainerRef}
+              className="flex-1 overflow-y-auto px-6 py-4 flex flex-col custom-scrollbar"
+            >
+              {hasMoreMessages &&
+                (loading ? (
+                  <div className="text-center text-blue-500 text-sm mb-2">
+                    Loading more messages...
                   </div>
-              ))}
+                ) : (
+                  <div
+                    className="text-center text-blue-500 cursor-pointer text-sm mb-2"
+                    onClick={loadMoreMessages}
+                  >
+                    Load More Messages
+                  </div>
+                ))}
               {messages.length === 0 && !loading && (
-                  <p className="text-center text-gray-500 text-sm mt-4">No messages yet. Start the conversation!</p>
+                <p className="text-center text-gray-500 text-sm mt-4">
+                  No messages yet. Start the conversation!
+                </p>
               )}
-              {messages.map(msg => {
-                const isMyMessage = Number(msg.sender.id) === Number(currentUser.uid); 
-                const senderProfilePic = msg.sender.profilePicture ? `${USER_PROFILE_PIC_BASE_URL}${msg.sender.profilePicture}` : DEFAULT_AVATAR;
+              {messages.map((msg) => {
+                const isMyMessage =
+                  Number(msg.sender.id) === Number(currentUser.uid);
+                const senderProfilePic = msg.sender.profilePicture
+                  ? `${USER_PROFILE_PIC_BASE_URL}${msg.sender.profilePicture}`
+                  : DEFAULT_AVATAR;
 
                 return (
                   <div
                     key={msg.id}
-                    className={`flex items-start gap-3 mb-4 ${isMyMessage ? 'flex-row-reverse ml-auto' : 'flex-row mr-auto'}`}
-                    style={{maxWidth: '75%'}} 
+                    className={`flex items-start gap-3 mb-4 ${
+                      isMyMessage
+                        ? "flex-row-reverse ml-auto"
+                        : "flex-row mr-auto"
+                    }`}
+                    style={{ maxWidth: "75%" }}
                   >
-                    {/* Profile Picture */}
+                    {/* PROFILE PIC */}
                     <img
                       src={senderProfilePic} // Use the correctly formatted URL
                       alt={msg.sender.name || msg.sender.lastName} // Fallback to last name if name is missing
                       className="w-8 h-8 rounded-full object-cover flex-shrink-0"
                     />
 
-                    {/* Message Bubble */}
+                    {/* MESSAGE BUBBLE */}
                     <div
                       className={`p-3 rounded-2xl text-sm shadow flex-1 ${
                         isMyMessage
@@ -244,7 +309,7 @@ function Message() {
                           : "bg-white text-gray-900"
                       }`}
                     >
-                      {/* Sender Name (only for other users' messages) */}
+                      {/* SENDER NAME */}
                       {!isMyMessage && (
                         <p className="font-medium text-xs mb-1 text-gray-600">
                           {msg.sender.firstName || msg.sender.name}
@@ -252,14 +317,28 @@ function Message() {
                       )}
                       <p>{msg.text}</p>
                       {msg.images && msg.images.length > 0 && (
-                          <div className="mt-2 grid grid-cols-2 gap-2">
-                              {msg.images.map((imgUrl, idx) => (
-                                  <img key={idx} src={imgUrl} alt="message attachment" className="rounded-md max-w-full h-auto" />
-                              ))}
-                          </div>
+                        <div className="mt-2 grid grid-cols-2 gap-2">
+                          {msg.images.map((imgUrl, idx) => (
+                            <img
+                              key={idx}
+                              src={imgUrl}
+                              alt="message attachment"
+                              className="rounded-md max-w-full h-auto"
+                            />
+                          ))}
+                        </div>
                       )}
-                      <span className={`text-[10px] mt-1 block ${isMyMessage ? 'text-white text-opacity-75' : 'text-gray-500'} text-right`}>
-                        {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      <span
+                        className={`text-[10px] mt-1 block ${
+                          isMyMessage
+                            ? "text-white text-opacity-75"
+                            : "text-gray-500"
+                        } text-right`}
+                      >
+                        {new Date(msg.createdAt).toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
                       </span>
                     </div>
                   </div>
@@ -269,8 +348,14 @@ function Message() {
             </div>
 
             {/* MESSAGE INPUT AREA */}
-            <form onSubmit={handleSendMessage} className="border-t border-gray-200 px-4 py-3 flex items-center gap-2">
-              <button type="button" className="text-gray-500 hover:text-gray-700">
+            <form
+              onSubmit={handleSendMessage}
+              className="border-t border-gray-200 px-4 py-3 flex items-center gap-2"
+            >
+              <button
+                type="button"
+                className="text-gray-500 hover:text-gray-700"
+              >
                 <ImageIcon size={20} />
               </button>
               <input
