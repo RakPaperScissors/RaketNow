@@ -15,6 +15,23 @@ function Raket() {
     if (error) return <div>{error}</div>;
     if (loading) return <div>Loading...</div>;
 
+    function applyToThisRaket() {
+        const parsedRaketId = Number(id);
+        const parsedRaketistaId = Number(raketistaId);
+        const parsedPriceProposal = Number(priceProposal);
+
+        if (!parsedRaketId || !parsedRaketistaId || isNaN(parsedPriceProposal)) {
+            console.error("Invalid apply data:", {
+            raketId: parsedRaketId,
+            raketistaId: parsedRaketistaId,
+            priceProposal: parsedPriceProposal,
+            });
+            return;
+        }
+
+        apply(parsedRaketistaId, parsedPriceProposal);
+    }
+
     return (
         <div>
             <DebugPanel user={currentUser} />
@@ -43,7 +60,7 @@ function Raket() {
                     onChange={e => setPriceProposal(e.target.value)}
                     />
                     <button
-                    onClick={() => apply(raketistaId, Number(priceProposal))}
+                    onClick={applyToThisRaket}
                     disabled={applyLoading}
                     >
                     {applyLoading ? "Applying..." : "Apply"}

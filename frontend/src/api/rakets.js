@@ -28,8 +28,8 @@ export async function deleteRaketById(raketId) {
 }
 
 // cancel ongoing rakets
-export async function cancelRaket(raketId) {
-  const response = await fetch(`http://localhost:3000/rakets/${raketId}/cancel`, {
+export async function cancelOngoingRaket(raketId) {
+  const response = await fetch(`http://localhost:3000/rakets/${raketId}/cancel-ongoing`, {
     method: "PATCH",
     credentials: 'include',
     headers: {
@@ -39,6 +39,17 @@ export async function cancelRaket(raketId) {
   if (!response.ok) throw new Error("Failed to cancel raket");
   return response.json();
 }
+
+// cancel open rakets
+export const cancelOpenRaket = async (raketId) => {
+  const res = await fetch(`http://localhost:3000/rakets/${raketId}/cancel-open`, {
+    method: 'PATCH',
+    credentials: 'include',
+  });
+
+  if (!res.ok) throw new Error('Failed to cancel open raket');
+  return;
+};
 
 // fetch my rakets
 export async function fetchMyRakets() {
@@ -54,13 +65,9 @@ export async function fetchMyRakets() {
 
 // update raket status (only clients can do this to their raket)
 export async function updateRaketStatus(id, status) {
-  const response = await fetch(`http://localhost:3000/rakets/${id}/status`, {
+  const response = await fetch(`http://localhost:3000/rakets/${id}/status?status=${status}`, {
     method: "PATCH",
     credentials: 'include',
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ status }),
   });
   if (!response.ok) throw new Error("Failed to update raket status");
   return response.json();
@@ -73,7 +80,10 @@ export async function fetchAssignedRakets() {
   });
 
   if (!response.ok) throw new Error('Failed to fetch assigned rakets');
-  return response.json();
+
+  const data = await response.json();
+  console.log('Fetched assigned rakets:', data);
+  return data;
 }
 
 // fetching raket applications from the client side
@@ -87,10 +97,10 @@ export async function fetchRaketApplications() {
 
 // fetch application based on raket for filtering
 export async function fetchApplicationsForRaket(raketId) {
-  const response = await fetch(`http://localhost:3000/raket-application/raket/${raketId}`, {
+  const response = await fetch(`http://localhost:3000/raket-application/raket/${raketId}/applications`, {
     credentials: 'include',
   });
-  if (!response.ok) throw new Error('Failed to fetch applications based on the raket');
+  if (!response.ok) throw new Error('Failed to fetch applications');
   return response.json();
 }
 
@@ -190,6 +200,7 @@ export async function fetchApplicationsForRaket(raketId, accessToken) {
 
 // applying to a raket
 export async function applyToRaket({ raketId, raketistaId, priceProposal }) {
+  console.log("Sending:", { raketId, raketistaId, priceProposal });
   const response = await fetch('http://localhost:3000/raket-application', {
     method: 'POST',
     credentials: 'include',
@@ -255,7 +266,7 @@ export const cancelCompletionRequest = async (raketId) => {
 
 // client rejects completion request
 export async function rejectCompletionRequest(raketId) {
-  const res = await fetch(`http://localhost:3000/rakets/${raketId}/reject-completion-request`, {
+  const res = await fetch(`http://localhost:3000/rakets/${raketId}/reject-completion`, {
     method: "PATCH",
     credentials: 'include',
   });

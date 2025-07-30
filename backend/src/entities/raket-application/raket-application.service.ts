@@ -84,10 +84,10 @@ export class RaketApplicationService {
   }
 
   // find all applications for a specific raket (para pag filter)
-  async findByRaket(raketId: number) {
+  async findByRaketId(raketId: number) {
     return this.raketApplicationRepository.find({
       where: { raket: { raketId } },
-      relations: ['raketista', 'raket'],
+      relations: ['raketista', 'raket', 'raket.user'],
       order: { dateCreated: 'DESC' },
     });
   }

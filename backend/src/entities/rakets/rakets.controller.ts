@@ -9,37 +9,41 @@ import { CurrentUser } from 'src/auth/current-user.decorator';
 
 @Controller('rakets')
 export class RaketsController {
-  constructor(private readonly raketsService: RaketsService) {}
+  constructor(
+    private readonly raketsService: RaketsService,
+    @InjectRepository(Users)
+    private readonly usersRepository: Repository<Users>,
+  ) {}
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  create(@Body() dto: CreateRaketDto, @Request() req) {
-    return this.raketsService.create(dto, req.user);
-  }
+  async create(@Body() dto: CreateRaketDto, @Req() req: RequestWithUser) {
+    const user = await this.usersRepository.findOne({ where: { uid: req.user.uid } });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
 
-  @Get()
-  findAll() {
-    return this.raketsService.findAll();
+    return this.raketsService.create(dto, user);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('/myrakets')
-  findMyRakets(@Request() req) {
+  findMyRakets(@Req() req: RequestWithUser) {
     return this.raketsService.findMyRakets(req.user.uid);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('/assigned-to-me')
-  getRaketsAssignedToUser(@Request() req) {
-    return this.raketsService.findMyRakets(Number(req.user.uid));
+  getRaketsAssignedToUser(@Req() req: RequestWithUser) {
+    return this.raketsService.getRaketsAssignedToUser(req.user.uid);
   }
 
   @UseGuards(JwtAuthGuard)
   @Patch(':id/status')
   updateRaketStatus(
-    @Param('id') id: number,
+    @Param('id', ParseIntPipe) id: number,
     @Query('status') status: RaketStatus,
-    @Request() req
+    @Req() req: RequestWithUser,
   ) {
     return this.raketsService.updateRaketStatus(id, status, req.user.uid);
   }
@@ -75,39 +79,44 @@ export class RaketsController {
     return this.raketsService.patch(raketId, dto);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Delete(':id')
-  remove(@Param('id', ParseIntPipe) raketId: number, @Request() req) {
-    return this.raketsService.remove(raketId, req.user.uid);
-  }
+  // @UseGuards(JwtAuthGuard)
+  // @Delete(':id')
+  // remove(@Param('id', ParseIntPipe) raketId: number, @Req() req: RequestWithUser) {
+  //   return this.raketsService.remove(raketId, req.user.uid);
+  // }
 
-  @UseGuards(JwtAuthGuard)
-  @Patch(':id/cancel')
-  cancelRaket(@Param('id', ParseIntPipe) raketId: number, @Request() req) {
-    return this.raketsService.cancelRaket(raketId, req.user.uid);
-  }
+  // @UseGuards(JwtAuthGuard)
+  // @Patch(':id/cancel')
+  // cancelRaket(@Param('id', ParseIntPipe) raketId: number, @Req() req: RequestWithUser) {
+  //   return this.raketsService.cancelRaket(raketId, req.user.uid);
+  // }
 
   @UseGuards(JwtAuthGuard)
   @Patch(':id/reject-completion')
-  clientRejectsCompletionRequest(@Param('id', ParseIntPipe) raketId: number, @Request() req) {
+  clientRejectsCompletionRequest(@Param('id', ParseIntPipe) raketId: number, @Req() req: RequestWithUser) {
     return this.raketsService.clientRejectsCompletionRequest(raketId, req.user.uid);
   }
 
   @UseGuards(JwtAuthGuard)
   @Patch(':id/withdraw')
-  withdrawRaket(@Param('id', ParseIntPipe) raketId: number, @Request() req) {
+  withdrawRaket(@Param('id', ParseIntPipe) raketId: number, @Req() req: RequestWithUser) {
     return this.raketsService.withdrawRaket(raketId, req.user.uid);
   }
 
   @UseGuards(JwtAuthGuard)
   @Patch(':id/request-completion')
-  raketistaRequestCompletion(@Param('id', ParseIntPipe) raketId: number, @Request() req) {
+  raketistaRequestCompletion(@Param('id', ParseIntPipe) raketId: number, @Req() req: RequestWithUser) {
     return this.raketsService.raketistaRequestCompletion(raketId, req.user.uid);
   }
 
   @UseGuards(JwtAuthGuard)
   @Patch(':id/cancel-completion-request')
-  cancelCompletionRequest(@Param('id', ParseIntPipe) raketId: number, @Request() req) {
+  cancelCompletionRequest(@Param('id', ParseIntPipe) raketId: number, @Req() req: RequestWithUser) {
     return this.raketsService.cancelCompletionRequest(raketId, req.user.uid);
+  }
+
+  @Get()
+  findAll() {
+    return this.raketsService.findAll();
   }
 }

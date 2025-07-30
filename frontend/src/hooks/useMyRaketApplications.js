@@ -6,17 +6,9 @@ export function useMyRaketApplications() {
   const [error, setError] = useState("");
 
   const refetch = useCallback(() => {
-    const token = localStorage.getItem("access_token");
-    if (!token) {
-      setError("No access token found");
-      setApps([]);
-      setLoading(false);
-      return;
-    }
-
     setLoading(true);
     fetch("http://localhost:3000/raket-application/my-applications", {
-      headers: { Authorization: `Bearer ${token}` },
+      credentials: "include",
     })
       .then(async (res) => {
         const text = await res.text();
@@ -27,7 +19,9 @@ export function useMyRaketApplications() {
         setApps(data);
         setError("");
       })
-      .catch((e) => setError(e.message || "Failed to fetch my applications"))
+      .catch((e) =>
+        setError(e.message || "Failed to fetch my applications")
+      )
       .finally(() => setLoading(false));
   }, []);
 

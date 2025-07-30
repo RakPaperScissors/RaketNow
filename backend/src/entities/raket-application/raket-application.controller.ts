@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UseGuards, UnauthorizedException  } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UseGuards, UnauthorizedException, ParseIntPipe  } from '@nestjs/common';
 import { RaketApplicationService } from './raket-application.service';
 import { CreateRaketApplicationDto } from './dto/create-raket-application.dto';
 import { UpdateRaketApplicationDto } from './dto/update-raket-application.dto';
@@ -31,6 +31,12 @@ export class RaketApplicationController {
   @Get('my-applications')
   getMyApplications(@Req() req: AuthenticatedRequest) {
     return this.raketApplicationService.getApplicationsByRaketista(req.user);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/raket/:raketId/applications')
+  async getApplicationsByRaket(@Param('raketId', ParseIntPipe) raketId: number) {
+    return this.raketApplicationService.findByRaketId(raketId);
   }
 
   @Get(':id')

@@ -1,55 +1,10 @@
 import React from "react";
 import { ListFilter, MessageCircle } from "lucide-react";
 import { useEffect, useState, useCallback } from "react";
-import { fetchMyRakets, updateRaketStatus, fetchAssignedRakets, requestCompletion, cancelCompletionRequest, deleteRaketById, cancelRaket, rejectCompletionRequest, withdrawFromRaket  } from "../api/rakets";
+import { fetchMyRakets, updateRaketStatus, fetchAssignedRakets, requestCompletion, cancelCompletionRequest, deleteRaketById, cancelOngoingRaket, cancelOpenRaket, rejectCompletionRequest, withdrawFromRaket  } from "../api/rakets";
 import { useCurrentUser } from "../hooks/useCurrentUser";
+import { useNavigate } from "react-router-dom";
 import DebugPanel from "../components/DebugPanel"; 
-
-// Mock Data for testing
-// const mockMyRakets = [
-//   {
-//     id: 1,
-//     title: "E-commerce Website Redesign",
-//     description: "Redesigned UI/UX of an e-commerce platform.",
-//     status: "Completed",
-//     date: "June 15, 2024",
-//     price: "₱15,000",
-//     rating: 5,
-//     author: "John Doe",
-//   },
-//   {
-//     id: 2,
-//     title: "React.js Dashboard Development",
-//     description: "Developed an admin dashboard with data visualization.",
-//     status: "Ongoing",
-//     date: "July 10, 2025",
-//     price: "₱22,500",
-//     rating: 4,
-//     author: "Jane Smith",
-//   },
-//   {
-//     id: 3,
-//     title: "Mobile App UI Design",
-//     description: "Designed UI for a mobile fitness app.",
-//     status: "Pending",
-//     date: "July 22, 2025",
-//     price: "₱8,500",
-//     author: "Alex Cruz",
-//   },
-// ];
-
-const getStatusStyle = (status) => {
-  switch (status) {
-    case "Completed":
-      return "bg-green-100 text-green-600";
-    case "Ongoing":
-      return "bg-blue-100 text-blue-600";
-    case "Pending":
-      return "bg-yellow-100 text-yellow-600";
-    default:
-      return "bg-gray-100 text-gray-600";
-  }
-};
 
 const StarRating = ({ count }) => (
   <div className="flex space-x-1">
@@ -61,9 +16,50 @@ const StarRating = ({ count }) => (
   </div>
 );
 
+const statusMap = {
+  open: "Pending",
+  in_progress: "Ongoing",
+  pending_confirmation: "Ongoing",
+  completed: "Completed",
+  cancelled: "Completed",
+};
+
+const mapStatusToLabel = (status) => statusMap[status] || "Other";
+const getStatusStyle = (label) => {
+  switch (label) {
+    case "Completed":
+      return "bg-green-100 text-green-600";
+    case "Ongoing":
+      return "bg-blue-100 text-blue-600";
+    case "Pending":
+      return "bg-yellow-100 text-yellow-600";
+    default:
+      return "bg-gray-100 text-gray-600";
+  }
+};
+
+const formatDateTime = (timestamp) => {
+  if (!timestamp) return "N/A";
+
+  const date = new Date(timestamp);
+
+  const formattedDate = date.toLocaleDateString("en-PH", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
+  const formattedTime = date.toLocaleTimeString("en-PH", {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  });
+
+  return { formattedDate, formattedTime };
+};
+
 
 const UserRakets = () => {
-  // const [rakets, setRakets] = useState([]);
   const [statusFilter, setStatusFilter] = useState("All");
   const [showDropdown, setShowDropdown] = useState(false);
   const currentUser = useCurrentUser();
@@ -72,6 +68,7 @@ const UserRakets = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [updatingId, setUpdatingId] = useState(null);
+  const navigate = useNavigate();
   
   // for fetching data
       const fetchRaketsData = useCallback(async () => {
@@ -113,31 +110,31 @@ const UserRakets = () => {
           }
       };
   
-      const handleMarkCompleted = async (raketId) => {
-          try {
-          setUpdatingId(raketId);
-          await requestCompletion(raketId);
-          await fetchRaketsData();
-          } catch (err) {
-          console.error("Failed to mark as completed:", err);
-          alert("Something went wrong. Try again.");
-          } finally {
-          setUpdatingId(null);
-          }
-      };
+      // const handleMarkCompleted = async (raketId) => {
+      //     try {
+      //     setUpdatingId(raketId);
+      //     await requestCompletion(raketId);
+      //     await fetchRaketsData();
+      //     } catch (err) {
+      //     console.error("Failed to mark as completed:", err);
+      //     alert("Something went wrong. Try again.");
+      //     } finally {
+      //     setUpdatingId(null);
+      //     }
+      // };
   
-      const handleCancelConfirmation = async (raketId) => {
-          try {
-          setUpdatingId(raketId);
-          await cancelCompletionRequest(raketId);
-          await fetchRaketsData();
-          } catch (err) {
-          console.error("Failed to cancel confirmation:", err);
-          alert("Something went wrong. Try again.");
-          } finally {
-          setUpdatingId(null);
-          }
-      };
+      // const handleCancelConfirmation = async (raketId) => {
+      //     try {
+      //     setUpdatingId(raketId);
+      //     await cancelCompletionRequest(raketId);
+      //     await fetchRaketsData();
+      //     } catch (err) {
+      //     console.error("Failed to cancel confirmation:", err);
+      //     alert("Something went wrong. Try again.");
+      //     } finally {
+      //     setUpdatingId(null);
+      //     }
+      // };
   
       const handleClientConfirmCompleted = async (raketId) => {
           try {
@@ -152,17 +149,17 @@ const UserRakets = () => {
           }
       };
   
-      const handleDeleteRaket = async (raketId) => {
-          try {
-          setUpdatingId(raketId);
+      const handleDelete = async (raketId) => {
+        const confirmDelete = confirm("Are you sure you want to permanently delete this raket?");
+        if (!confirmDelete) return;
+
+        try {
           await deleteRaketById(raketId);
-          await fetchRaketsData();
-          } catch (err) {
+          setRakets(prev => prev.filter(r => r.id !== raketId));
+        } catch (err) {
           console.error("Failed to delete raket:", err);
-          alert("Failed to delete raket.");
-          } finally {
-          setUpdatingId(null);
-          }
+          alert("Something went wrong while deleting.");
+        }
       };
   
       const handleCancel = async (raketId) => {
@@ -171,7 +168,7 @@ const UserRakets = () => {
   
           try {
           setUpdatingId(raketId);
-          await cancelRaket(raketId);
+          await cancelOngoingRaket(raketId);
           await fetchRaketsData();
           } catch (err) {
           console.error("Failed to cancel raket:", err);
@@ -179,6 +176,20 @@ const UserRakets = () => {
           } finally {
           setUpdatingId(null);
           }
+      };
+
+      const handleCancelOpen = async (raketId) => {
+        const confirmCancel = confirm("Cancel this open raket? Applicants will be notified.");
+        if (!confirmCancel) return;
+
+        try {
+          await cancelOpenRaket(raketId);
+          setRakets(prev => prev.filter(r => r.id !== raketId));
+          await fetchRaketsData();
+        } catch (err) {
+          console.error("Failed to cancel raket:", err);
+          alert("Something went wrong while cancelling.");
+        }
       };
   
       const handleRejectCompletionRequest = async (raketId) => {
@@ -197,36 +208,32 @@ const UserRakets = () => {
           }
       };
   
-      const handleWithdraw = async (raketId) => {
-          const confirm = window.confirm("Are you sure you want to withdraw? The raket will return to open status.");
-          if (!confirm) return;
+      // const handleWithdraw = async (raketId) => {
+      //     const confirm = window.confirm("Are you sure you want to withdraw? The raket will return to open status.");
+      //     if (!confirm) return;
   
-          try {
-          setUpdatingId(raketId);
-          await withdrawFromRaket(raketId);
-          await fetchRaketsData();
-          } catch (err) {
-          console.error("Failed to withdraw:", err);
-          alert("Failed to withdraw from raket.");
-          } finally {
-          setUpdatingId(null);
-          }
-      };
+      //     try {
+      //     setUpdatingId(raketId);
+      //     await withdrawFromRaket(raketId);
+      //     await fetchRaketsData();
+      //     } catch (err) {
+      //     console.error("Failed to withdraw:", err);
+      //     alert("Failed to withdraw from raket.");
+      //     } finally {
+      //     setUpdatingId(null);
+      //     }
+      // };
       // format
-      const formatStatus = (status) =>
-          status
-          .replace(/_/g, " ")
-          .replace(/\b\w/g, (c) => c.toUpperCase());
-
-  // useEffect(() => {
-  //   setRakets(mockMyRakets);
-  // }, []);
+      // const formatStatus = (status) =>
+      //     status
+      //     .replace(/_/g, " ")
+      //     .replace(/\b\w/g, (c) => c.toUpperCase());
 
   // for filtering
   const filteredRakets =
-    statusFilter === "All"
-      ? rakets
-      : rakets.filter((r) => r.status === statusFilter);
+  statusFilter === "All"
+    ? rakets
+    : rakets.filter((r) => mapStatusToLabel(r.status) === statusFilter);
 
   const handleFilterChange = (status) => {
     setStatusFilter(status);
@@ -290,51 +297,140 @@ const UserRakets = () => {
       ) : (
         <div className="space-y-4">
           {filteredRakets.map((raket) => (
-  <div
-    key={raket.id}
-    className="bg-white p-5 rounded-lg shadow hover:shadow-lg transition"
-  >
-    {/* Title + Author + Message Icon */}
-    <div className="flex justify-between items-center mb-2">
-      <h2 className="text-lg font-semibold text-[#0C2C57]">{raket.title}</h2>
-      <div className="flex items-center space-x-4 text-sm text-gray-600">
-        <span>by {raket.author}</span>
-        <button
-          title={`Message ${raket.author}`}
-          className="bg-gray-100 hover:bg-gray-200 text-gray-700 p-2 rounded-full transition"
-        >
-          <MessageCircle className="w-5 h-5" />
-        </button>
-      </div>
-    </div>
+            <div
+              key={raket.raketId}
+              className="bg-white p-5 rounded-lg shadow hover:shadow-lg transition"
+            >
+              {/* Title */}
+              <h2 className="text-lg font-semibold text-[#0C2C57] mb-1">{raket.title}</h2>
+              {/* RAKETISTA ASSIGNED */}
+              {raket.acceptedRaketista && (
+                <p>
+                  Assigned to: {raket.acceptedRaketista.firstName}{" "}
+                  {raket.acceptedRaketista.lastName}
+                </p>
+              )}
 
-    {/* Divider */}
-    <div className="border-b border-gray-200 mb-3" />
+              <div className="border-b border-gray-200 mb-3" />
 
-    {/* Star Rating (if Completed) */}
-    {raket.status === "Completed" && raket.rating && (
-      <div className="mb-2">
-        <StarRating count={raket.rating} />
-      </div>
-    )}
+              {/* Description */}
+              <p className="text-gray-700 text-sm mb-3">{raket.description}</p>
+              <div className="text-sm text-gray-500 mb-2">{(() => {
+                const { formattedDate, formattedTime } = formatDateTime(raket.dateCreated);
+                return (
+                  <div className="text-sm text-gray-500 mb-2">
+                    <div>Date Posted: {formattedDate}</div>
+                    <div>Time Posted: {formattedTime}</div>
+                  </div>
+                );
+              })()}</div>
 
-    {/* Description and Date */}
-    <p className="text-gray-700 text-sm mb-1">{raket.description}</p>
-    <div className="text-sm text-gray-500 mb-2">{raket.date}</div>
+              {/* Budget + Status */}
+              <div className="flex justify-between items-center mt-2">
+                <span className="text-[#FF7C2B] font-semibold">PHP {raket.budget}</span>
 
-    {/* Price + Status */}
-    <div className="flex justify-between items-center mt-3">
-      <p className="text-[#FF7C2B] font-semibold">{raket.price}</p>
-      <span
-        className={`text-sm px-2 py-1 rounded-full font-medium ${getStatusStyle(
-          raket.status
-        )}`}
-      >
-        {raket.status}
-      </span>
-    </div>
-  </div>
-))}
+                {raket.status === "in_progress" && (
+                <div className="flex items-center gap-2">
+                  <select
+                    value={raket.status}
+                    onChange={(e) => handleStatusChange(raket.raketId, e.target.value)}
+                    disabled={updatingId === raket.raketId}
+                    className={`text-xs h-7 leading-none rounded-full px-2 font-medium border ${getStatusStyle(
+                      mapStatusToLabel(raket.status)
+                    )}`}
+                  >
+                    <option value="in_progress">Ongoing</option>
+                    <option value="completed">Done</option>
+                  </select>
+                  <button
+                    onClick={() => handleCancel(raket.raketId)}
+                    disabled={updatingId === raket.raketId}
+                    className="bg-red-500 text-white px-3 py-1.5 rounded-md text-xs hover:bg-red-600 transition"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              )}
+
+              {raket.status === "pending_confirmation" && (
+                <div className="flex gap-2 items-center">
+                  <button
+                    disabled={updatingId === raket.raketId}
+                    onClick={() => handleClientConfirmCompleted(raket.raketId)}
+                    className="bg-green-500 text-white px-3 py-1 rounded-md hover:bg-green-600 transition"
+                  >
+                    Confirm Completion
+                  </button>
+                  <button
+                    disabled={updatingId === raket.raketId}
+                    onClick={() => handleRejectCompletionRequest(raket.raketId)}
+                    className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 transition"
+                  >
+                    Reject Completion
+                  </button>
+                </div>
+              )}
+
+
+                {/* COMPLETED */}
+                {raket.status === "completed" && (
+                  <div className="flex items-center gap-2">
+                    <span
+                      className={`text-xs h-7 leading-none rounded-full px-2 font-medium border ${getStatusStyle(
+                        mapStatusToLabel(raket.status)
+                      )}`}
+                    >
+                      Completed
+                    </span>
+                    {/* Add logic to check if rating exists, asnd if not rated yet, show Rate button*/}
+                    <button
+                      className="text-xs px-3 py-1 rounded-md bg-blue-100 text-blue-700 hover:bg-blue-200 transition"
+                      onClick={() => {
+                        // handle opening the rating modal or page
+                      }}
+                    >
+                      Rate
+                    </button>
+                  </div>
+                )}
+                {/* Action Buttons (for cancelled rakets) */}
+                {raket.status === 'cancelled' && (
+                  <div className="flex gap-2 items-center">
+                    <span className="text-red-500 font-semibold">Cancelled</span>
+                    <button
+                      className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded"
+                      onClick={() => handleDelete(raket.raketId)}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                )}
+
+
+                {/* Action Buttons (for open rakets) */}
+                {raket.status === "open" && (
+                  <div className="flex gap-2 items-center">
+                    <button
+                      onClick={() => navigate(`/raket/${raket.raketId}/applications`)}
+                      className="text-sm px-3 py-1 rounded-md bg-blue-100 text-blue-700 hover:bg-blue-200 transition"
+                    >
+                      View Applications
+                    </button>
+                    <button
+                      disabled={updatingId === raket.raketId}
+                      onClick={() => handleCancelOpen(raket.raketId)}
+                      className="text-sm px-2 py-1 rounded-full font-medium bg-red-100 text-red-700 hover:bg-red-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      Withdraw
+                    </button>
+                  </div>
+                )}
+
+              </div>
+
+            </div>
+
+          ))}
 
         </div>
       )}

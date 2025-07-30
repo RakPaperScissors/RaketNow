@@ -1,35 +1,27 @@
-import { useEffect, useState } from "react";
-import { fetchRaketApplications } from "../api/rakets";
+import { useEffect, useState, useCallback } from "react";
+import { fetchApplicationsForRaket } from "../api/rakets";
 
-export function useRaketApplications() {
+
+export function useRaketApplications(raketId) {
   const [raketApplications, setRaketApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const fetchData = () => {
-    const accessToken = localStorage.getItem("access_token");
-    if (!accessToken) {
-      setError("No access token found");
-      setLoading(false);
-      return;
-    }
-
+  const fetch = useCallback(async () => {
     setLoading(true);
-    fetchRaketApplications(accessToken)
-      .then(data => {
-        setRaketApplications(data);
-        setError("");
-      })
-      .catch(err => {
-        setError(err.message || "Failed to fetch applications");
-      })
-      .finally(() => setLoading(false));
-  };
+    try {
+      const data = await fetchApplicationsForRaket(raketId);
+      setRaketApplications(data);
+    } catch (err) {
+      setError(err.message || "Failed to load applications");
+    } finally {
+      setLoading(false);
+    }
+  }, [raketId]);
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  useEffect(() => {;
+    if (raketId) fetch();
+  }, [raketId, fetch]);
 
-  return { raketApplications, loading, error, refetch: fetchData };
+  return { raketApplications, loading, error, refetch: fetch };
 }
-

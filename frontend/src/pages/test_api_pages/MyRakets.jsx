@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import { fetchMyRakets, updateRaketStatus, fetchAssignedRakets, requestCompletion, cancelCompletionRequest, deleteRaketById, cancelRaket, rejectCompletionRequest, withdrawFromRaket  } from "../../api/rakets";
+import { fetchMyRakets, updateRaketStatus, fetchAssignedRakets, requestCompletion, cancelCompletionRequest, deleteRaketById, cancelOngoingRaket, rejectCompletionRequest, withdrawFromRaket  } from "../../api/rakets";
 import { useCurrentUser } from "../../hooks/useCurrentUser";
 import DebugPanel from "../../components/DebugPanel"; 
 
@@ -150,7 +150,7 @@ const UserRakets = () => {
 
         try {
         setUpdatingId(raketId);
-        await cancelRaket(raketId);
+        await cancelOngoingRaket(raketId);
         await fetchRaketsData();
         } catch (err) {
         console.error("Failed to cancel raket:", err);
