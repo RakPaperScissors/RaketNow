@@ -1,4 +1,3 @@
-// changed some format coz deins ko gets pano naga work yung root layout HASHDHASD
 
 import React from "react";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
@@ -14,10 +13,11 @@ import Faqs from "./pages/Faqs";
 import Home from "./pages/Home";
 import ForYou from "./pages/ForYou";
 import ProfilePage from "./pages/ProfilePage";
-import MessagePage from "./pages/MessagePage";
-import BecomeRaketista from "./pages/BecomeRaketista";
+import Message from "./pages/MessagePage";
+import UserNotifications from "./pages/Notifications";
 import UserRakets from "./pages/MyRakets";
 import BoostPost from "./pages/Boost";
+import AdminDashboard from "./pages/AdminDashboard";
 
 function AppContent() {
   const location = useLocation();
@@ -48,10 +48,13 @@ function AppContent() {
         <Route path="/home" element={<Home />} />
         <Route path="/rakets" element={<ForYou />} />
         <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/message" element={<MessagePage />} />
-        <Route path="/become-raketista" element={<BecomeRaketista />} />
+        <Route path="/message" element={<Message />} />
+        <Route path="/notifications" element={<UserNotifications />} />
         <Route path="/my-rakets" element={<UserRakets />} />
         <Route path="/boost" element={<BoostPost />} />
+
+        {/*For Admin Dashboard*/}
+        <Route path="/admin-dashboard" element={<AdminDashboard />} />
       </Routes>
 
       {showFooter && <Footer />}
