@@ -22,6 +22,13 @@ export interface AuthJwtPayload {
   sub: number;
 }
 
+export interface ValidatedJwtPayload {
+  id: number;
+  email: string;
+  role: string; 
+}
+
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -132,9 +139,15 @@ export class AuthService {
     return { message: "Password updated successfully" };
   }
 
-  async verifyJwt(token: string): Promise<any> {
+ async verifyJwt(token: string): Promise<ValidatedJwtPayload | null> {
     try {
-      return this.jwtService.verify(token);
+      const payload = this.jwtService.verify(token);
+      // Map the 'sub' from the JWT payload to 'id' for consistency
+      return {
+        id: payload.sub,
+        email: payload.email,
+        role: payload.role,
+      };
     } catch (e) {
       return null;
     }
