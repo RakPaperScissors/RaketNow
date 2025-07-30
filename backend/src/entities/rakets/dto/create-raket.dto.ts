@@ -1,6 +1,6 @@
 import { Users } from "src/entities/user/entities/user.entity";
 import { RaketStatus } from "../entities/raket.entity";
-import { IsDate } from "class-validator";
+import { IsDate, IsEnum } from "class-validator";
 
 export class CreateRaketDto {
 
@@ -8,7 +8,9 @@ export class CreateRaketDto {
 
     description: string;
 
-    status: RaketStatus;
+    
+    @IsEnum(RaketStatus)
+    status?: RaketStatus;
 
     budget: number;
 

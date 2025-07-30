@@ -1,38 +1,42 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { ListFilter, MessageCircle } from "lucide-react";
+import { useEffect, useState, useCallback } from "react";
+import { fetchMyRakets, updateRaketStatus, fetchAssignedRakets, requestCompletion, cancelCompletionRequest, deleteRaketById, cancelRaket, rejectCompletionRequest, withdrawFromRaket  } from "../api/rakets";
+import { useCurrentUser } from "../hooks/useCurrentUser";
+import DebugPanel from "../components/DebugPanel"; 
 
-// to be replaced
-const mockMyRakets = [
-  {
-    id: 1,
-    title: "E-commerce Website Redesign",
-    description: "Redesigned UI/UX of an e-commerce platform.",
-    status: "Completed",
-    date: "June 15, 2024",
-    price: "₱15,000",
-    rating: 5,
-    author: "John Doe",
-  },
-  {
-    id: 2,
-    title: "React.js Dashboard Development",
-    description: "Developed an admin dashboard with data visualization.",
-    status: "Ongoing",
-    date: "July 10, 2025",
-    price: "₱22,500",
-    rating: 4,
-    author: "Jane Smith",
-  },
-  {
-    id: 3,
-    title: "Mobile App UI Design",
-    description: "Designed UI for a mobile fitness app.",
-    status: "Pending",
-    date: "July 22, 2025",
-    price: "₱8,500",
-    author: "Alex Cruz",
-  },
-];
+// Mock Data for testing
+// const mockMyRakets = [
+//   {
+//     id: 1,
+//     title: "E-commerce Website Redesign",
+//     description: "Redesigned UI/UX of an e-commerce platform.",
+//     status: "Completed",
+//     date: "June 15, 2024",
+//     price: "₱15,000",
+//     rating: 5,
+//     author: "John Doe",
+//   },
+//   {
+//     id: 2,
+//     title: "React.js Dashboard Development",
+//     description: "Developed an admin dashboard with data visualization.",
+//     status: "Ongoing",
+//     date: "July 10, 2025",
+//     price: "₱22,500",
+//     rating: 4,
+//     author: "Jane Smith",
+//   },
+//   {
+//     id: 3,
+//     title: "Mobile App UI Design",
+//     description: "Designed UI for a mobile fitness app.",
+//     status: "Pending",
+//     date: "July 22, 2025",
+//     price: "₱8,500",
+//     author: "Alex Cruz",
+//   },
+// ];
 
 const getStatusStyle = (status) => {
   switch (status) {
@@ -59,14 +63,166 @@ const StarRating = ({ count }) => (
 
 
 const UserRakets = () => {
-  const [rakets, setRakets] = useState([]);
+  // const [rakets, setRakets] = useState([]);
   const [statusFilter, setStatusFilter] = useState("All");
   const [showDropdown, setShowDropdown] = useState(false);
+  const currentUser = useCurrentUser();
+  const [rakets, setRakets] = useState([]);
+  const [assignedRakets, setAssignedRakets] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [updatingId, setUpdatingId] = useState(null);
+  
+  // for fetching data
+      const fetchRaketsData = useCallback(async () => {
+          try {
+          const [myRaketsData, assignedRaketsData] = await Promise.all([
+              fetchMyRakets(),
+              fetchAssignedRakets(),
+          ]);
+          setRakets(myRaketsData);
+          setAssignedRakets(assignedRaketsData);
+          } catch (err) {
+          console.error("Error fetching rakets:", err);
+          setError("Failed to fetch rakets.");
+          } finally {
+          setLoading(false);
+          }
+      }, []);
+  
+      useEffect(() => {
+          fetchRaketsData();
+      }, [fetchRaketsData]);
 
-  useEffect(() => {
-    setRakets(mockMyRakets);
-  }, []);
+      // raket button functions (CRUD)
+      const handleStatusChange = async (raketId, newStatus) => {
+          try {
+          setUpdatingId(raketId);
+          const raket = rakets.find((r) => r.raketId === raketId);
+          const wasPending = raket.status === "pending_confirmation";
+          await updateRaketStatus(raketId, newStatus);
+          if (wasPending && newStatus === "in_progress") {
+              await cancelCompletionRequest(raketId);
+          }
+          await fetchRaketsData();
+          } catch (err) {
+          console.error("Failed to update status:", err);
+          alert("Failed to update status. Try again.");
+          } finally {
+          setUpdatingId(null);
+          }
+      };
+  
+      const handleMarkCompleted = async (raketId) => {
+          try {
+          setUpdatingId(raketId);
+          await requestCompletion(raketId);
+          await fetchRaketsData();
+          } catch (err) {
+          console.error("Failed to mark as completed:", err);
+          alert("Something went wrong. Try again.");
+          } finally {
+          setUpdatingId(null);
+          }
+      };
+  
+      const handleCancelConfirmation = async (raketId) => {
+          try {
+          setUpdatingId(raketId);
+          await cancelCompletionRequest(raketId);
+          await fetchRaketsData();
+          } catch (err) {
+          console.error("Failed to cancel confirmation:", err);
+          alert("Something went wrong. Try again.");
+          } finally {
+          setUpdatingId(null);
+          }
+      };
+  
+      const handleClientConfirmCompleted = async (raketId) => {
+          try {
+          setUpdatingId(raketId);
+          await updateRaketStatus(raketId, "completed");
+          await fetchRaketsData();
+          } catch (err) {
+          console.error("Failed to confirm completion:", err);
+          alert("Something went wrong. Try again.");
+          } finally {
+          setUpdatingId(null);
+          }
+      };
+  
+      const handleDeleteRaket = async (raketId) => {
+          try {
+          setUpdatingId(raketId);
+          await deleteRaketById(raketId);
+          await fetchRaketsData();
+          } catch (err) {
+          console.error("Failed to delete raket:", err);
+          alert("Failed to delete raket.");
+          } finally {
+          setUpdatingId(null);
+          }
+      };
+  
+      const handleCancel = async (raketId) => {
+          const confirmCancel = window.confirm("Are you sure you want to cancel this ongoing raket?");
+          if (!confirmCancel) return;
+  
+          try {
+          setUpdatingId(raketId);
+          await cancelRaket(raketId);
+          await fetchRaketsData();
+          } catch (err) {
+          console.error("Failed to cancel raket:", err);
+          alert("Failed to cancel raket. Please try again.");
+          } finally {
+          setUpdatingId(null);
+          }
+      };
+  
+      const handleRejectCompletionRequest = async (raketId) => {
+          const confirmReject = window.confirm("Are you sure you want to reject the completion request?");
+          if (!confirmReject) return;
+  
+          try {
+          setUpdatingId(raketId);
+          await rejectCompletionRequest(raketId);
+          await fetchRaketsData();
+          } catch (err) {
+          console.error("Failed to reject completion request:", err);
+          alert("Something went wrong. Try again.");
+          } finally {
+          setUpdatingId(null);
+          }
+      };
+  
+      const handleWithdraw = async (raketId) => {
+          const confirm = window.confirm("Are you sure you want to withdraw? The raket will return to open status.");
+          if (!confirm) return;
+  
+          try {
+          setUpdatingId(raketId);
+          await withdrawFromRaket(raketId);
+          await fetchRaketsData();
+          } catch (err) {
+          console.error("Failed to withdraw:", err);
+          alert("Failed to withdraw from raket.");
+          } finally {
+          setUpdatingId(null);
+          }
+      };
+      // format
+      const formatStatus = (status) =>
+          status
+          .replace(/_/g, " ")
+          .replace(/\b\w/g, (c) => c.toUpperCase());
 
+  // useEffect(() => {
+  //   setRakets(mockMyRakets);
+  // }, []);
+
+  // for filtering
   const filteredRakets =
     statusFilter === "All"
       ? rakets

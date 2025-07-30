@@ -54,7 +54,6 @@ function Applications() {
     }
   };
 
-
   const renderRaketistaName = (raketista) =>
     [raketista?.firstName, raketista?.lastName].filter(Boolean).join(" ") ||
     "Unknown";

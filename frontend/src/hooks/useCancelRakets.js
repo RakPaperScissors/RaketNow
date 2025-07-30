@@ -5,11 +5,11 @@ export function useCancelRaket() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const handleCancel = async (raketId, token) => {
+  const handleCancel = async (raketId) => {
     try {
       setLoading(true);
       setError(null);
-      await cancelRaket(raketId, token);
+      await cancelRaket(raketId);
     } catch (err) {
       setError(err.message || 'Something went wrong');
     } finally {

@@ -8,10 +8,9 @@ export function useUpdateRaketStatus() {
   const updateStatus = async (raketId, newStatus) => {
     setLoading(true);
     setError("");
-    const accessToken = localStorage.getItem("access_token");
 
     try {
-      const updated = await updateRaketStatus(raketId, newStatus, accessToken);
+      const updated = await updateRaketStatus(raketId, newStatus);
       return updated;
     } catch (err) {
       setError(err.message || "Update failed");

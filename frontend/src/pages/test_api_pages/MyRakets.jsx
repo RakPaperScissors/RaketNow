@@ -11,21 +11,12 @@ const UserRakets = () => {
     const [error, setError] = useState("");
     const [updatingId, setUpdatingId] = useState(null);
 
-    const token = localStorage.getItem("access_token");
-
     const fetchRaketsData = useCallback(async () => {
-        if (!token) {
-        setError("Access token not found.");
-        setLoading(false);
-        return;
-        }
-
         try {
         const [myRaketsData, assignedRaketsData] = await Promise.all([
-            fetchMyRakets(token),
-            fetchAssignedRakets(token),
+            fetchMyRakets(),
+            fetchAssignedRakets(),
         ]);
-
         setRakets(myRaketsData);
         setAssignedRakets(assignedRaketsData);
         } catch (err) {
@@ -34,7 +25,7 @@ const UserRakets = () => {
         } finally {
         setLoading(false);
         }
-    }, [token]);
+    }, []);
 
     useEffect(() => {
         fetchRaketsData();
@@ -42,52 +33,52 @@ const UserRakets = () => {
 
     const handleStatusChange = async (raketId, newStatus) => {
         try {
-            setUpdatingId(raketId);
-            const raket = rakets.find(r => r.raketId === raketId);
-            const wasPending = raket.status === "pending_confirmation";
-            await updateRaketStatus(raketId, newStatus, token);
-            if (wasPending && newStatus === "in_progress") {
-            await cancelCompletionRequest(raketId, token);
-            }
-            await fetchRaketsData();
+        setUpdatingId(raketId);
+        const raket = rakets.find((r) => r.raketId === raketId);
+        const wasPending = raket.status === "pending_confirmation";
+        await updateRaketStatus(raketId, newStatus);
+        if (wasPending && newStatus === "in_progress") {
+            await cancelCompletionRequest(raketId);
+        }
+        await fetchRaketsData();
         } catch (err) {
-            console.error("Failed to update status:", err);
-            alert("Failed to update status. Try again.");
+        console.error("Failed to update status:", err);
+        alert("Failed to update status. Try again.");
         } finally {
-            setUpdatingId(null);
+        setUpdatingId(null);
         }
     };
 
     const handleMarkCompleted = async (raketId) => {
         try {
-            setUpdatingId(raketId);
-            await requestCompletion(raketId, token);
-            await fetchRaketsData();
+        setUpdatingId(raketId);
+        await requestCompletion(raketId);
+        await fetchRaketsData();
         } catch (err) {
-            console.error("Failed to mark as completed:", err);
-            alert("Something went wrong. Try again.");
+        console.error("Failed to mark as completed:", err);
+        alert("Something went wrong. Try again.");
         } finally {
-            setUpdatingId(null);
+        setUpdatingId(null);
         }
     };
 
     const handleCancelConfirmation = async (raketId) => {
         try {
-            setUpdatingId(raketId);
-            await cancelCompletionRequest(raketId, token);
-            await fetchRaketsData();
+        setUpdatingId(raketId);
+        await cancelCompletionRequest(raketId);
+        await fetchRaketsData();
         } catch (err) {
-            console.error("Failed to cancel confirmation:", err);
-            alert("Something went wrong. Try again.");
+        console.error("Failed to cancel confirmation:", err);
+        alert("Something went wrong. Try again.");
         } finally {
-            setUpdatingId(null);
+        setUpdatingId(null);
         }
     };
 
     const handleClientConfirmCompleted = async (raketId) => {
         try {
         setUpdatingId(raketId);
-        await updateRaketStatus(raketId, "completed", token);
+        await updateRaketStatus(raketId, "completed");
         await fetchRaketsData();
         } catch (err) {
         console.error("Failed to confirm completion:", err);
@@ -99,14 +90,14 @@ const UserRakets = () => {
 
     const handleDeleteRaket = async (raketId) => {
         try {
-            setUpdatingId(raketId);
-            await deleteRaketById(raketId, token);
-            await fetchRaketsData();
+        setUpdatingId(raketId);
+        await deleteRaketById(raketId);
+        await fetchRaketsData();
         } catch (err) {
-            console.error("Failed to delete raket:", err);
-            alert("Failed to delete raket.");
+        console.error("Failed to delete raket:", err);
+        alert("Failed to delete raket.");
         } finally {
-            setUpdatingId(null);
+        setUpdatingId(null);
         }
     };
 
@@ -115,14 +106,14 @@ const UserRakets = () => {
         if (!confirmCancel) return;
 
         try {
-            setUpdatingId(raketId);
-            await cancelRaket(raketId, token);
-            await fetchRaketsData();
+        setUpdatingId(raketId);
+        await cancelRaket(raketId);
+        await fetchRaketsData();
         } catch (err) {
-            console.error("Failed to cancel raket:", err);
-            alert("Failed to cancel raket. Please try again.");
+        console.error("Failed to cancel raket:", err);
+        alert("Failed to cancel raket. Please try again.");
         } finally {
-            setUpdatingId(null);
+        setUpdatingId(null);
         }
     };
 
@@ -131,14 +122,14 @@ const UserRakets = () => {
         if (!confirmReject) return;
 
         try {
-            setUpdatingId(raketId);
-            await rejectCompletionRequest(raketId, token);
-            await fetchRaketsData();
+        setUpdatingId(raketId);
+        await rejectCompletionRequest(raketId);
+        await fetchRaketsData();
         } catch (err) {
-            console.error("Failed to reject completion request:", err);
-            alert("Something went wrong. Try again.");
+        console.error("Failed to reject completion request:", err);
+        alert("Something went wrong. Try again.");
         } finally {
-            setUpdatingId(null);
+        setUpdatingId(null);
         }
     };
 
@@ -147,16 +138,17 @@ const UserRakets = () => {
         if (!confirm) return;
 
         try {
-            setUpdatingId(raketId);
-            await withdrawFromRaket(raketId, token);
-            await fetchRaketsData();
+        setUpdatingId(raketId);
+        await withdrawFromRaket(raketId);
+        await fetchRaketsData();
         } catch (err) {
-            console.error("Failed to withdraw:", err);
-            alert("Failed to withdraw from raket.");
+        console.error("Failed to withdraw:", err);
+        alert("Failed to withdraw from raket.");
         } finally {
-            setUpdatingId(null);
+        setUpdatingId(null);
         }
     };
+
 
 
     const formatStatus = (status) =>

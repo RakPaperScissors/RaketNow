@@ -266,7 +266,7 @@ export class RaketsService {
     });
   }
 
-  async updateRaketStatus(raketId: number, status: RaketStatus) {
+  async updateRaketStatus(raketId: number, status: RaketStatus, userId: number) {
     const raket = await this.getEntityById(raketId);
     if (!Object.values(RaketStatus).includes(status)) {
       throw new BadRequestException(`Invalid raket status: ${status}`);
@@ -280,6 +280,9 @@ export class RaketsService {
         raketId: raketId,
         actionable: true,
       });
+    }
+    if (raket.user.uid !== userId) {
+      throw new ForbiddenException('You are not allowed to update this raket');
     }
     raket.status = status;
     if (status === RaketStatus.COMPLETED) {

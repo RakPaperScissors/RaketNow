@@ -1,23 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UseGuards } from '@nestjs/common';
-import { RaketStatus } from "./entities/raket.entity";
-import { RaketsService } from './rakets.service';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Request, UseGuards, ParseIntPipe, Query, } from '@nestjs/common';
 import { CreateRaketDto } from './dto/create-raket.dto';
 import { UpdateRaketDto } from './dto/update-raket.dto';
-import { CurrentUser } from 'src/auth/current-user.decorator';
-import { Request } from 'express';
+import { RaketStatus } from './entities/raket.entity';
+import { RaketsService } from './rakets.service';
+import { Users } from '../user/entities/user.entity';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { ParseIntPipe } from '@nestjs/common';
-import { Users, userRole } from 'src/entities/user/entities/user.entity';
-
-export interface RequestWithUser extends Request {
-  user: {
-    uid: number;
-    role: userRole;
-    email?: string;
-    firstName?: string;
-    lastName?: string;
-  };
-}
+import { CurrentUser } from 'src/auth/current-user.decorator';
 
 @Controller('rakets')
 export class RaketsController {
@@ -25,8 +13,8 @@ export class RaketsController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  create(@Body() createRaketDto: CreateRaketDto, @CurrentUser() user: Users) {
-    return this.raketsService.create(createRaketDto, user);
+  create(@Body() dto: CreateRaketDto, @Request() req) {
+    return this.raketsService.create(dto, req.user);
   }
 
   @Get()
@@ -35,91 +23,72 @@ export class RaketsController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('myrakets')
-  getMyRakets(@Req() req: RequestWithUser) {
+  @Get('/myrakets')
+  findMyRakets(@Request() req) {
     return this.raketsService.findMyRakets(req.user.uid);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('assigned-to-me')
-  getAssignedRakets(@Req() req: RequestWithUser) {
-    return this.raketsService.getRaketsAssignedToUser(req.user.uid);
+  @Get('/assigned-to-me')
+  getRaketsAssignedToUser(@Request() req) {
+    return this.raketsService.findMyRakets(Number(req.user.uid));
   }
 
   @UseGuards(JwtAuthGuard)
   @Patch(':id/status')
-  async updateStatus(
-    @Param('id', ParseIntPipe) raketId: number,
-    @Body('status') status: RaketStatus
+  updateRaketStatus(
+    @Param('id') id: number,
+    @Query('status') status: RaketStatus,
+    @Request() req
   ) {
-    return this.raketsService.updateRaketStatus(raketId, status);
+    return this.raketsService.updateRaketStatus(id, status, req.user.uid);
   }
 
-  @Patch(':id/request-completion')
-  @UseGuards(JwtAuthGuard)
-  async requestCompletion(
-    @Param('id', ParseIntPipe) raketId: number,
-    @Req() req: Request
-  ) {
-    const userId = req.user?.['uid'];
-    return this.raketsService.raketistaRequestCompletion(raketId, userId);
-  }
-
-  @Patch(':id/cancel-completion-request')
-  @UseGuards(JwtAuthGuard)
-  async cancelCompletionRequest(
-    @Param('id', ParseIntPipe) raketId: number,
-    @Req() req: Request
-  ) {
-    const userId = req.user?.['uid'];
-    return this.raketsService.cancelCompletionRequest(raketId, userId);
-  }
-
-  @Patch(':id/reject-completion-request')
-  @UseGuards(JwtAuthGuard)
-  async clientRejectCompletion(
-    @Param('id', ParseIntPipe) raketId: number,
-    @Req() req: any,
-  ) {
-    const clientId = req.user.uid;
-    return this.raketsService.clientRejectsCompletionRequest(raketId, clientId);
-  }
-
-  @Patch(':id/withdraw')
-  @UseGuards(JwtAuthGuard)
-  async withdrawFromRaket(
-    @Param('id') raketId: number,
-    @Req() req: any,
-  ) {
-    const raketistaUid = req.user.uid;
-    return this.raketsService.withdrawRaket(raketId, raketistaUid);
-  }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.raketsService.findOne(id);
+  findOne(@Param('id', ParseIntPipe) raketId: number) {
+    return this.raketsService.findOne(raketId);
   }
 
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateRaketDto: UpdateRaketDto, @CurrentUser() user: Users) {
-    return this.raketsService.patch(+id, updateRaketDto);
+  patch(@Param('id', ParseIntPipe) raketId: number, @Body() dto: UpdateRaketDto) {
+    return this.raketsService.patch(raketId, dto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  @UseGuards(JwtAuthGuard)
-  remove(@Param('id') id: string, @Req() req: Request) {
-    const userId = (req.user as any)?.uid;
-    return this.raketsService.remove(+id, userId);
+  remove(@Param('id', ParseIntPipe) raketId: number, @Request() req) {
+    return this.raketsService.remove(raketId, req.user.uid);
   }
 
-  @Patch(':id/cancel')
   @UseGuards(JwtAuthGuard)
-  async cancelRaket(
-    @Param('id', ParseIntPipe) raketId: number,
-    @Req() req: any,
-  ) {
-    const userId = req.user.uid;
-    return this.raketsService.cancelRaket(raketId, userId);
+  @Patch(':id/cancel')
+  cancelRaket(@Param('id', ParseIntPipe) raketId: number, @Request() req) {
+    return this.raketsService.cancelRaket(raketId, req.user.uid);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch(':id/reject-completion')
+  clientRejectsCompletionRequest(@Param('id', ParseIntPipe) raketId: number, @Request() req) {
+    return this.raketsService.clientRejectsCompletionRequest(raketId, req.user.uid);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch(':id/withdraw')
+  withdrawRaket(@Param('id', ParseIntPipe) raketId: number, @Request() req) {
+    return this.raketsService.withdrawRaket(raketId, req.user.uid);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch(':id/request-completion')
+  raketistaRequestCompletion(@Param('id', ParseIntPipe) raketId: number, @Request() req) {
+    return this.raketsService.raketistaRequestCompletion(raketId, req.user.uid);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch(':id/cancel-completion-request')
+  cancelCompletionRequest(@Param('id', ParseIntPipe) raketId: number, @Request() req) {
+    return this.raketsService.cancelCompletionRequest(raketId, req.user.uid);
   }
 }

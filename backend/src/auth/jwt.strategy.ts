@@ -6,10 +6,7 @@ import { Request } from 'express';
 
 
 const cookieExtractor = (req: Request): string | null => {
-  if (req && req.cookies) {
-    return req.cookies['access_token'];
-  }
-  return null;
+  return req?.cookies?.access_token ?? null;
 };
 
 @Injectable()
@@ -23,6 +20,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     }
 
     async validate(payload: any) {
-        return { uid: payload.sub, email: payload.email, role: payload.role };
+        return { uid: parseInt(payload.sub, 10), email: payload.email, role: payload.role };
     }
 }

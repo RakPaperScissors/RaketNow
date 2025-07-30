@@ -7,15 +7,9 @@ export function useMyRakets() {
   const [error, setError] = useState("");
 
   const fetchData = () => {
-    const accessToken = localStorage.getItem("access_token");
-    if (!accessToken) {
-      setError("No access token found");
-      setLoading(false);
-      return;
-    }
-
     setLoading(true);
-    fetchMyRakets(accessToken)
+
+    fetchMyRakets()
       .then(data => {
         setMyRakets(data);
         setError("");
