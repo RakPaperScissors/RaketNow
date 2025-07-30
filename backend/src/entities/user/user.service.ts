@@ -1,17 +1,27 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Users } from './entities/user.entity';
 import { ILike, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { userRole } from './entities/user.entity';
+import { Raketista } from './../raketista/entities/raketista.entity';
+import { Skills } from '../skills/entities/skill.entity';
+import { RaketistaSkill } from '../raketista-skill/entities/raketista-skill.entity';
+import { RaketistaSkillService } from '../raketista-skill/raketista-skill.service';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(Users)
-    private readonly users: Repository<Users>){
-  }
+    private readonly users: Repository<Users>,
+    @InjectRepository(Skills)
+    private readonly skillsRepo: Repository<Skills>,
+    @InjectRepository(RaketistaSkill)
+    private readonly raketistaSkillRepo: Repository<RaketistaSkill>,
+    @InjectRepository(Raketista)
+    private readonly raketistaRepo: Repository<Raketista>,
+  ){}
 
   // --- Basic CRUD operations for USER entity ---
   // 1. Create User
@@ -110,5 +120,53 @@ export class UserService {
     // Updates the role if user is found and save
     findUser.role = role;
     return await this.users.save(findUser);
+  }
+
+  // 3. Add additional role
+  async addRole(uid: number, newRole: userRole) {
+    const user = await this.users.findOne({ where: { uid: uid} });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    if (!user.roles.includes(newRole)) {
+      user.roles.push(newRole);
+      await this.users.save(user);
+    }
+    return user;
+  }
+
+  // 4. Apply to be a raketista from client
+  async applyForRaketistaRole(uid: number) {
+    // Find the user (as base class)
+    const user = await this.users.findOne({ where: { uid } });
+    if (!user) {
+      throw new NotFoundException(`User with ID ${uid} not found.`);
+    }
+
+    // Check if user already has raketista in 'roles'
+    if (user.roles && user.roles.includes(userRole.RAKETISTA)) {
+      throw new BadRequestException('User is already a raketista.');
+    }
+    // Ensure clients can only apply
+    if (user.role !== userRole.CLIENT) {
+      throw new BadRequestException('Only users with a primary role of "client" can apply to be a raketista.');
+    }
+
+    // Add raketista to roles
+    const updatedRoles = user.roles.includes(userRole.RAKETISTA)
+      ? user.roles
+      : [...user.roles, userRole.RAKETISTA];
+
+    await this.users
+      .createQueryBuilder()
+      .update(Users)
+      .set({ type: 'Raketista', roles: updatedRoles })
+      .where("uid = :uid", { uid: user.uid })
+      .execute();
+
+    const updated = await this.users.findOne({ where: { uid: user.uid }});
+
+    return updated;
   }
 }

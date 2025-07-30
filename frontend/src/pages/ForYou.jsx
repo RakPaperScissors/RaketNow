@@ -1,13 +1,19 @@
-import React from "react";
+import React, { useState} from "react";
 import SearchBar from "../components/SearchBar";
 import SideNav from "../components/SideNav";
 import RaketFeed from "../components/RaketFeed";
 import TopRaketista from "../components/TopRaketista";
 import PostRaket from "../components/PostRaket";
 import Help from "../components/Help";
+import { useAuth } from "../context/AuthContext";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 
 const ForYou = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const { loading } = useAuth();
+
+  if (loading) return <LoadingSpinner fullScreen />;
 
   return (
     <div className="flex h-screen bg-[#f9fafb]">
@@ -20,7 +26,7 @@ const ForYou = () => {
       <div className="ml-64 flex-1 flex flex-col h-screen overflow-hidden">
         {/* Top Section */}
         <div className="sticky top-0 z-10 bg-white ">
-          <SearchBar />
+          <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
         </div>
 
         {/* Scrollable Content */}
@@ -28,9 +34,7 @@ const ForYou = () => {
           <PostRaket />
           <Help /> 
           <TopRaketista />
-          <RaketFeed />
-          
-
+          <RaketFeed searchTerm={searchTerm} />
         </div>
       </div>
     </div>
