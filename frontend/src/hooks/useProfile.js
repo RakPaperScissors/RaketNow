@@ -49,7 +49,7 @@ export function useProfile() {
     // Load data on initial component mount
     useEffect(() => {
         fetchProfileData();
-    }, [fetchProfileData]);
+    }, [fetchProfileData, location.pathname]);
 
     // Handler to toggle editing mode on/off
     const toggleEditMode = () => {

@@ -38,7 +38,8 @@ function ProfileCard() {
   if (error) return <div className="text-center p-10 text-red-500">Error: {error}</div>;
   if (!user) return <div className="text-center p-10">No user data found. Please log in.</div>;
 
-  const isRaketista = user?.type === "Raketista";
+  const isRaketista = user.type === "Raketista";
+  console.log("User:", user.firstName, user.lastName);
   console.log("Is user raketista?", isRaketista);
   console.log("bio:", user.bio);
   console.log("currentSkills:", currentSkills);
@@ -75,7 +76,7 @@ function ProfileCard() {
           <div>
             <h2 className="text-xl font-bold">{`${user.firstName} ${user.lastName}`}</h2>
             <div className="flex items-center gap-2 text-sm text-gray-600 mt-1">
-              <span className="bg-orange-100 text-orange-600 px-2 py-0.5 rounded-full text-xs font-medium capitalize">{user.type}</span>
+              <span className="bg-orange-100 text-orange-600 px-2 py-0.5 rounded-full text-xs font-medium capitalize">{user.type === "Users" ? "Client" : user.type}</span>
               <span>• Joined {formatDate(user.createdAt)}</span>
             </div>
             <div className="flex items-center text-gray-600 mt-1">
@@ -150,8 +151,8 @@ function ProfileCard() {
       {isEditing && (
         <div className="mt-8 pt-4 border-t flex justify-end gap-3">
           <button onClick={toggleEditMode} className="px-5 py-2 bg-gray-400 text-white font-semibold rounded-md hover:bg-gray-500">Cancel</button>
-          <button onClick={handleSaveChanges} disabled={loading} className="px-5 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 disabled:opacity-50">
-            {loading ? "Saving..." : "Save Changes"}
+          <button onClick={handleSaveChanges} disabled={authLoading} className="px-5 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 disabled:opacity-50">
+            {authLoading ? "Saving..." : "Save Changes"}
           </button>
         </div>
       )}

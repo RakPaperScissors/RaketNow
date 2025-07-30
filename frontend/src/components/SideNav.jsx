@@ -30,6 +30,9 @@ function SideNav() {
   if (isLoggingOut) return <LoadingSpinner fullScreen/>
   if (!user) return <p>You are not logged in.</p>
 
+  const userType = user.type === "Users" ? "Client" : user.type;
+  const canApplyAsRaketista = userType === "Client";
+
   return (
     <aside className="h-screen w-64 bg-white border-r border-gray-200 flex flex-col justify-between py-6 px-4">
       {/* TOP SECTION */}
@@ -55,12 +58,13 @@ function SideNav() {
       {/* BOTTOM SECTION */}
       <div>
         <div className="space-y-2 mb-4">
-          {/* APPLY LOGIC HERE, WILL ONLY APPEAR IF CLIENT SI USER */}
-          <SideNavItem
-            to="/become-raketista"
-            icon={Users}
-            label="Become a Raketista"
-          />
+          {canApplyAsRaketista ? (
+            <SideNavItem
+              to="/become-raketista"
+              icon={Users}
+              label="Become a Raketista"
+            />
+          ) : ("")}
 
           {/* always visible */}
           <SideNavItem to="/notifications" icon={Bell} label="Notifications" />
@@ -75,7 +79,7 @@ function SideNav() {
           <NavLink to="/profile">
             <SideNavUser
               name={`${user.firstName} ${user.lastName}`}
-              role={user.type}
+              role={userType}
               image={user?.profilePicture} // Fallback image
             />
           </NavLink>
