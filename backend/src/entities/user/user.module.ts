@@ -10,7 +10,6 @@ import { RaketistaService } from '../raketista/raketista.service';
 import { Raketista } from '../raketista/entities/raketista.entity';
 import { Organization } from '../organization/entities/organization.entity';
 
-
 @Module({
   imports: [TypeOrmModule.forFeature([Users, RaketistaSkill, Organization, Raketista]), SkillsModule, RaketistaSkillModule],
   controllers: [UserController],

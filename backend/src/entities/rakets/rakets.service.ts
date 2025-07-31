@@ -16,6 +16,7 @@ import { Notification } from '../notification/entities/notification.entity';
 import { NotificationService } from '../notification/notification.service';
 import { S3 } from 'aws-sdk';
 import { RaketPictures } from '../raket-pictures/entities/raket-picture.entity';
+import { Rating } from '../rating/entities/rating.entity';
 
 @Injectable()
 export class RaketsService {
@@ -28,6 +29,8 @@ export class RaketsService {
     private readonly appRepo: Repository<RaketApplication>,
     @InjectRepository(Notification)
     private readonly notifRepo: Repository<Notification>,
+    @InjectRepository(Rating)
+    private readonly ratingRepo: Repository<Rating>,
     private readonly notifService: NotificationService,
     @InjectRepository(RaketPictures)
     private raketPicturesRepo: Repository<RaketPictures>,
@@ -218,34 +221,50 @@ async clientRejectsCompletionRequest(raketId: number, clientId: number) {
     await this.raketRepo.remove(raket);
   }
 
-  // fetches for GET /raket/myrakets
+  // fetches for GET /raket/my-rakets
 async findMyRakets(userId: number) {
   const rakets = await this.raketRepo.find({
     where: { user: { uid: userId } },
     relations: {
-      applications: {
-        raketista: true,
+      applications: { raketista: true },
+    },
+    order: { dateCreated: 'DESC' },
+  });
+
+  const results: (Raket & {
+    myRating: number | null;
+    acceptedRaketista: { firstName: string; lastName: string } | null;
+  })[] = [];
+
+  for (const raket of rakets) {
+    const existingRating = await this.ratingRepo.findOne({
+      where: {
+        user: { uid: userId },
+        raket: { raketId: raket.raketId },
       },
-    },
-    order: {
-      dateCreated: 'DESC',
-    },
-  });
+    });
 
-  return rakets.map(raket => {
-    const acceptedApp = raket.applications.find(app => app.status === RaketApplicationStatus.ACCEPTED);
+    const acceptedApp = raket.applications.find(
+      (app) => app.status === RaketApplicationStatus.ACCEPTED
+    );
 
-    return {
-      ...raket,
-      acceptedRaketista: acceptedApp?.raketista
-        ? {
-            firstName: acceptedApp.raketista.firstName,
-            lastName: acceptedApp.raketista.lastName,
-          }
-        : null,
-    };
-  });
+    // results.push({
+    //   ...raket,
+    //   myRating: existingRating ? existingRating.rating : null,
+    //   acceptedRaketista: acceptedApp?.raketista
+    //     ? {
+    //         firstName: acceptedApp.raketista.firstName,
+    //         lastName: acceptedApp.raketista.lastName,
+    //       }
+    //     : null,
+    // });
+  }
+
+  return results;
 }
+
+
+
 
 
   async updateRaketStatus(raketId: number, status: RaketStatus, userId: number) {

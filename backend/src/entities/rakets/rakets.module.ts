@@ -11,10 +11,11 @@ import { NotificationModule } from '../notification/notification.module';
 import { RaketPictures } from '../raket-pictures/entities/raket-picture.entity';
 import { MinioClientProvider } from 'src/minio/minio-client.provider';
 import { MinioModule } from 'src/minio/minio.module';
+import { Rating } from '../rating/entities/rating.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Raket, Users, RaketApplication, Notification, RaketPictures]),
+    TypeOrmModule.forFeature([Raket, Users, RaketApplication, Notification, RaketPictures, Rating]),
     RaketApplicationModule, NotificationModule, MinioModule,
   ],
   controllers: [RaketsController],

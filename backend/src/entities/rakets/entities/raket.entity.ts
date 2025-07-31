@@ -72,4 +72,7 @@ export class Raket {
         },
     })
     skills: Skills[];
+    
+    @Column({ default: false })
+    myRating?: boolean;
 }

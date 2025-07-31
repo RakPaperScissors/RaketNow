@@ -22,4 +22,7 @@ export class Rating {
 
   @ManyToOne(() => Raket, { onDelete: 'CASCADE' })
   raket: Raket;
+
+  @Column({ nullable: false })
+  raketistaId: number;
 }

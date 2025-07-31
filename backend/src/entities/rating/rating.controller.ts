@@ -1,4 +1,5 @@
-import { Controller, Post, Body, Param, Get, Patch, Delete, ParseIntPipe } from '@nestjs/common';
+import { Controller, Post, Body, Param, Get, Patch, Delete, ParseIntPipe, UseGuards, Req } from '@nestjs/common';
+import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 import { RatingService } from './rating.service';
 import { CreateRatingDto } from './dto/create-rating.dto';
 import { UpdateRatingDto } from './dto/update-rating.dto';
@@ -8,13 +9,15 @@ export class RatingController {
   constructor(private readonly ratingService: RatingService) {}
 
   // POST /ratings/:userId/:raketId
-  @Post(':userId/:raketId')
-  create(
-    @Param('userId', ParseIntPipe) userId: number,
+  @Post(':raketId')
+  @UseGuards(JwtAuthGuard)
+  createRating(
+    @Req() req,
     @Param('raketId', ParseIntPipe) raketId: number,
-    @Body() createRatingDto: CreateRatingDto,
+    @Body() dto: CreateRatingDto
   ) {
-    return this.ratingService.create(createRatingDto, userId, raketId);
+    const userId = req.user.id; // from cookie auth
+    return this.ratingService.create(dto, userId, raketId);
   }
 
   @Get()

@@ -65,6 +65,10 @@ const RaketFeed = ({ searchTerm }) => {
   const clearAll = () => setSelectedCategories([]);
 
   const filteredRakets = rakets.filter((raket) => {
+    if (["accepted", "in_progress", "completed", "cancelled"].includes(raket.status)) {
+      return false;
+    }
+
     const matchesCategory =
       selectedCategories.length === 0 || selectedCategories.includes(raket.category);
 
@@ -75,6 +79,7 @@ const RaketFeed = ({ searchTerm }) => {
 
     return matchesCategory && matchesSearch;
   });
+
     // selectedCategories.length === 0
     //   ? rakets
     //   : rakets.filter((raket) => selectedCategories.includes(raket.category));

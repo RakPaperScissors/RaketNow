@@ -90,20 +90,32 @@ const UserRakets = () => {
     
   // for fetching data
       const fetchRaketsData = useCallback(async () => {
-          try {
+        try {
           const [myRaketsData, assignedRaketsData] = await Promise.all([
-              fetchMyRakets(),
-              fetchAssignedRakets(),
+            fetchMyRakets(),
+            fetchAssignedRakets(),
           ]);
+
           setRakets(myRaketsData);
           setAssignedRakets(assignedRaketsData);
-          } catch (err) {
+
+          // store ratings for completed rakets
+          const ratingsMap = {};
+          myRaketsData.forEach((raket) => {
+            if (raket.status === "completed" && raket.myRating) {
+              ratingsMap[raket.raketId] = raket.myRating;
+            }
+          });
+          setSubmittedRatings(ratingsMap);
+
+        } catch (err) {
           console.error("Error fetching rakets:", err);
           setError("Failed to fetch rakets.");
-          } finally {
+        } finally {
           setLoading(false);
-          }
+        }
       }, []);
+
   
       useEffect(() => {
           fetchRaketsData();
@@ -398,36 +410,41 @@ const UserRakets = () => {
 
                 {/* COMPLETED */}
                 {raket.status === "completed" && (
-                <div className="flex flex-col items-start gap-1">
-                  <div className="flex items-center gap-2">
-                    {ratingRaketId === raket.raketId ? (
-                      <StarRating
-                        userId={currentUser?.userId}
-                        raketId={raket?.acceptedRaketista?.userId}
-                      />
-                    ) : submittedRatings[raket.raketId] ? (
-                      <span className="text-green-500 font-medium text-sm">
-                        Rated: {submittedRatings[raket.raketId]}★
-                      </span>
-                    ) : (
-                      <button
-                        className="text-xs px-3 py-1 rounded-md bg-blue-100 text-blue-700 hover:bg-blue-200 transition"
-                        onClick={() => handleRate(raket)}
-                      >
-                        Rate
-                      </button>
-                    )}
+                  <div className="flex flex-col items-start gap-1">
+                    <div className="flex items-center gap-2">
+                      {submittedRatings[raket.raketId] ? (
+                        // Show static stars after rating
+                        <span className="text-green-500 font-medium text-sm">
+                          Rated: {submittedRatings[raket.raketId]}★
+                        </span>
+                      ) : ratingRaketId === raket.raketId ? (
+                        // Show star rating component when clicked
+                        <StarRating
+                          raketId={raket.raketId}
+                          initialRating={submittedRatings[raket.raketId] || 0}
+                          alreadyRated={!!submittedRatings[raket.raketId]}
+                        />
+                      ) : (
+                        // Show button before rating
+                        <button
+                          className="text-xs px-3 py-1 rounded-md bg-blue-100 text-blue-700 hover:bg-blue-200 transition"
+                          onClick={() => setRatingRaketId(raket.raketId)}
+                        >
+                          Rate
+                        </button>
+                      )}
 
-                    <span
-                      className={`text-xs h-7 leading-none rounded-full px-2 font-medium border ${getStatusStyle(
-                        mapStatusToLabel(raket.status)
-                      )}`}
-                    >
-                      Completed
-                    </span>
+                      <span
+                        className={`text-xs h-7 leading-none rounded-full px-2 font-medium border ${getStatusStyle(
+                          mapStatusToLabel(raket.status)
+                        )}`}
+                      >
+                        Completed
+                      </span>
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
+
 
                 {/* Action Buttons (for cancelled rakets) */}
                 {raket.status === 'cancelled' && (
