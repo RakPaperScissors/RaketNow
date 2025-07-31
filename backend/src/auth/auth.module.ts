@@ -14,12 +14,13 @@ import { UserService } from 'src/entities/user/user.service';
 import refreshJwtConfig from './refresh-jwt.config';
 import { SkillsModule } from 'src/entities/skills/skills.module';
 import { RaketistaSkillModule } from 'src/entities/raketista-skill/raketista-skill.module';
+import { Organization } from 'src/entities/organization/entities/organization.entity';
 
 
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Users]),
+    TypeOrmModule.forFeature([Users, Organization]),
     PassportModule,
     JwtModule.register({
       secret: jwtConstants.secret,
