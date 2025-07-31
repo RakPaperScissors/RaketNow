@@ -8,16 +8,20 @@ export function useRaketApplications(raketId) {
   const [error, setError] = useState("");
 
   const fetch = useCallback(async () => {
-    setLoading(true);
-    try {
-      const data = await fetchApplicationsForRaket(raketId);
-      setRaketApplications(data);
-    } catch (err) {
-      setError(err.message || "Failed to load applications");
-    } finally {
-      setLoading(false);
-    }
-  }, [raketId]);
+  setLoading(true);
+  try {
+    const data = await fetchApplicationsForRaket(raketId);
+    console.log("Fetched raket applications:", data);
+    setRaketApplications(data);
+    setError("");
+  } catch (err) {
+    console.error("Error fetching raket applications:", err);
+    setError(err.message || "Failed to load applications");
+  } finally {
+    setLoading(false);
+  }
+}, [raketId]);
+
 
   useEffect(() => {;
     if (raketId) fetch();

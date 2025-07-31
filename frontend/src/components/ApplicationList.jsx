@@ -21,6 +21,12 @@ function Applications() {
     const currentUser = useCurrentUser();
     const [actionLoading, setActionLoading] = useState(false);
 
+if (isNaN(numericRaketId) || numericRaketId <= 0) {
+  return <p className="text-center text-red-500 mt-6">Invalid Raket ID.</p>;
+}
+    console.log("🔢 numericRaketId:", numericRaketId);
+    console.log("🚀 raketId from URL params:", raketId);
+
     const handleAccept = async (id) => {
         try {
         setActionLoading(true);

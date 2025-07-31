@@ -33,10 +33,15 @@ export class RaketApplicationController {
     return this.raketApplicationService.getApplicationsByRaketista(req.user);
   }
 
+  @Get('raket/:raketId/applications')
   @UseGuards(JwtAuthGuard)
-  @Get('/raket/:raketId/applications')
-  async getApplicationsByRaket(@Param('raketId', ParseIntPipe) raketId: number) {
-    return this.raketApplicationService.findByRaketId(raketId);
+  getApplicationsByRaket(
+    @Param('raketId', ParseIntPipe) raketId: number,
+    @Req() req: Request,
+  ) {
+    const user = req.user as { uid: number; role: string; email: string };
+    console.log('GET /raket-application/raket/:raketId/applications called with raketId:', raketId);
+    return this.raketApplicationService.findApplicationsByRaketId(raketId);
   }
 
   @Get(':id')

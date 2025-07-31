@@ -57,7 +57,7 @@ function AppContent() {
           <Route path="/become-raketista" element={<BecomeRaketista />} />
           <Route path="/my-rakets" element={<UserRakets />} />
           <Route path="/boost" element={<BoostPost />} />
-          <Route path="/raket/:id/applications" element={<MyApplications />} />
+          <Route path="/raket/:raketId/applications" element={<MyApplications />} />
           <Route path="/rakets/:id" element={<Raket />} />
           
         </Routes>

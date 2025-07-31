@@ -84,27 +84,20 @@ export class RaketApplicationService {
   }
 
   // find all applications for a specific raket (para pag filter)
-  async findByRaketId(raketId: number) {
-    return (
-    await this.raketApplicationRepository.find({
-      where: { raket: { raketId } },
-      relations: ['raketista', 'raket', 'raket.user'],
-      order: { dateCreated: 'DESC' },
-    })
-  ).map(app => ({
-    ...app,
-    raket: {
-      ...app.raket,
-      user: app.raket.user
-        ? {
-            uid: app.raket.user.uid,
-            firstName: app.raket.user.firstName,
-            lastName: app.raket.user.lastName,
-          }
-        : null,
-    },
-  }));
-    }
+  async findApplicationsByRaketId(raketId: number) {
+    return this.raketApplicationRepository.find({
+      where: { raket: { raketId: raketId } },
+      relations: ['raket', 'raket.user', 'raketista'],
+    });
+  }
+
+// (raketId: number) {
+//   return this.raketApplicationRepository.find({
+//     where: { raket: { raketId } },
+//     relations: ['raket', 'raket.user', 'raketista'],
+//   });
+// }
+
 
     async findOne(id: number) {
       return this.raketApplicationRepository.findOne({
