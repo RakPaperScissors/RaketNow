@@ -136,8 +136,12 @@ async patch(uid: number, updateUserDto: UpdateUserDto): Promise<any> {
 
   // --- User profile and role management ---
   // 1. Update profile picture
-  async updateProfilePicture(userId: number, key: string) {
-    await this.users.update(userId, { profilePicture: key, });
+  async updateProfilePicture(userId: number, newKey: string): Promise<Users> {
+    const user = await this.users.findOneBy({ uid: userId });
+    if (!user) throw new NotFoundException();
+
+    user.profilePicture = newKey;
+    return await this.users.save(user);
   }
 
   // 2. Get profile picture
