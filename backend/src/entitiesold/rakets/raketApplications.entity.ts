@@ -19,9 +19,6 @@ export class RaketApplication {
     @JoinColumn({ name: 'raketistaID' })
     raketista: Users; 
 
-    @Column({ type: 'numeric', precision: 10, scale: 2, nullable: true }) // Correct type for currency
-    priceProposal: number;
-
     @Column({type: 'timestamp', default: () => 'CURRENT_TIMESTAMP'})
     dateCreated: Date;
 

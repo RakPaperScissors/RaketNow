@@ -17,12 +17,6 @@ export class Rating {
   @Column({ type: 'int', width: 1 })
   rating: number;
 
-  @Column({ type: 'text', nullable: true })
-  comment: string;
-
-  @CreateDateColumn()
-  createdAt: Date;
-
   @ManyToOne(() => Users, { eager: true })
   user: Users;
 

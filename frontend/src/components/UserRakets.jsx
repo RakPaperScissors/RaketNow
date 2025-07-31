@@ -6,17 +6,31 @@ import { useCurrentUser } from "../hooks/useCurrentUser";
 import { useNavigate } from "react-router-dom";
 import { submitRating } from "../api/ratings";
 import DebugPanel from "../components/DebugPanel";
-import Modal from "../components/RateModal";
+import StarRating from "../components/Rating";
 
-const StarRating = ({ count }) => (
-  <div className="flex space-x-1">
-    {Array(count)
-      .fill(0)
-      .map((_, i) => (
-        <span key={i} className="text-yellow-400 text-xl">★</span> 
-      ))}
-  </div>
-);
+
+// const StarRating = ({ count = 5, selected = 0, onSelect }) => {
+//   const [hovered, setHovered] = useState(null);
+
+//   return (
+//     <div className="flex space-x-1 cursor-pointer">
+//       {Array.from({ length: count }, (_, i) => (
+//         <span
+//           key={i}
+//           className={`text-xl ${
+//             (hovered ?? selected) > i ? "text-yellow-400" : "text-gray-300"
+//           }`}
+//           onMouseEnter={() => setHovered(i + 1)}
+//           onMouseLeave={() => setHovered(null)}
+//           onClick={() => onSelect(i + 1)}
+//         >
+//           ★
+//         </span>
+//       ))}
+//     </div>
+//   );
+// };
+
 
 const statusMap = {
   open: "Pending",
@@ -71,8 +85,8 @@ const UserRakets = () => {
   const [error, setError] = useState("");
   const [updatingId, setUpdatingId] = useState(null);
   const navigate = useNavigate();
-  const [showRatingModal, setShowRatingModal] = useState(false);
-  const [selectedRaket, setSelectedRaket] = useState(null);
+  const [ratingRaketId, setRatingRaketId] = useState(null);
+  const [submittedRatings, setSubmittedRatings] = useState({});
     
   // for fetching data
       const fetchRaketsData = useCallback(async () => {
@@ -212,31 +226,12 @@ const UserRakets = () => {
           }
       };
 
-      const handleRate = async (raket) => {
-        if (!currentUser) {
-          alert("You must be logged in to rate.");
-          return;
-        }
-
-        try {
-          const selectedScore = prompt("Enter your rating from 1 to 5:");
-          if (!selectedScore || isNaN(selectedScore)) return;
-
-          const score = parseInt(selectedScore);
-          if (score < 1 || score > 5) {
-            alert("Score must be between 1 and 5.");
-            return;
-          }
-
-          await submitRating(currentUser.userId, raket.acceptedRaketista.userId, score);
-          alert("Rating submitted!");
-        } catch (err) {
-          console.error("Rating failed:", err);
-          alert("Failed to submit rating.");
-        }
+      const handleRate = (raket) => {
+        console.log("currentUser.userId:", currentUser?.userId);
+        console.log("raket.acceptedRaketista.userId:", raket?.acceptedRaketista?.userId);
+        setRatingRaketId(raket.raketId);
       };
 
-  
       // const handleWithdraw = async (raketId) => {
       //     const confirm = window.confirm("Are you sure you want to withdraw? The raket will return to open status.");
       //     if (!confirm) return;
@@ -403,7 +398,26 @@ const UserRakets = () => {
 
                 {/* COMPLETED */}
                 {raket.status === "completed" && (
+                <div className="flex flex-col items-start gap-1">
                   <div className="flex items-center gap-2">
+                    {ratingRaketId === raket.raketId ? (
+                      <StarRating
+                        userId={currentUser?.userId}
+                        raketId={raket?.acceptedRaketista?.userId}
+                      />
+                    ) : submittedRatings[raket.raketId] ? (
+                      <span className="text-green-500 font-medium text-sm">
+                        Rated: {submittedRatings[raket.raketId]}★
+                      </span>
+                    ) : (
+                      <button
+                        className="text-xs px-3 py-1 rounded-md bg-blue-100 text-blue-700 hover:bg-blue-200 transition"
+                        onClick={() => handleRate(raket)}
+                      >
+                        Rate
+                      </button>
+                    )}
+
                     <span
                       className={`text-xs h-7 leading-none rounded-full px-2 font-medium border ${getStatusStyle(
                         mapStatusToLabel(raket.status)
@@ -411,14 +425,10 @@ const UserRakets = () => {
                     >
                       Completed
                     </span>
-                    <button
-                      className="text-xs px-3 py-1 rounded-md bg-blue-100 text-blue-700 hover:bg-blue-200 transition"
-                      onClick={() => handleRate(raket)}
-                    >
-                      Rate
-                    </button>
                   </div>
-                )}
+                </div>
+              )}
+
                 {/* Action Buttons (for cancelled rakets) */}
                 {raket.status === 'cancelled' && (
                   <div className="flex gap-2 items-center">

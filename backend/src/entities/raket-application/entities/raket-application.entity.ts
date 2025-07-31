@@ -21,9 +21,6 @@ export class RaketApplication {
   @JoinColumn({ name: 'raketId', referencedColumnName: 'raketId' })
   raket: Raket;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0, nullable: true})
-  priceProposal: number;
-
   @Column({ type: 'enum', enum: RaketApplicationStatus, default: RaketApplicationStatus.PENDING })
   status: RaketApplicationStatus;
 

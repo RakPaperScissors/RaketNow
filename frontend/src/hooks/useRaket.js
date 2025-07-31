@@ -21,7 +21,7 @@ export function useRaket(id) {
       });
   }, [id]);
 
-  const apply = async (raketistaId, priceProposal) => {
+  const apply = async (raketistaId) => {
     setApplyLoading(true);
     setApplyError("");
     setApplySuccess(false);
@@ -30,7 +30,6 @@ export function useRaket(id) {
       await applyToRaket({
         raketId: Number(id), 
         raketistaId: Number(raketistaId), 
-        priceProposal: Number(priceProposal),
       });
       setApplySuccess(true);
     } catch (err) {

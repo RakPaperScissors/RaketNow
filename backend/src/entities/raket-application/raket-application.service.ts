@@ -38,15 +38,6 @@ export class RaketApplicationService {
       throw new BadRequestException('Raket not found.');
     }
 
-    const priceProposal =
-      dto.priceProposal !== undefined && dto.priceProposal !== null
-        ? dto.priceProposal
-        : raket.budget;
-
-    if (priceProposal < 0) {
-      throw new BadRequestException('Price proposal cannot be negative.');
-    }
-
     // if existing application already
     const existingApplication = await this.raketApplicationRepository.findOne({
       where: {
@@ -57,7 +48,6 @@ export class RaketApplicationService {
 
     if (existingApplication) {
       await this.raketApplicationRepository.update(existingApplication.applicationId, {
-        priceProposal,
         status: RaketApplicationStatus.PENDING,
       });
 
@@ -67,7 +57,6 @@ export class RaketApplicationService {
     const newApplication = this.raketApplicationRepository.create({
       raketista,
       raket,
-      priceProposal,
     });
 
     const savedApplication = await this.raketApplicationRepository.save(newApplication);

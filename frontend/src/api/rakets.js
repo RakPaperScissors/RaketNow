@@ -105,8 +105,8 @@ export async function fetchApplicationsForRaket(raketId) {
 }
 
 // applying to a raket
-export async function applyToRaket({ raketId, raketistaId, priceProposal }) {
-  console.log("Sending:", { raketId, raketistaId, priceProposal });
+export async function applyToRaket({ raketId, raketistaId }) {
+  console.log("Sending:", { raketId, raketistaId });
   const response = await fetch('http://localhost:3000/raket-application', {
     method: 'POST',
     credentials: 'include',
@@ -116,7 +116,6 @@ export async function applyToRaket({ raketId, raketistaId, priceProposal }) {
     body: JSON.stringify({
       raketId,
       raketistaId,
-      priceProposal,
     }),
   });
   if (!response.ok) throw new Error('Failed to apply to raket.');

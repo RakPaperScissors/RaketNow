@@ -112,10 +112,6 @@ if (isNaN(numericRaketId) || numericRaketId <= 0) {
                             <div className="mb-2">
                                 <strong>Raketista:</strong> {raketistaName}
                             </div>
-                            <div className="mb-2">
-                                <strong>Proposal:</strong>{" "}
-                                {formatPeso.format(Number(app.priceProposal || 0))}
-                            </div>
                             <div className="mb-4">
                                 <strong>Status:</strong> {app.status}
                             </div>
@@ -162,10 +158,6 @@ if (isNaN(numericRaketId) || numericRaketId <= 0) {
                             </div>
                             <div className="mb-2">
                                 <strong>Raketista:</strong> {raketistaName}
-                            </div>
-                            <div className="mb-2">
-                                <strong>Proposal:</strong>{" "}
-                                {formatPeso.format(Number(app.priceProposal || 0))}
                             </div>
                             <div className="mb-2">
                                 <strong>Status:</strong> {app.status}

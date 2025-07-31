@@ -8,7 +8,6 @@ import DebugPanel from "../../components/DebugPanel";
 function Raket() {
     const { id } = useParams();
     const { raket, loading, error, apply, applyLoading, applyError, applySuccess } = useRaket(id);
-    const [priceProposal, setPriceProposal] = useState("");
     const currentUser = useCurrentUser();
     const raketistaId = currentUser?.uid;
 
@@ -18,18 +17,16 @@ function Raket() {
     function applyToThisRaket() {
         const parsedRaketId = Number(id);
         const parsedRaketistaId = Number(raketistaId);
-        const parsedPriceProposal = Number(priceProposal);
 
-        if (!parsedRaketId || !parsedRaketistaId || isNaN(parsedPriceProposal)) {
+        if (!parsedRaketId || !parsedRaketistaId) {
             console.error("Invalid apply data:", {
             raketId: parsedRaketId,
             raketistaId: parsedRaketistaId,
-            priceProposal: parsedPriceProposal,
             });
             return;
         }
 
-        apply(parsedRaketistaId, parsedPriceProposal);
+        apply(parsedRaketistaId);
     }
 
     return (
@@ -56,8 +53,6 @@ function Raket() {
                     <input
                     type="number"
                     placeholder="Your Price Proposal"
-                    value={priceProposal}
-                    onChange={e => setPriceProposal(e.target.value)}
                     />
                     <button
                     onClick={applyToThisRaket}

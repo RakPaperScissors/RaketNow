@@ -175,24 +175,23 @@ const RaketFeed = ({ searchTerm }) => {
           filteredRakets.map((raket) => (
           <RaketCard 
             key={raket.raketId}
+            raketId={raket.raketId}
+            status={raket.status}
             images={
-              raket.pictures.length > 0
-                ? raket.pictures
+              raket.pictures?.length > 0
+                ? raket.pictures.map(p => p.imageUrl)
                 : ["/default_profile.jpg"]
             }
             title={raket.title || "Untitled Raket"}
             description={raket.description || "No description provided."}
             budget={raket.budget || 0}
-            user={
-              raket.user
-                ? `${raket.user.firstName || ""} ${raket.user.lastName || ""}`.trim()
-                : "Unknown User"
-            }
+            user={raket.user || { firstName: "Unknown", lastName: "User" }}
             postedAt={formatDistanceToNow(new Date(raket.dateCreated), { addSuffix: true })}
             location={"Davao City"}
             rating={0}
-            category={"General"}
-            />))
+            category={raket.category || "General"}
+          />))
+
         ) : (
           <p className="text-center text-sm text-gray-500">
             No rakets found for selected categories.

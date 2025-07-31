@@ -7,8 +7,4 @@ export class CreateRaketApplicationDto {
   @IsNumber()
   raketId: number;
 
-  @IsNumber()
-  @IsOptional()
-  priceProposal?: number;
-
 }

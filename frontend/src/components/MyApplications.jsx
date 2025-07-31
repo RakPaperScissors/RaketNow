@@ -64,12 +64,6 @@ function MyApplications() {
                 <strong>Budget:</strong> PHP {app.raket?.budget || 0}
                 </p>
 
-                {/* Proposal */}
-                <p className="text-gray-700 mb-3">
-                <strong>Proposal:</strong>{" "}
-                {formatPeso.format(Number(app.priceProposal || 0))}
-                </p>
-
                 {/* Status */}
                 <p className="text-gray-600 mb-4">
                 <strong>Status:</strong> {app.status}

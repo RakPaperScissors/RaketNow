@@ -111,10 +111,6 @@ function Applications() {
                         <strong>Raketista:</strong> {raketistaName}
                       </div>
                       <div>
-                        <strong>Proposal:</strong>{" "}
-                        {formatPeso.format(Number(app.priceProposal || 0))}
-                      </div>
-                      <div>
                         <strong>Status:</strong> {app.status}
                       </div>
 
@@ -166,10 +162,6 @@ function Applications() {
                         <strong>Raketista:</strong> {raketistaName}
                       </div>
                       <div>
-                        <strong>Proposal:</strong>{" "}
-                        {formatPeso.format(Number(app.priceProposal || 0))}
-                      </div>
-                      <div>
                         <strong>Status:</strong> {app.status}
                       </div>
                     </li>
@@ -208,10 +200,6 @@ function Applications() {
                   >
                     <div>
                       <strong>Raket:</strong> {app.raket?.title || "No title"}
-                    </div>
-                    <div>
-                      <strong>Proposal:</strong>{" "}
-                      {formatPeso.format(Number(app.priceProposal || 0))}
                     </div>
                     <div>
                       <strong>Status:</strong> {app.status}
