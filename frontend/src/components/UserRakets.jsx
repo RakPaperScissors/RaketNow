@@ -4,7 +4,9 @@ import { useEffect, useState, useCallback } from "react";
 import { fetchMyRakets, updateRaketStatus, fetchAssignedRakets, requestCompletion, cancelCompletionRequest, deleteRaketById, cancelOngoingRaket, cancelOpenRaket, rejectCompletionRequest, withdrawFromRaket  } from "../api/rakets";
 import { useCurrentUser } from "../hooks/useCurrentUser";
 import { useNavigate } from "react-router-dom";
-import DebugPanel from "../components/DebugPanel"; 
+import { submitRating } from "../api/ratings";
+import DebugPanel from "../components/DebugPanel";
+import Modal from "../components/RateModal";
 
 const StarRating = ({ count }) => (
   <div className="flex space-x-1">
@@ -69,7 +71,9 @@ const UserRakets = () => {
   const [error, setError] = useState("");
   const [updatingId, setUpdatingId] = useState(null);
   const navigate = useNavigate();
-  
+  const [showRatingModal, setShowRatingModal] = useState(false);
+  const [selectedRaket, setSelectedRaket] = useState(null);
+    
   // for fetching data
       const fetchRaketsData = useCallback(async () => {
           try {
@@ -207,6 +211,31 @@ const UserRakets = () => {
           setUpdatingId(null);
           }
       };
+
+      const handleRate = async (raket) => {
+        if (!currentUser) {
+          alert("You must be logged in to rate.");
+          return;
+        }
+
+        try {
+          const selectedScore = prompt("Enter your rating from 1 to 5:");
+          if (!selectedScore || isNaN(selectedScore)) return;
+
+          const score = parseInt(selectedScore);
+          if (score < 1 || score > 5) {
+            alert("Score must be between 1 and 5.");
+            return;
+          }
+
+          await submitRating(currentUser.userId, raket.acceptedRaketista.userId, score);
+          alert("Rating submitted!");
+        } catch (err) {
+          console.error("Rating failed:", err);
+          alert("Failed to submit rating.");
+        }
+      };
+
   
       // const handleWithdraw = async (raketId) => {
       //     const confirm = window.confirm("Are you sure you want to withdraw? The raket will return to open status.");
@@ -382,12 +411,9 @@ const UserRakets = () => {
                     >
                       Completed
                     </span>
-                    {/* Add logic to check if rating exists, asnd if not rated yet, show Rate button*/}
                     <button
                       className="text-xs px-3 py-1 rounded-md bg-blue-100 text-blue-700 hover:bg-blue-200 transition"
-                      onClick={() => {
-                        // handle opening the rating modal or page
-                      }}
+                      onClick={() => handleRate(raket)}
                     >
                       Rate
                     </button>

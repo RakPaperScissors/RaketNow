@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete , Req} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete , Req, ParseIntPipe} from '@nestjs/common';
 import { Request } from 'express';
 import { NotificationService } from './notification.service';
 import { CreateNotificationDto } from './dto/create-notification.dto';
@@ -32,6 +32,13 @@ export class NotificationController {
     @Get(':id')
     findOne(@Param('id') id: string) {
         return this.notificationService.findOne(+id);
+    }
+
+    @Patch(':id/read')
+    @UseGuards(JwtAuthGuard)
+    async markAsRead(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
+      const userId = (req.user as any).uid;
+      return this.notificationService.markAsRead(id, userId);
     }
 
     @Patch(':id')
