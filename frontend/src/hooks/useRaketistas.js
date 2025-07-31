@@ -22,7 +22,7 @@ export function useRaketistas() {
                     raketistaMap[r.uid] = {
                         id: r.uid,
                         name: `${r.firstName} ${r.lastName}`,
-                        role: r.role || "N/A",
+                        type: r.type || "N/A",
                         rating: (Math.random() * 2 + 3).toFixed(1), // Example rating
                         skills: [],
                         img: r.profilePicture ? `http://localhost:9000/raketnow/${r.profilePicture}` : 'http://localhost:9000/raketnow/default_profile.jpg',

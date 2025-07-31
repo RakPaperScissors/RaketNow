@@ -99,7 +99,7 @@ function ProfileCard() {
           {isEditing ? (
             <textarea value={bio} onChange={e => setBio(e.target.value)} rows={4} className="w-full p-2 border rounded-md" placeholder="Tell us about your services..." />
           ) : (
-            <p className="text-gray-700 whitespace-pre-wrap">{user.bio || "No bio has been added yet."}</p>
+            <p className="text-gray-700 whitespace-pre-wrap">{bio || "No bio has been added yet."}</p>
           )}
         </div>
       )}

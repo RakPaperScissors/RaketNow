@@ -87,7 +87,7 @@ const TopRaketista = () => {
 
               {/* Name and Role */}
               <h3 className="text-base font-semibold text-[#0C2C57]">{r.name}</h3>
-              <p className="text-sm text-gray-600 capitalize">{r.role}</p>
+              <p className="text-sm text-gray-600 capitalize">{r.type}</p>
 
               {/* Rating */}
               <div className="flex items-center justify-center mt-2">
