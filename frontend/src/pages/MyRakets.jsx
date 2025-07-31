@@ -5,7 +5,7 @@ import UserRakets from "../components/UserRakets";
 import RaketStatus from "../components/RaketStatus";
 
 // for debugging
-import DebugPanel from "../components/DebugPanel"; 
+// import DebugPanel from "../components/DebugPanel"; 
 import { useCurrentUser } from "../hooks/useCurrentUser";
 import MyApplications from "../components/MyApplications";
 
@@ -13,7 +13,6 @@ const MyRakets = () => {
   const currentUser = useCurrentUser();
   return (
     <div className="flex h-screen bg-[#f9fafb]">
-      <DebugPanel user={currentUser} />
       {/* Fixed Sidebar */}
       <div className="fixed inset-y-0 left-0 w-64 z-20 bg-white border-r">
         <SideNav />

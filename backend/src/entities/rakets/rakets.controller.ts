@@ -33,6 +33,15 @@ export class RaketsController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Patch(':id/cancel-open')
+  cancelOpenRaket(
+    @Param('id', ParseIntPipe) raketId: number,
+    @Req() req: RequestWithUser
+  ) {
+    return this.raketsService.cancelOpenRaket(raketId, req.user.uid);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Get('/myrakets')
   findMyRakets(@Req() req: RequestWithUser) {
     return this.raketsService.findMyRakets(req.user.uid);
@@ -85,11 +94,11 @@ export class RaketsController {
     return this.raketsService.patch(raketId, dto);
   }
 
-  // @UseGuards(JwtAuthGuard)
-  // @Delete(':id')
-  // remove(@Param('id', ParseIntPipe) raketId: number, @Req() req: RequestWithUser) {
-  //   return this.raketsService.remove(raketId, req.user.uid);
-  // }
+  @UseGuards(JwtAuthGuard)
+  @Delete(':id')
+  remove(@Param('id', ParseIntPipe) raketId: number, @Req() req: RequestWithUser) {
+    return this.raketsService.deleteRaket(raketId, req.user.uid);
+  }
 
   // @UseGuards(JwtAuthGuard)
   // @Patch(':id/cancel')
