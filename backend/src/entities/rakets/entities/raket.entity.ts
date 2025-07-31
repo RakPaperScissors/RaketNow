@@ -2,7 +2,8 @@ import { RaketPictures } from 'src/entities/raket-pictures/entities/raket-pictur
 import { Users } from 'src/entities/user/entities/user.entity';
 import { RaketApplication } from 'src/entities/raket-application/entities/raket-application.entity';
 import { Skills } from 'src/entities/skills/entities/skill.entity';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, ManyToMany, JoinColumn, JoinTable } from 'typeorm';
+import { Rating } from 'src/entities/rating/entities/rating.entity';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, OneToOne, ManyToMany, JoinColumn, JoinTable } from 'typeorm';
 export enum RaketStatus {
     OPEN = 'open',
     IN_PROGRESS = 'in_progress',
@@ -73,6 +74,7 @@ export class Raket {
     })
     skills: Skills[];
     
-    @Column({ default: false })
-    myRating?: boolean;
+    @OneToOne(() => Rating, rating => rating.raket)
+    rating: Rating;
+
 }

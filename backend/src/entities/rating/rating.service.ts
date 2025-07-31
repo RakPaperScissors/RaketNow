@@ -22,53 +22,41 @@ export class RatingService {
   ) {}
 
   async create(createRatingDto: CreateRatingDto, userId: number, raketId: number) {
-  const user = await this.usersRepository.findOne({ where: { uid: userId } });
-  if (!user) throw new NotFoundException('User not found');
+    const user = await this.usersRepository.findOne({ where: { uid: userId } });
+    if (!user) throw new NotFoundException('User not found');
 
-  const raket = await this.raketsRepository.findOne({ where: { raketId } });
-  if (!raket) throw new NotFoundException('Raket not found');
+    const raket = await this.raketsRepository.findOne({ where: { raketId } });
+    if (!raket) throw new NotFoundException('Raket not found');
 
-  if (raket.status !== RaketStatus.COMPLETED) {
-    throw new BadRequestException('You can only rate completed rakets.');
-  }
-
-  // ✅ Prevent duplicate ratings
-  const existingRating = await this.ratingsRepository.findOne({
-    where: {
-      user: { uid: userId },
-      raket: { raketId }
+    if (raket.status !== RaketStatus.COMPLETED) {
+      throw new BadRequestException('You can only rate completed rakets.');
     }
-  });
-  if (existingRating) {
-    throw new BadRequestException('You have already rated this raket.');
+
+    // Prevent duplicate ratings
+    const existingRating = await this.ratingsRepository.findOne({
+      where: { user: { uid: userId }, raket: { raketId } }
+    });
+    if (existingRating) {
+      throw new BadRequestException('You have already rated this raket.');
+    }
+
+    const application = await this.raketApplicationsRepository.findOne({
+      where: { raket: { raketId }, status: RaketApplicationStatus.ACCEPTED },
+      relations: ['raketista'],
+    });
+    if (!application) {
+      throw new BadRequestException('No accepted raketista found for this raket.');
+    }
+
+    const rating = this.ratingsRepository.create({
+      ...createRatingDto,
+      user,
+      raket,
+      raketistaId: application.raketista.uid,
+    });
+
+    return this.ratingsRepository.save(rating);
   }
-
-  const application = await this.raketApplicationsRepository.findOne({
-    where: { raket: { raketId }, status: RaketApplicationStatus.ACCEPTED },
-    relations: ['raketista'],
-  });
-
-  if (!application) {
-    throw new BadRequestException('No accepted raketista found for this raket.');
-  }
-
-  const raketistaId = application.raketista.uid;
-
-  const rating = this.ratingsRepository.create({
-    ...createRatingDto,
-    user,
-    raket,
-    raketistaId,
-  });
-
-  await this.ratingsRepository.save(rating);
-
-  // ✅ Update raket so frontend knows it's rated (locks stars after refresh)
-  await this.raketsRepository.update(raketId, { myRating: true });
-
-  return rating;
-}
-
 
   findAll() {
     return this.ratingsRepository.find({ relations: ['user', 'raket'] });

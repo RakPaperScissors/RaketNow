@@ -10,6 +10,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { FilesInterceptor } from '@nestjs/platform-express';
+import { MyRaketDto } from './rakets.service';
 
 export interface RequestWithUser extends Request {
   user: Users;
@@ -47,9 +48,14 @@ export class RaketsController {
     return this.raketsService.cancelOpenRaket(raketId, req.user.uid);
   }
 
+  // @UseGuards(JwtAuthGuard)
+  // @Get('/myrakets')
+  // findMyRakets(@Req() req: RequestWithUser) {
+  //   return this.raketsService.findMyRakets(req.user.uid);
+  // }
   @UseGuards(JwtAuthGuard)
   @Get('/myrakets')
-  findMyRakets(@Req() req: RequestWithUser) {
+  findMyRakets(@Req() req: RequestWithUser): Promise<MyRaketDto[]> {
     return this.raketsService.findMyRakets(req.user.uid);
   }
 

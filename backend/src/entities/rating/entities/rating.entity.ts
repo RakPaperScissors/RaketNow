@@ -1,10 +1,10 @@
-// src/ratings/entities/rating.entity.ts
 import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
   ManyToOne,
-  CreateDateColumn,
+  OneToOne,
+  JoinColumn
 } from 'typeorm';
 import { Raket } from '../../rakets/entities/raket.entity';
 import { Users } from '../../../entities/user/entities/user.entity';
@@ -20,7 +20,8 @@ export class Rating {
   @ManyToOne(() => Users, { eager: true })
   user: Users;
 
-  @ManyToOne(() => Raket, { onDelete: 'CASCADE' })
+  @OneToOne(() => Raket, raket => raket.rating)
+  @JoinColumn()
   raket: Raket;
 
   @Column({ nullable: false })

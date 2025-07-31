@@ -410,23 +410,24 @@ const UserRakets = () => {
 
                 {/* COMPLETED */}
                 {raket.status === "completed" && (
-                  <div className="flex flex-col items-start gap-1">
-                    <div className="flex items-center gap-2">
-                      {submittedRatings[raket.raketId] ? (
-                        // Show static stars after rating
-                        <span className="text-green-500 font-medium text-sm">
-                          Rated: {submittedRatings[raket.raketId]}★
-                        </span>
-                      ) : ratingRaketId === raket.raketId ? (
-                        // Show star rating component when clicked
-                        <StarRating
-                          raketId={raket.raketId}
-                          initialRating={submittedRatings[raket.raketId] || 0}
-                          alreadyRated={!!submittedRatings[raket.raketId]}
-                        />
-                      ) : (
-                        // Show button before rating
-                        <button
+                    <div className="flex flex-col items-start gap-1">
+                      <div className="flex items-center gap-2">
+                        {submittedRatings[raket.raketId] ? (
+                          // Read-only star display for already rated rakets
+                          <StarRating
+                            initialRating={submittedRatings[raket.raketId]}
+                            readOnly
+                          />
+                        ) : ratingRaketId === raket.raketId ? (
+                          // Interactive star rating mode
+                          <StarRating
+                            raketId={raket.raketId}
+                            initialRating={0}
+                            alreadyRated={false}
+                          />
+                        ) : (
+                          // Show button before rating
+                          <button
                           className="text-xs px-3 py-1 rounded-md bg-blue-100 text-blue-700 hover:bg-blue-200 transition"
                           onClick={() => setRatingRaketId(raket.raketId)}
                         >
@@ -444,6 +445,7 @@ const UserRakets = () => {
                     </div>
                   </div>
                 )}
+
 
 
                 {/* Action Buttons (for cancelled rakets) */}

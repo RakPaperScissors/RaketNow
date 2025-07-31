@@ -18,6 +18,12 @@ import { S3 } from 'aws-sdk';
 import { RaketPictures } from '../raket-pictures/entities/raket-picture.entity';
 import { Rating } from '../rating/entities/rating.entity';
 
+export interface MyRaketDto extends Omit<Raket, 'myRating'> {
+  myRating: number | null;
+  acceptedRaketista: { firstName: string; lastName: string } | null;
+}
+
+
 @Injectable()
 export class RaketsService {
   constructor(
@@ -223,40 +229,64 @@ async clientRejectsCompletionRequest(raketId: number, clientId: number) {
   }
 
   // fetches for GET /raket/my-rakets
+  // async findMyRakets(userId: number) {
+  //   const rakets = await this.raketRepo.find({
+  //     where: { user: { uid: userId } },
+  //     relations: {
+  //       applications: { raketista: true },
+  //     },
+  //     order: { dateCreated: 'DESC' },
+  //   });
+
+  //   const results: (Raket & {
+  //     acceptedRaketista: { firstName: string; lastName: string } | null;
+  //   })[] = [];
+
+  //   for (const raket of rakets) {
+  //     const acceptedApp = raket.applications.find(
+  //       (app) => app.status === RaketApplicationStatus.ACCEPTED
+  //     );
+
+  //     results.push({
+  //       ...raket,
+  //       acceptedRaketista: acceptedApp?.raketista
+  //         ? {
+  //             firstName: acceptedApp.raketista.firstName,
+  //             lastName: acceptedApp.raketista.lastName,
+  //           }
+  //         : null,
+  //     });
+  //   }
+
+  //   return results;
+  // }
+
+  
   async findMyRakets(userId: number) {
     const rakets = await this.raketRepo.find({
       where: { user: { uid: userId } },
       relations: {
         applications: { raketista: true },
+        rating: true,
       },
       order: { dateCreated: 'DESC' },
     });
 
-    const results: (Raket & {
-      acceptedRaketista: { firstName: string; lastName: string } | null;
-    })[] = [];
+    return rakets.map(raket => {
+      const acceptedApp = raket.applications.find(app => app.status === RaketApplicationStatus.ACCEPTED);
 
-    for (const raket of rakets) {
-      const acceptedApp = raket.applications.find(
-        (app) => app.status === RaketApplicationStatus.ACCEPTED
-      );
-
-      results.push({
+      return {
         ...raket,
+        myRating: raket.rating ? raket.rating.rating : null, // ← now direct
         acceptedRaketista: acceptedApp?.raketista
           ? {
               firstName: acceptedApp.raketista.firstName,
               lastName: acceptedApp.raketista.lastName,
             }
           : null,
-      });
-    }
-
-    return results;
+      };
+    });
   }
-
-
-
 
 
 
