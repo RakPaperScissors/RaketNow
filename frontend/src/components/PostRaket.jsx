@@ -48,7 +48,7 @@ const PostRaket = () => {
         description: form.description,
         category: form.category,
         budget: Number(form.price),
-        // Photos
+        photos: form.photos,
       };
 
       await submitRaket(raketData);
@@ -61,7 +61,7 @@ const PostRaket = () => {
         price: "",
         photos: [],
       });
-
+      
     } catch (err) {
       console.error("Error submittin raket:", err);
     }

@@ -1,5 +1,6 @@
 import { RaketCategory, RaketStatus } from "../entities/raket.entity";
 import { IsString, IsNumber, IsOptional, IsEnum } from 'class-validator';
+import { Type } from "class-transformer";
 
 export class CreateRaketDto {
   @IsString()
@@ -16,6 +17,7 @@ export class CreateRaketDto {
   category: RaketCategory
 
   @IsNumber()
+  @Type(() => Number)
   budget: number;
 
 }

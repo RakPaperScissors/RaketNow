@@ -206,13 +206,21 @@ export async function withdrawMyApplication(applicationId) {
 }
 
 export async function postRaket(data) {
+  const formData = new FormData();
+
+  formData.append("title", data.title);
+  formData.append("description", data.description);
+  formData.append("category", data.category);
+  formData.append("budget", data.budget);
+
+  data.photos.forEach((photo) => {
+    formData.append("images", photo);
+  });
+
   const res = await fetch('http://localhost:3000/rakets', {
     method: 'POST',
     credentials: 'include',
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
+    body: formData,
   });
 
   if (!res.ok) {

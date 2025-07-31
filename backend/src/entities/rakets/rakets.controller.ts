@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Request, UseGuards, ParseIntPipe, Query, Req, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Request, UseGuards, ParseIntPipe, Query, Req, NotFoundException, UploadedFiles, UseInterceptors } from '@nestjs/common';
 import { CreateRaketDto } from './dto/create-raket.dto';
 import { UpdateRaketDto } from './dto/update-raket.dto';
 import { RaketStatus } from './entities/raket.entity';
@@ -9,6 +9,7 @@ import { CurrentUser } from 'src/auth/current-user.decorator';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { FilesInterceptor } from '@nestjs/platform-express';
 
 export interface RequestWithUser extends Request {
   user: Users;
@@ -23,13 +24,18 @@ export class RaketsController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  async create(@Body() dto: CreateRaketDto, @Req() req: RequestWithUser) {
+  @UseInterceptors(FilesInterceptor('images'))
+  async create(
+    @Body() dto: CreateRaketDto,
+    @UploadedFiles() files: Express.Multer.File[], 
+    @Req() req: RequestWithUser
+  ) {
     const user = await this.usersRepository.findOne({ where: { uid: req.user.uid } });
     if (!user) {
       throw new NotFoundException('User not found');
     }
 
-    return this.raketsService.create(dto, user);
+    return this.raketsService.create(dto, user, files);
   }
 
   @UseGuards(JwtAuthGuard)

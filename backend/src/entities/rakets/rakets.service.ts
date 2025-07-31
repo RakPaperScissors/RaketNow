@@ -3,6 +3,7 @@ import {
   Injectable,
   NotFoundException,
   ForbiddenException,
+  Inject,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -13,6 +14,8 @@ import { Users } from '../user/entities/user.entity';
 import { RaketApplication, RaketApplicationStatus } from '../raket-application/entities/raket-application.entity';
 import { Notification } from '../notification/entities/notification.entity';
 import { NotificationService } from '../notification/notification.service';
+import { S3 } from 'aws-sdk';
+import { RaketPictures } from '../raket-pictures/entities/raket-picture.entity';
 
 @Injectable()
 export class RaketsService {
@@ -25,12 +28,48 @@ export class RaketsService {
     private readonly appRepo: Repository<RaketApplication>,
     @InjectRepository(Notification)
     private readonly notifRepo: Repository<Notification>,
-    private readonly notifService: NotificationService
+    private readonly notifService: NotificationService,
+    @InjectRepository(RaketPictures)
+    private raketPicturesRepo: Repository<RaketPictures>,
+    @Inject('MINIO_CLIENT') private readonly s3Client: S3,
   ) {}
 
-  async create(createRaketDto: CreateRaketDto, creator: Users): Promise<Raket> {
+  private readonly BUCKET_NAME = 'raketnow';
+
+  async create(createRaketDto: CreateRaketDto, creator: Users, files?: Express.Multer.File[]): Promise<Raket> {
     const raket = this.raketRepo.create({ ...createRaketDto, user: creator });
-    return this.raketRepo.save(raket);
+    const savedRaket = await this.raketRepo.save(raket);
+
+    if (files && files.length > 0) {
+      const pictureEntities: RaketPictures[] = [];
+
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const key = `raket-images/${savedRaket.raketId}/${Date.now()}-${file.originalname}`;
+
+        await this.s3Client
+          .putObject({
+            Bucket: this.BUCKET_NAME,
+            Key: key,
+            Body: file.buffer,
+            ContentType: file.mimetype,
+          })
+          .promise();
+        
+          const imageUrl = `${this.s3Client.endpoint.href}${this.BUCKET_NAME}/${key}`;
+
+          const picture = this.raketPicturesRepo.create({
+            raket: savedRaket,
+            imageUrl,
+            displayOrder: i,
+          });
+
+          pictureEntities.push(picture);
+      }
+
+      await this.raketPicturesRepo.save(pictureEntities);
+    }
+    return savedRaket;
   }
 
   async findAll() {
@@ -46,13 +85,13 @@ export class RaketsService {
       budget: r.budget,
       dateCreated: r.dateCreated,
       completedAt: r.completedAt,
-      user: {
+      user: r.user ? {
         uid: r.user.uid,
         email: r.user.email,
         firstName: r.user.firstName,
         lastName: r.user.lastName,
         lastActive: r.user.lastActive,
-      },
+      } : null,
       pictures: r.pictures.map(p => ({
         id: p.id,
         imageUrl: p.imageUrl,
@@ -71,13 +110,13 @@ export class RaketsService {
 
     return {
       ...raket,
-      user: {
+      user: raket.user ? {
         uid: raket.user.uid,
         email: raket.user.email,
         firstName: raket.user.firstName,
         lastName: raket.user.lastName,
         lastActive: raket.user.lastActive,
-      },
+      } : null,
       pictures: raket.pictures.map(p => ({
         id: p.id,
         imageUrl: p.imageUrl,

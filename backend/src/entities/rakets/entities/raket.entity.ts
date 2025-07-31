@@ -29,7 +29,7 @@ export class Raket {
     raketId: number;
 
     @ManyToOne(() => Users, { eager: false })
-    @JoinColumn({ name: 'userId', referencedColumnName: 'uid' })
+    @JoinColumn({ name: 'userUid', referencedColumnName: 'uid' })
     user: Users;
 
     @Column({ type: 'varchar', length: 100 })
