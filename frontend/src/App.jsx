@@ -23,6 +23,7 @@ import UserRakets from "./pages/MyRakets";
 import BoostPost from "./pages/Boost";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminUsersTable from "./pages/AdminUsersTable";
+import ProfileDisplayCard from "./components/ProfileDisplayCard";
 
 function AppContent() {
   const location = useLocation();
@@ -58,6 +59,7 @@ function AppContent() {
           <Route path="/become-raketista" element={<BecomeRaketista />} />
           <Route path="/my-rakets" element={<UserRakets />} />
           <Route path="/boost" element={<BoostPost />} />
+          <Route path="/profile-display/:userId" element={<ProfileDisplayCard />} /> 
 
           {/* admin page */}
           <Route path="/admin-dashboard" element={<AdminDashboard />} />

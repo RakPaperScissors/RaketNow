@@ -169,4 +169,58 @@ export class UserService {
 
     return updated;
   }
+
+  // For getting profile details
+  async getPublicProfileById(uid: number): Promise<any> {
+    const user = await this.raketistaRepo.findOne({
+      where: { uid: uid },
+      relations: ['raketistaSkills', 'raketistaSkills.skill'],
+    });
+
+    if (user) {
+      return {
+        uid: user.uid,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        profilePicture: user.profilePicture,
+        role: user.role,
+        type: user.type,
+        createdAt: user.createdAt,
+        lastActive: user.lastActive,
+        bio: user.bio,
+        isRaketistaVerified: user.isRaketistaVerified,
+        aveResponseTime: user.aveResponseTime,
+        isAutoReplyEnabled: user.isAutoReplyEnabled,
+        autoReplyMessage: user.autoReplyMessage,
+        raketistaSkills: user.raketistaSkills.map((rs: RaketistaSkill) => ({
+          id: rs.id,
+          skill: {
+            skill_Id: rs.skill.skill_Id,
+            skillName: rs.skill.skillName,
+            category: rs.skill.category,
+          },
+        })),
+      };
+    } else {
+      const genericUser = await this.users.findOne({
+        where: { uid: uid },
+      });
+      if (!genericUser) {
+        throw new NotFoundException(`User with ID ${uid} not found.`);
+      }
+      return {
+        uid: genericUser.uid,
+        firstName: genericUser.firstName,
+        lastName: genericUser.lastName,
+        email: genericUser.email,
+        profilePicture: genericUser.profilePicture,
+        role: genericUser.role,
+        type: genericUser.type,
+        createdAt: genericUser.createdAt,
+        lastActive: genericUser.lastActive,
+      };
+    }
+  }
+
 }

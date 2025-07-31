@@ -27,3 +27,19 @@ export async function applyForRaketista() {
     if (!response.ok) throw new Error('Failed to apply for raketista');
     return response.json();
 }
+
+export async function getPublicUserProfile(uid) {
+    const response = await fetch(`http://localhost:3000/user/${uid}/public-profile`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+    });
+
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to fetch public profile.');
+    }
+    return response.json();
+}

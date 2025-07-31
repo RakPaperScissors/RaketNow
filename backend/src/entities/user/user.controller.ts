@@ -7,6 +7,7 @@ import { UseGuards } from '@nestjs/common';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { RolesGuard } from 'src/common/guards/roles.guard';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { Public } from 'src/common/decorators/public.decorator';
 
 // @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('user')
@@ -105,5 +106,13 @@ export class UserController {
   async applyForRaketista(@Req() req: any) {
     const userId = req.user['uid'];
     return this.userService.applyForRaketistaRole(userId);
+  }
+
+  //Get Public Profile
+  @Public()
+  @Get(':uid/public-profile')
+  async getPublicProfile(@Param('uid', ParseIntPipe) uid: number) {
+    const userProfile = await this.userService.getPublicProfileById(uid);
+    return userProfile;
   }
 }
