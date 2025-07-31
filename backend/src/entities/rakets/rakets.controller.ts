@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Request, UseGuards, ParseIntPipe, Query, } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Request, UseGuards, ParseIntPipe, Query, Req, NotFoundException } from '@nestjs/common';
 import { CreateRaketDto } from './dto/create-raket.dto';
 import { UpdateRaketDto } from './dto/update-raket.dto';
 import { RaketStatus } from './entities/raket.entity';
@@ -6,7 +6,13 @@ import { RaketsService } from './rakets.service';
 import { Users } from '../user/entities/user.entity';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { CurrentUser } from 'src/auth/current-user.decorator';
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
+export interface RequestWithUser extends Request {
+  user: Users;
+}
 @Controller('rakets')
 export class RaketsController {
   constructor(
@@ -48,7 +54,7 @@ export class RaketsController {
     return this.raketsService.updateRaketStatus(id, status, req.user.uid);
   }
 
-  @Patch(':id/reject-completion-request')
+  @Patch(':id/reject-completion')
   @UseGuards(JwtAuthGuard)
   async clientRejectCompletion(
     @Param('id', ParseIntPipe) raketId: number,
@@ -91,10 +97,19 @@ export class RaketsController {
   //   return this.raketsService.cancelRaket(raketId, req.user.uid);
   // }
 
+  // @UseGuards(JwtAuthGuard)
+  // @Patch(':id/reject-completion')
+  // clientRejectsCompletionRequest(@Param('id', ParseIntPipe) raketId: number, @Req() req: RequestWithUser) {
+  //   return this.raketsService.clientRejectsCompletionRequest(raketId, req.user.uid);
+  // }
+
   @UseGuards(JwtAuthGuard)
-  @Patch(':id/reject-completion')
-  clientRejectsCompletionRequest(@Param('id', ParseIntPipe) raketId: number, @Req() req: RequestWithUser) {
-    return this.raketsService.clientRejectsCompletionRequest(raketId, req.user.uid);
+  @Patch(':id/cancel-ongoing')
+  cancelOngoingRaket(
+    @Param('id', ParseIntPipe) raketId: number,
+    @Req() req: any
+  ) {
+    return this.raketsService.cancelOngoingRaket(raketId, req.user.uid);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -110,7 +125,7 @@ export class RaketsController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Patch(':id/cancel-completion-request')
+  @Patch(':id/cancel-completion')
   cancelCompletionRequest(@Param('id', ParseIntPipe) raketId: number, @Req() req: RequestWithUser) {
     return this.raketsService.cancelCompletionRequest(raketId, req.user.uid);
   }

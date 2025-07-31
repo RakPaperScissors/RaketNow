@@ -104,6 +104,45 @@ export class RaketsService {
     return this.raketRepo.save(raket);
   }
 
+  // cancel raket completion confirmation
+async clientRejectsCompletionRequest(raketId: number, clientId: number) {
+  const raket = await this.raketRepo.findOne({
+    where: { raketId },
+    relations: ['user', 'applications', 'applications.raketista'],
+  });
+
+  if (!raket) throw new NotFoundException('Raket not found');
+
+  if (raket.user.uid !== clientId) {
+    throw new ForbiddenException('You are not authorized to perform this action');
+  }
+
+  if (raket.status !== RaketStatus.PENDING_CONFIRMATION) {
+    throw new BadRequestException('Raket is not pending confirmation');
+  }
+
+  raket.status = RaketStatus.IN_PROGRESS;
+  await this.raketRepo.save(raket);
+
+  const acceptedApp = raket.applications.find(app => app.status === RaketApplicationStatus.ACCEPTED);
+  if (acceptedApp) {
+    await this.notifRepo.create({
+      user: acceptedApp.raketista,
+      raket: { raketId: raket.raketId },
+      message: `Your completion request for "${raket.title}" was rejected by the client.`,
+      actionable: false,
+    });
+  }
+
+  await this.notifRepo.delete({
+    raket: { raketId },
+    actionable: true,
+  });
+
+  return { message: 'Completion request rejected. Status set back to IN PROGRESS.' };
+}
+
+
   async cancelOpenRaket(raketId: number, userId: number): Promise<void> {
     const raket = await this.raketRepo.findOne({
       where: { raketId },
@@ -140,31 +179,68 @@ export class RaketsService {
     await this.raketRepo.remove(raket);
   }
 
+  // fetches for GET /raket/myrakets
+async findMyRakets(userId: number) {
+  const rakets = await this.raketRepo.find({
+    where: { user: { uid: userId } },
+    relations: {
+      applications: {
+        raketista: true,
+      },
+    },
+    order: {
+      dateCreated: 'DESC',
+    },
+  });
+
+  return rakets.map(raket => {
+    const acceptedApp = raket.applications.find(app => app.status === RaketApplicationStatus.ACCEPTED);
+
+    return {
+      ...raket,
+      acceptedRaketista: acceptedApp?.raketista
+        ? {
+            firstName: acceptedApp.raketista.firstName,
+            lastName: acceptedApp.raketista.lastName,
+          }
+        : null,
+    };
+  });
+}
+
 
   async updateRaketStatus(raketId: number, status: RaketStatus, userId: number) {
-    const raket = await this.getEntityById(raketId);
+  const raket = await this.getEntityById(raketId);
 
-    if (!Object.values(RaketStatus).includes(status)) {
-      throw new BadRequestException(`Invalid status: ${status}`);
-    }
-
-    if (raket.user.uid !== userId) {
-      throw new ForbiddenException();
-    }
-
-    if (
-      raket.status === RaketStatus.PENDING_CONFIRMATION &&
-      status === RaketStatus.COMPLETED
-    ) {
-      await this.notificationRepository.delete({
-        raketId: raketId,
-        actionable: true,
-      });
-    }
-
-    await this.notifRepo.delete({ raket: { raketId }, actionable: true });
-    return { message: 'Completion rejected. Status set to IN PROGRESS.' };
+  if (!Object.values(RaketStatus).includes(status)) {
+    throw new BadRequestException(`Invalid status: ${status}`);
   }
+
+  if (raket.user.uid !== userId) {
+    throw new ForbiddenException();
+  }
+
+  // Allow status change to COMPLETED only if currently pending confirmation or in_progress
+  if (
+    raket.status === RaketStatus.PENDING_CONFIRMATION &&
+    status === RaketStatus.COMPLETED
+  ) {
+    await this.notifRepo.delete({
+      raketId: raketId,
+      actionable: true,
+    });
+  }
+
+  raket.status = status;
+  if (status === RaketStatus.COMPLETED) {
+    raket.completedAt = new Date();
+  }
+
+  await this.raketRepo.save(raket);
+
+  return { message: `Raket status updated to ${status}` };
+}
+
 
   async getRaketsAssignedToUser(uid: number) {
     const acceptedApps = await this.appRepo.find({
@@ -176,58 +252,6 @@ export class RaketsService {
       ...app.raket,
       clientName: `${app.raket.user?.firstName} ${app.raket.user?.lastName}`,
     }));
-  }
-
-  // withdrawal from ongoing raket
-  async withdrawRaket(raketId: number, raketistaUid: number) {
-    const raket = await this.raket.findOne({
-      where: { raketId },
-      relations: ['applications', 'user', 'applications.raketista'],
-    });
-    if (!raket) {
-      throw new NotFoundException('Raket not found');
-    }
-    const acceptedApp = raket.applications.find(app =>
-      app.raketista?.uid === raketistaUid && app.status === RaketApplicationStatus.ACCEPTED,
-    );
-
-    if (!acceptedApp) {
-      throw new ForbiddenException('You are not the assigned raketista');
-    }
-    acceptedApp.status = RaketApplicationStatus.WITHDRAWN;
-    raket.status = RaketStatus.OPEN;
-
-    await this.raketApplicationRepository.save(acceptedApp);
-    await this.raket.save(raket);
-
-    await this.notificationService.create({
-      user: raket.user,
-      message: `The raketista has withdrawn from your raket "${raket.title}". It is now open again.`,
-      raketId: raket.raketId,
-      actionable: false,
-    });
-
-    // for rejected applicants: reset rejected applicants to pending & notify
-    const rejectedApps = raket.applications.filter(app =>
-      app.status === RaketApplicationStatus.REJECTED
-    );
-
-    for (const app of rejectedApps) {
-      app.status = RaketApplicationStatus.PENDING;
-
-      await this.raketApplicationRepository.save(app);
-
-      if (app.raketista) {
-        await this.notificationService.create({
-          user: app.raketista,
-          message: `The raket "${raket.title}" is open again. Your application has been reopened.`,
-          raketId: raket.raketId,
-          actionable: false,
-        });
-      }
-    }
-
-    return { message: 'Successfully withdrawn from raket' };
   }
 
   // pending confirmation for the raketistas (to be confirmed by the client)

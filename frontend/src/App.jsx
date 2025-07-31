@@ -20,6 +20,8 @@ import UserRakets from "./pages/MyRakets";
 import BoostPost from "./pages/Boost";
 import { AuthProvider } from "./context/AuthContext";
 import LoadingSpinner from "./components/LoadingSpinner";
+import MyApplications from "./pages/Applications"
+import Raket from "./pages/test_api_pages/Raket"
 
 function AppContent() {
   const location = useLocation();
@@ -55,6 +57,9 @@ function AppContent() {
           <Route path="/become-raketista" element={<BecomeRaketista />} />
           <Route path="/my-rakets" element={<UserRakets />} />
           <Route path="/boost" element={<BoostPost />} />
+          <Route path="/raket/:id/applications" element={<MyApplications />} />
+          <Route path="/rakets/:id" element={<Raket />} />
+          
         </Routes>
 
         {showFooter && <Footer />}

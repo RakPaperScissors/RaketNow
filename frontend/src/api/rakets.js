@@ -104,104 +104,10 @@ export async function fetchApplicationsForRaket(raketId) {
   return response.json();
 }
 
-// delete rakets
-export async function deleteRaketById(raketId, token) {
-  const response = await fetch(`http://localhost:3000/rakets/${raketId}`, {
-    method: "DELETE",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error("Failed to delete raket");
-  }
-
-  return true;
-}
-
-// cancel ongoing rakets
-export async function cancelRaket(raketId, accessToken) {
-  const response = await fetch(`http://localhost:3000/rakets/${raketId}/cancel`, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
-  if (!response.ok) {
-    throw new Error("Failed to cancel raket");
-  }
-  return response.json();
-}
-
-// fetch my rakets
-export async function fetchMyRakets(accessToken) {
-  const response = await fetch('http://localhost:3000/rakets/myrakets', {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
-  if (!response.ok) {
-    throw new Error('Failed to fetch your rakets');
-  }
-  return response.json();
-}
-
-// update raket status (only clients can do this to their raket)
-export async function updateRaketStatus(id, status, token) {
-  const response = await fetch(`http://localhost:3000/rakets/${id}/status`, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({ status }),
-  });
-  if (!response.ok) throw new Error("Failed to update raket status");
-  return response.json();
-}
-
-// fetch rakets assigned to me
-export async function fetchAssignedRakets(accessToken) {
-  const response = await fetch('http://localhost:3000/rakets/assigned-to-me', {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error('Failed to fetch assigned rakets');
-  }
-
-  return response.json();
-}
-
-
-// fetching raket applications from the client side
-export async function fetchRaketApplications(accessToken) {
-  const response = await fetch('http://localhost:3000/raket-application', {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
-  if (!response.ok) throw new Error('Failed to fetch raket applications');
-  return response.json();
-}
-// fetch application based on raket for filtering
-export async function fetchApplicationsForRaket(raketId, accessToken) {
-  const response = await fetch(`http://localhost:3000/raket-application/raket/${raketId}`, {
-    headers: { Authorization: `Bearer ${accessToken}` },
-  });
-  if (!response.ok) throw new Error('Failed to fetch applications based on the raket');
-  return response.json();
-}
-
-
 // applying to a raket
 export async function applyToRaket({ raketId, raketistaId, priceProposal }) {
   console.log("Sending:", { raketId, raketistaId, priceProposal });
-  const response = await fetch('http://localhost:3000/raket-application', {
+  const response = await fetch('http://localhost:3000/rrake', {
     method: 'POST',
     credentials: 'include',
     headers: {
@@ -256,7 +162,7 @@ export const requestCompletion = async (raketId) => {
 
 // cancel confirmation request
 export const cancelCompletionRequest = async (raketId) => {
-  const res = await fetch(`http://localhost:3000/rakets/${raketId}/cancel-completion-request`, {
+  const res = await fetch(`http://localhost:3000/rakets/${raketId}/cancel-completion`, {
     method: "PATCH",
     credentials: 'include',
   });
