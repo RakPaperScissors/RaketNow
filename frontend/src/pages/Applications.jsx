@@ -2,16 +2,13 @@ import React from "react";
 import SearchBar from "../components/SearchBar";
 import SideNav from "../components/SideNav";
 import DebugPanel from "../components/DebugPanel";
-import ApplicationList from "../components/ApplicationList"; // your main content component
-import { useCurrentUser } from "../hooks/useCurrentUser";
+import ApplicationList from "../components/ApplicationList";
 
 const MyApplications = () => {
-  const currentUser = useCurrentUser();
 
   return (
     <div className="flex h-screen bg-[#f9fafb]">
       {/* Debug Info */}
-      <DebugPanel user={currentUser} />
 
       {/* Sidebar */}
       <div className="fixed inset-y-0 left-0 w-64 z-20 bg-white border-r">

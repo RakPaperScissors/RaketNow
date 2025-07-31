@@ -434,13 +434,11 @@ const UserRakets = () => {
                         </button>
                       )}
 
-                      <span
-                        className={`text-xs h-7 leading-none rounded-full px-2 font-medium border ${getStatusStyle(
-                          mapStatusToLabel(raket.status)
-                        )}`}
-                      >
-                        Completed
-                      </span>
+                      <p className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${getStatusStyle(
+                      mapStatusToLabel(raket.status)
+                      )}`}>
+                        {mapStatusToLabel(raket.status)}
+                      </p>
                     </div>
                   </div>
                 )}
