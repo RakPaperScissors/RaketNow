@@ -7,6 +7,8 @@ import { RaketistaSkillModule } from '../raketista-skill/raketista-skill.module'
 import { SkillsModule } from '../skills/skills.module';
 import { RaketistaSkill } from '../raketista-skill/entities/raketista-skill.entity';
 import { RaketistaService } from '../raketista/raketista.service';
+import { Raketista } from '../raketista/entities/raketista.entity';
+import { Organization } from '../organization/entities/organization.entity';
 
 
 @Module({
