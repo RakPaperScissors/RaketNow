@@ -10,5 +10,6 @@ import { Skills } from '../skills/entities/skill.entity';
   imports: [TypeOrmModule.forFeature([RaketistaSkill, Raketista, Skills])],
   controllers: [RaketistaSkillController],
   providers: [RaketistaSkillService],
+  exports: [RaketistaSkillService, TypeOrmModule],
 })
 export class RaketistaSkillModule {}

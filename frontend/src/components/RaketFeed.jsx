@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import RaketCard from "./RaketCard";
 import { ListFilter } from "lucide-react";
+import { formatDistanceToNow } from "date-fns";
 import Mockup from "../assets/images/raketnow-mockup.png";
 import Sample from "../assets/images/raketnow-logo.png";
+import { useRakets } from "../hooks/useRakets";
+import LoadingSpinner from "./LoadingSpinner";
 
 const CATEGORIES = [
   "Maintenance & Repair",
@@ -17,35 +20,37 @@ const CATEGORIES = [
   "Moving & Delivery Services",
 ];
 
-const jobs = [
-  {
-    images: [Mockup, Sample],
-    title: "Plumbing Services for Leaky Faucet",
-    description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis, tempora Lorem ipsum dolor sit amet. Sit molestiae voluptates est voluptatem quasi aut ratione unde ab reiciendis eligendi sit reiciendis voluptas hic expedita odio. At dicta error 33 voluptatem illum eos itaque nesciunt aut dolor molestiae et dignissimos animi in recusandae quibusdam. In voluptatem ullam aut molestias voluptate qui doloribus sequi.Est fugit itaque hic autem cupiditate ut voluptatum ipsa nam eligendi quos. Et enim rerum eum velit nisi qui dolorum voluptas 33 suscipit rerum aut sint omnis. Vel magni velit 33 veniam voluptatem est ducimus fugiat.",
-    budget: 850,
-    user: "Xander Jay",
-    postedAt: "1h ago",
-    location: "Davao City",
-    rating: 4.8,
-    category: "Maintenance & Repair",
-  },
-  {
-    images: ["https://via.placeholder.com/300x200", "https://via.placeholder.com/300x201"],
-    title: "Build a Personal Website",
-    description: "Need someone to build my portfolio site using React or Next.js.",
-    budget: 10000,
-    user: "Jhaye Marie",
-    postedAt: "3h ago",
-    location: "Matina",
-    rating: 5,
-    category: "Tech & Electronics",
-  },
-];
+// const jobs = [
+//   {
+//     images: [Mockup, Sample],
+//     title: "Plumbing Services for Leaky Faucet",
+//     description:
+//       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis, tempora Lorem ipsum dolor sit amet. Sit molestiae voluptates est voluptatem quasi aut ratione unde ab reiciendis eligendi sit reiciendis voluptas hic expedita odio. At dicta error 33 voluptatem illum eos itaque nesciunt aut dolor molestiae et dignissimos animi in recusandae quibusdam. In voluptatem ullam aut molestias voluptate qui doloribus sequi.Est fugit itaque hic autem cupiditate ut voluptatum ipsa nam eligendi quos. Et enim rerum eum velit nisi qui dolorum voluptas 33 suscipit rerum aut sint omnis. Vel magni velit 33 veniam voluptatem est ducimus fugiat.",
+//     budget: 850,
+//     user: "Xander Jay",
+//     postedAt: "1h ago",
+//     location: "Davao City",
+//     rating: 4.8,
+//     category: "Maintenance & Repair",
+//   },
+//   {
+//     images: ["https://via.placeholder.com/300x200", "https://via.placeholder.com/300x201"],
+//     title: "Build a Personal Website",
+//     description: "Need someone to build my portfolio site using React or Next.js.",
+//     budget: 10000,
+//     user: "Jhaye Marie",
+//     postedAt: "3h ago",
+//     location: "Matina",
+//     rating: 5,
+//     category: "Tech & Electronics",
+//   },
+// ];
 
-const RaketFeed = () => {
+
+const RaketFeed = ({ searchTerm }) => {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
+  const { rakets, loading, error } = useRakets();
 
   const toggleCategory = (cat) => {
     setSelectedCategories((prev) =>
@@ -59,10 +64,20 @@ const RaketFeed = () => {
 
   const clearAll = () => setSelectedCategories([]);
 
-  const filteredJobs =
-    selectedCategories.length === 0
-      ? jobs
-      : jobs.filter((job) => selectedCategories.includes(job.category));
+  const filteredRakets = rakets.filter((raket) => {
+    const matchesCategory =
+      selectedCategories.length === 0 || selectedCategories.includes(raket.category);
+
+    const matchesSearch =
+      !searchTerm ||
+      raket.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      raket.description.toLowerCase().includes(searchTerm.toLowerCase());
+
+    return matchesCategory && matchesSearch;
+  });
+    // selectedCategories.length === 0
+    //   ? rakets
+    //   : rakets.filter((raket) => selectedCategories.includes(raket.category));
 
   return (
     <main className="bg-[#F9FAFB] min-h-screen py-8 px-4">
@@ -152,13 +167,44 @@ const RaketFeed = () => {
 
 
         {/* Feed */}
-        {filteredJobs.length > 0 ? (
-          filteredJobs.map((job, idx) => <RaketCard key={idx} {...job} />)
+        {loading ? (
+          <LoadingSpinner />
+        ) : error ? (
+          <p className="text-center text-sm text-red-500">{error}</p>
+        ) : filteredRakets.length > 0 ? (
+          filteredRakets.map((raket) => (
+          <RaketCard 
+            key={raket.raketId}
+            images={
+              raket.pictures.length > 0
+                ? raket.pictures
+                : ["/default_profile.jpg"]
+            }
+            title={raket.title || "Untitled Raket"}
+            description={raket.description || "No description provided."}
+            budget={raket.budget || 0}
+            user={
+              raket.user
+                ? `${raket.user.firstName || ""} ${raket.user.lastName || ""}`.trim()
+                : "Unknown User"
+            }
+            postedAt={formatDistanceToNow(new Date(raket.dateCreated), { addSuffix: true })}
+            location={"Davao City"}
+            rating={0}
+            category={"General"}
+            />))
         ) : (
           <p className="text-center text-sm text-gray-500">
             No rakets found for selected categories.
           </p>
         )}
+        {/* {filteredJobs.length > 0 ? (
+          filteredJobs.map((job, idx) => <RaketCard key={idx} {...job} />)
+        ) : (
+          <p className="text-center text-sm text-gray-500">
+            No rakets found for selected categories.
+          </p>
+        )} */}
       </div>
     </main>
   );

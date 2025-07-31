@@ -1,8 +1,14 @@
 import React from "react";
 import SideNav from "../components/SideNav";
 import ProfileCard from "../components/ProfileCard";
+import { useAuth } from "../context/AuthContext";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 function ProfilePage() {
+  const { loading } = useAuth();
+
+  if (loading) return <LoadingSpinner fullScreen/>;
+
   return (
     <div className="flex min-h-screen bg-gray-50">
       <SideNav />

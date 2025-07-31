@@ -10,17 +10,28 @@ import {
   Users,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
+import LoadingSpinner from "./LoadingSpinner";
 import SideNavItem from "./SideNavItem";
 import SideNavUser from "./SideNavUser";
 import logo from "../assets/images/raketnow-blue-logo.png";
-import { useUser } from "../hooks/useUsers";
+import { useAuth } from "../context/AuthContext";
 
 function SideNav() {
-  const { user, loading } = useUser();
+  const { user, loading, logout } = useAuth();
+  const [isLoggingOut, setIsLoggingOut] = React.useState(false);
 
-    const handleLogout = () => {
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+    await logout();
     window.location.href = "/login";
   };
+
+  if (loading) return <LoadingSpinner fullScreen/>;
+  if (isLoggingOut) return <LoadingSpinner fullScreen/>
+  if (!user) return <p>You are not logged in.</p>
+
+  const userType = user.type === "Users" ? "Client" : user.type;
+  const canApplyAsRaketista = userType === "Client";
 
   return (
     <aside className="h-screen w-64 bg-white border-r border-gray-200 flex flex-col justify-between py-6 px-4">
@@ -47,12 +58,13 @@ function SideNav() {
       {/* BOTTOM SECTION */}
       <div>
         <div className="space-y-2 mb-4">
-          {/* APPLY LOGIC HERE, WILL ONLY APPEAR IF CLIENT SI USER */}
-          <SideNavItem
-            to="/become-raketista"
-            icon={Users}
-            label="Become a Raketista"
-          />
+          {canApplyAsRaketista ? (
+            <SideNavItem
+              to="/become-raketista"
+              icon={Users}
+              label="Become a Raketista"
+            />
+          ) : ("")}
 
           {/* always visible */}
           <SideNavItem to="/notifications" icon={Bell} label="Notifications" />
@@ -67,16 +79,22 @@ function SideNav() {
           <NavLink to="/profile">
             <SideNavUser
               name={`${user.firstName} ${user.lastName}`}
-              role={user.role}
-              image={user.profilePicture || 'https://randomuser.me/api/portraits/lego/6.jpg'} // Fallback image
+              role={userType}
+              image={user?.profilePicture} // Fallback image
             />
           </NavLink>
         ) : (
           <p>Not logged in.</p>
         )}
 
-        <div className="mt-4" onClick={handleLogout} style={{ cursor: 'pointer' }}>
-          <SideNavItem to="#" icon={LogOut} label="Logout" />
+        <div className="mt-4">
+          {loading ? (
+            <LoadingSpinner />
+          ) : (
+            <div onClick={handleLogout} style={{ cursor: 'pointer' }}>
+              <SideNavItem to="#" icon={LogOut} label="Logout" />
+            </div>
+          )}
         </div>
       </div>
     </aside>

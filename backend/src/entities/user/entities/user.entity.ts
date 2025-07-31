@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, TableInheritance, OneToMany, ManyToMany, ManyToOne } from 'typeorm';
-import { Conversation } from 'src/entities/conversation/entities/conversation.entity';
-import { Message } from 'src/entities/message/entities/message.entity';
+import { Conversation } from '../../conversation/entities/conversation.entity';
+import { Message } from '../../message/entities/message.entity';
 export enum userRole {
     CLIENT = 'client',
     RAKETISTA = 'raketista',
@@ -14,6 +14,9 @@ export class Users {
     @PrimaryGeneratedColumn({ type: 'int', unsigned: true })
     uid: number;
 
+    @Column({ type: 'varchar', name: 'type', default: 'Users'})
+    type: string;
+
     @Column({ type: 'varchar', length: 255 })
     email: string;
 
@@ -26,8 +29,13 @@ export class Users {
     @Column({ type: 'varchar', length: 255, nullable: true })
     lastName: string;
 
+    // Main role of the user
     @Column({ type: 'enum', enum: userRole, default: userRole.CLIENT, })
     role: userRole;
+
+    // Additional roles that the user can have
+    @Column("text", { array: true, default: [userRole.CLIENT]})
+    roles: userRole[];
 
     @Column({ type: 'varchar', length: 50, nullable: true})
     authProvider: string;

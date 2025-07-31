@@ -41,7 +41,7 @@ export class RaketsService {
       user: {
         uid: raket.user.uid,
         email: raket.user.email,
-        firtName: raket.user.firstName,
+        firstName: raket.user.firstName,
         lastName: raket.user.lastName,
         lastActive: raket.user.lastActive,
       },

@@ -1,12 +1,16 @@
 import React from "react";
 
-const LoadingSpinner = () => {
+const LoadingSpinner = ({ fullScreen = false, size = 60, className = "", bgColor = "bg-[#F9FAFB]" }) => {
   return (
-    <div className="flex justify-center items-center min-h-screen bg-white">
+    <div 
+      className={`${fullScreen
+        ? `flex justify-center items-center min-h-screen ${bgColor}`
+        : "inline-flex justify-center items-center"
+        } ${className}`}>
       <svg
         className="animate-spin"
-        width="60"
-        height="60"
+        width={size}
+        height={size}
         viewBox="0 0 100 100"
       >
         <defs>

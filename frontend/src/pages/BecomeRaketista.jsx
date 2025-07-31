@@ -1,25 +1,63 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SideNav from "../components/SideNav";
+import { useApplyRaketista } from "../hooks/useApplyRaketista";
+import { useAuth } from "../context/AuthContext";
+import { getAllSkills } from "../api/profile";
+import { useNavigate } from "react-router-dom";
 
 function BecomeRaketista() {
+  const { user } = useAuth();
   const [bio, setBio] = useState("");
-  const [skillInput, setSkillInput] = useState("");
-  const [skills, setSkills] = useState([]);
+  const { apply, loading: applying, error, success } = useApplyRaketista();
+  const [allSkills, setAllSkills] = useState([]);
+  const [selectedSkills, setSelectedSkills] = useState([]);
+  const [formError, setFormError] = useState("");
+  const navigate = useNavigate();
 
-  // smthn para maging "badge/chip" sa skills
-  const handleKeyDown = (e) => {
-    if ((e.key === "Enter" || e.key === ",") && skillInput.trim()) {
-      e.preventDefault();
-      const newSkill = skillInput.trim().replace(/,+$/, "");
-      if (!skills.includes(newSkill)) {
-        setSkills([...skills, newSkill]);
+  useEffect(() => {
+    const fetchSkills = async () => {
+      try {
+        const skills = await getAllSkills();
+        setAllSkills(skills);
+      } catch (err) {
       }
-      setSkillInput("");
+    };
+
+    fetchSkills();
+  }, []);
+
+  const handleAddSkill = (skillId) => {
+    if (!selectedSkills.includes(skillId)) {
+      setSelectedSkills((prev) => [...prev, skillId]);
     }
   };
 
-  const removeSkill = (index) => {
-    setSkills(skills.filter((_, i) => i !== index));
+  const handleRemoveSkill = (skillId) => {
+    setSelectedSkills((prev) => prev.filter((id) => id !== skillId));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if(!user?.uid) return;
+
+    if (!bio.trim()) {
+      setFormError("Please enter your bio.");
+      return;
+    }
+
+    if (selectedSkills.length === 0) {
+      setFormError("Please select at least one skill.");
+      return;
+    }
+
+    const result = await apply(user.uid, bio, selectedSkills);
+    if (!result) return;
+  
+    if (result) {  
+      navigate("/profile", { replace: true });
+      window.location.reload();
+    }
   };
 
   return (
@@ -64,40 +102,70 @@ function BecomeRaketista() {
               >
                 Add Skills
               </label>
-              <input
+              <select
                 id="skills"
-                type="text"
-                placeholder="E.g., Video Editor, Developer, Gardener"
-                className="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#ff7c2b]"
-                value={skillInput}
-                onChange={(e) => setSkillInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-              />
-              {/* eskelz */}
-              <div className="flex flex-wrap gap-2 mt-4">
-                {skills.map((skill, index) => (
-                  <span
-                    key={index}
-                    className="bg-[#0c2c57]/10 text-[#0c2c57] px-3 py-1 rounded-full text-sm flex items-center gap-2"
-                  >
-                    {skill}
-                    <button
-                      onClick={() => removeSkill(index)}
-                      className="text-[#0c2c57] hover:text-red-500 font-bold"
-                    >
-                      ×
-                    </button>
-                  </span>
+                className="w-full border border-gray-300 rounded-md px-4 py-3 focuse:outline-none focus:ring-[#ff7c2b]"
+                // value=""
+                onChange={(e) => {
+                  const skillId = parseInt(e.target.value, 10);
+                  if (!isNaN(skillId)) handleAddSkill(skillId);
+                }}
+                value=""
+              >
+                <option value="">--- Select a skill ---</option>
+                {allSkills.map((skill) => (
+                  <option key={skill.skill_Id} value={skill.skill_Id}>
+                    {skill.skillName} ({skill.category})
+                  </option>
                 ))}
+              </select>
+
+              {/* Displaye selected skills */}
+              <div className="flex flex-wrap gap-2 mt-4">
+                {selectedSkills.map((id) => {
+                  const skill = allSkills.find((s) => s.skill_Id === id);
+                  return (
+                    <span
+                      key={id}
+                      className="bg-[#0c2c57]/10 text-[#0c2c57] px-3 py-1 rounded-full text-sm flex items-center gap-2"
+                    >
+                      {skill?.skillName || "Unknown Skill"}
+                      <button
+                        onClick={() => handleRemoveSkill(id)}
+                        className="text-[#0c2c57] hover:text-red-500 font-bold"
+                      >
+                        ×
+                      </button>
+                    </span>
+                    );
+                })}
               </div>
             </div>
 
+            {/* MESSAGES */}
+            {error && (
+              <p className="mb-4 text-sm text-red-500">{error}</p>
+            )}
+            {success && (
+              <p className="mb-4 text-sm text-green-500">Application submitted!</p>
+            )}
+            {formError && (
+              <p className="text-red-500 text-sm mb-2">{formError}</p>
+            )}
+
             <div className="flex justify-end gap-4">
-              <button className="px-6 py-2 rounded-md border border-gray-300 text-[#0c2c57] hover:bg-gray-100">
+              <button 
+                className="px-6 py-2 rounded-md border border-gray-300 text-[#0c2c57] hover:bg-gray-100" 
+                onClick={() => navigate(-1)}
+              >
                 Cancel
               </button>
-              <button className="px-6 py-2 rounded-md bg-[#ff7c2b] text-white hover:bg-[#e76c21]">
-                Save Changes
+              <button 
+                className="px-6 py-2 rounded-md bg-[#ff7c2b] text-white hover:bg-[#e76c21]"
+                onClick={handleSubmit}
+                disabled={applying}
+              >
+                {applying ? "Saving..." : "Save Changes"}
               </button>
             </div>
           </div>

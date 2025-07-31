@@ -57,6 +57,7 @@ export async function getAllSkills() {
 
 // To assign a skill to the raketista
 export async function addSkill(raketistaId, skillId) {
+    console.log("📤 Sending skill assignment request:", { raketistaId, skillId });
     const response = await fetch(`http://localhost:3000/raketista-skill`, {
         method: "POST",
         headers: {
@@ -65,9 +66,12 @@ export async function addSkill(raketistaId, skillId) {
         body: JSON.stringify({ raketistaId, skillId }),
         credentials: 'include',
     });
+    console.log("📥 Response status:", response.status);
     if (!response.ok) {
+        console.error("❌ Error response:", text);
         throw new Error("Failed to assign skill to raketista.");
     }
+    // console.log("✅ Skill assignment success:", result);
     return await response.json();
 }
 
