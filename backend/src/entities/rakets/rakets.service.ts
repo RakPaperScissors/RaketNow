@@ -323,17 +323,44 @@ async clientRejectsCompletionRequest(raketId: number, clientId: number) {
 }
 
 
+  // async getRaketsAssignedToUser(uid: number) {
+  //   const acceptedApps = await this.appRepo.find({
+  //     where: { raketista: { uid }, status: RaketApplicationStatus.ACCEPTED },
+  //     relations: ['raket', 'raket.user'],
+  //   });
+
+  //   return acceptedApps.map(app => ({
+  //     ...app.raket,
+  //     clientName: `${app.raket.user?.firstName} ${app.raket.user?.lastName}`,
+  //   }));
+  // }
+
   async getRaketsAssignedToUser(uid: number) {
     const acceptedApps = await this.appRepo.find({
       where: { raketista: { uid }, status: RaketApplicationStatus.ACCEPTED },
-      relations: ['raket', 'raket.user'],
+      relations: [
+        'raket',
+        'raket.user', 
+        'raket.rating', 
+        'raket.applications.raketista',
+      ],
     });
 
-    return acceptedApps.map(app => ({
-      ...app.raket,
-      clientName: `${app.raket.user?.firstName} ${app.raket.user?.lastName}`,
-    }));
+    return acceptedApps.map(app => {
+      const raket = app.raket;
+
+      return {
+        ...raket,
+        clientName: `${raket.user?.firstName} ${raket.user?.lastName}`,
+        rating: raket.rating ? raket.rating.rating : null,
+        acceptedRaketista: {
+          firstName: app.raketista?.firstName ?? null,
+          lastName: app.raketista?.lastName ?? null,
+        },
+      };
+    });
   }
+
 
   // pending confirmation for the raketistas (to be confirmed by the client)
   async raketistaRequestCompletion(raketId: number, raketistaUid: number) {

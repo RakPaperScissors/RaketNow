@@ -80,4 +80,19 @@ export class RatingService {
 
     return this.ratingsRepository.remove(rating);
   }
+
+  // get the average rate
+  async getAverageRatingForRaketista(raketistaId: number) {
+    const ratings = await this.ratingsRepository.find({
+      where: { raketistaId },
+    });
+
+    if (ratings.length === 0) return 0;
+
+    const total = ratings.reduce((sum, rating) => sum + rating.rating, 0);
+    const average = total / ratings.length;
+
+    return Number(average.toFixed(2));
+  }
+
 }

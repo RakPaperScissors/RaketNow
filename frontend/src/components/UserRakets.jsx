@@ -4,7 +4,6 @@ import { useEffect, useState, useCallback } from "react";
 import { fetchMyRakets, updateRaketStatus, fetchAssignedRakets, requestCompletion, cancelCompletionRequest, deleteRaketById, cancelOngoingRaket, cancelOpenRaket, rejectCompletionRequest, withdrawFromRaket  } from "../api/rakets";
 import { useCurrentUser } from "../hooks/useCurrentUser";
 import { useNavigate } from "react-router-dom";
-import { submitRating } from "../api/ratings";
 import DebugPanel from "../components/DebugPanel";
 import StarRating from "../components/Rating";
 

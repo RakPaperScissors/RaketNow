@@ -5,6 +5,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Users } from '../entities/user/entities/user.entity';
+import { UserModule } from '../entities/user/user.module';
 import { JwtStrategy } from './jwt.strategy';
 import { jwtConstants } from './constant';
 import { ConfigModule } from '@nestjs/config';
@@ -21,6 +22,7 @@ import { Organization } from 'src/entities/organization/entities/organization.en
 @Module({
   imports: [
     TypeOrmModule.forFeature([Users, Organization]),
+    UserModule,
     PassportModule,
     JwtModule.register({
       secret: jwtConstants.secret,
