@@ -8,10 +8,11 @@ import { RaketApplication } from '../raket-application/entities/raket-applicatio
 import { RaketApplicationModule } from '../raket-application/raket-application.module';
 import { Notification } from '../notification/entities/notification.entity';
 import { NotificationModule } from '../notification/notification.module';
+import { Rating } from '../rating/entities/rating.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Raket, Users, RaketApplication, Notification]),
+    TypeOrmModule.forFeature([Raket, Users, RaketApplication, Notification, Rating]),
     RaketApplicationModule, NotificationModule,
   ],
   controllers: [RaketsController],

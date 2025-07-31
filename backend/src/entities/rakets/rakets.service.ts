@@ -211,16 +211,16 @@ async findMyRakets(userId: number) {
       (app) => app.status === RaketApplicationStatus.ACCEPTED
     );
 
-    results.push({
-      ...raket,
-      myRating: existingRating ? existingRating.rating : null,
-      acceptedRaketista: acceptedApp?.raketista
-        ? {
-            firstName: acceptedApp.raketista.firstName,
-            lastName: acceptedApp.raketista.lastName,
-          }
-        : null,
-    });
+    // results.push({
+    //   ...raket,
+    //   myRating: existingRating ? existingRating.rating : null,
+    //   acceptedRaketista: acceptedApp?.raketista
+    //     ? {
+    //         firstName: acceptedApp.raketista.firstName,
+    //         lastName: acceptedApp.raketista.lastName,
+    //       }
+    //     : null,
+    // });
   }
 
   return results;
