@@ -15,6 +15,6 @@ import { Raketista } from '../raketista/entities/raketista.entity';
   imports: [TypeOrmModule.forFeature([Users, RaketistaSkill, Organization, Raketista]), SkillsModule, RaketistaSkillModule],
   controllers: [UserController],
   providers: [UserService, RaketistaService],
-  exports: [UserService],
+  exports: [UserService, TypeOrmModule.forFeature([Users, Raketista, Organization])],
 })
 export class UserModule {}
