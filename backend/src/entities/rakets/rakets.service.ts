@@ -223,46 +223,38 @@ async clientRejectsCompletionRequest(raketId: number, clientId: number) {
   }
 
   // fetches for GET /raket/my-rakets
-async findMyRakets(userId: number) {
-  const rakets = await this.raketRepo.find({
-    where: { user: { uid: userId } },
-    relations: {
-      applications: { raketista: true },
-    },
-    order: { dateCreated: 'DESC' },
-  });
-
-  const results: (Raket & {
-    myRating: number | null;
-    acceptedRaketista: { firstName: string; lastName: string } | null;
-  })[] = [];
-
-  for (const raket of rakets) {
-    const existingRating = await this.ratingRepo.findOne({
-      where: {
-        user: { uid: userId },
-        raket: { raketId: raket.raketId },
+  async findMyRakets(userId: number) {
+    const rakets = await this.raketRepo.find({
+      where: { user: { uid: userId } },
+      relations: {
+        applications: { raketista: true },
       },
+      order: { dateCreated: 'DESC' },
     });
 
-    const acceptedApp = raket.applications.find(
-      (app) => app.status === RaketApplicationStatus.ACCEPTED
-    );
+    const results: (Raket & {
+      acceptedRaketista: { firstName: string; lastName: string } | null;
+    })[] = [];
 
-    // results.push({
-    //   ...raket,
-    //   myRating: existingRating ? existingRating.rating : null,
-    //   acceptedRaketista: acceptedApp?.raketista
-    //     ? {
-    //         firstName: acceptedApp.raketista.firstName,
-    //         lastName: acceptedApp.raketista.lastName,
-    //       }
-    //     : null,
-    // });
+    for (const raket of rakets) {
+      const acceptedApp = raket.applications.find(
+        (app) => app.status === RaketApplicationStatus.ACCEPTED
+      );
+
+      results.push({
+        ...raket,
+        acceptedRaketista: acceptedApp?.raketista
+          ? {
+              firstName: acceptedApp.raketista.firstName,
+              lastName: acceptedApp.raketista.lastName,
+            }
+          : null,
+      });
+    }
+
+    return results;
   }
 
-  return results;
-}
 
 
 
