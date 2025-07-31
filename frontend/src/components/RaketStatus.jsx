@@ -4,17 +4,18 @@ import { useEffect, useCallback } from "react";
 import { updateRaketStatus, fetchAssignedRakets, requestCompletion, cancelCompletionRequest, deleteRaketById, cancelOngoingRaket, cancelOpenRaket, rejectCompletionRequest, withdrawFromRaket  } from "../api/rakets";
 import { useCurrentUser } from "../hooks/useCurrentUser";
 import { useNavigate } from "react-router-dom";
-import { Star } from "lucide-react";
+// import { Star } from "lucide-react";
+import StarRating from "../components/Rating";
 
-const StarRating = ({ count }) => (
-  <div className="flex space-x-1">
-    {Array(count)
-      .fill(0)
-      .map((_, i) => (
-        <span key={i} className="text-yellow-400 text-xl">★</span> 
-      ))}
-  </div>
-);
+// const StarRating = ({ count }) => (
+//   <div className="flex space-x-1">
+//     {Array(count)
+//       .fill(0)
+//       .map((_, i) => (
+//         <span key={i} className="text-yellow-400 text-xl">★</span> 
+//       ))}
+//   </div>
+// );
 
 const statusMap = {
   open: "Pending",
@@ -369,6 +370,30 @@ const RaketStatus = () => {
                         </button>
                       </div>
                     )}
+
+                    {/* completed */}
+                    {raket.status === "completed" && (
+                      raket.rating ? (
+                        <div className="mt-2 flex items-center gap-2">
+                          <span className="text-sm text-gray-600">Rating:</span>
+                          <StarRating
+                            initialRating={raket.rating}
+                            readOnly={true}
+                          />
+                        </div>
+                      ) : (
+                        currentUser?.role === "client" && (
+                          <StarRating
+                            raketId={raket.raketId}
+                            initialRating={0}
+                            alreadyRated={false}
+                          />
+                        )
+                      )
+                    )}
+
+
+
                   </div>
                 );
               })}
