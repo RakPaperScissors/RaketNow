@@ -1,11 +1,13 @@
-// changed some format coz deins ko gets pano naga work yung root layout HASHDHASD
-
 import React, { Suspense } from "react";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import LoadingSpinner from "./components/LoadingSpinner";
 
+import { AuthProvider } from "./context/AuthContext";
+
+// Pages
 import About from "./pages/About";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -15,15 +17,14 @@ import Home from "./pages/Home";
 import ForYou from "./pages/ForYou";
 import ProfilePage from "./pages/ProfilePage";
 import MessagePage from "./pages/MessagePage";
+import UserNotifications from "./pages/Notifications";
 import BecomeRaketista from "./pages/BecomeRaketista";
 import UserRakets from "./pages/MyRakets";
 import BoostPost from "./pages/Boost";
-import { AuthProvider } from "./context/AuthContext";
-import LoadingSpinner from "./components/LoadingSpinner";
+import AdminDashboard from "./pages/AdminDashboard";
 
 function AppContent() {
   const location = useLocation();
-
   const currentPath = location.pathname;
 
   // will see header on these pages
@@ -52,9 +53,13 @@ function AppContent() {
           <Route path="/rakets" element={<ForYou />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/message" element={<MessagePage />} />
+          <Route path="/notifications" element={<UserNotifications />} />
           <Route path="/become-raketista" element={<BecomeRaketista />} />
           <Route path="/my-rakets" element={<UserRakets />} />
           <Route path="/boost" element={<BoostPost />} />
+
+          {/* admin page */}
+          <Route path="/admin-dashboard" element={<AdminDashboard />} />
         </Routes>
 
         {showFooter && <Footer />}
