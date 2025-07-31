@@ -24,6 +24,7 @@ import BoostPost from "./pages/Boost";
 import AdminDashboard from "./pages/AdminDashboard";
 import MyApplications from "./pages/Applications";
 import Raket from "./pages/test_api_pages/Raket";
+import AdminUsersTable from "./pages/AdminUsersTable";
 
 function AppContent() {
   const location = useLocation();
@@ -64,6 +65,7 @@ function AppContent() {
 
           {/* admin page */}
           <Route path="/admin-dashboard" element={<AdminDashboard />} />
+          <Route path="/admin-users-table" element={<AdminUsersTable />} />
         </Routes>
 
         {showFooter && <Footer />}
