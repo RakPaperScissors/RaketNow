@@ -4,7 +4,7 @@ import LoadingSpinner from "./LoadingSpinner";
 import { getPublicUserProfile } from "../api/users";
 import { useParams } from 'react-router-dom';
 
-const DEFAULT_AVATAR = "https://randomuser.me/api/portraits/lego/6.jpg";
+const DEFAULT_AVATAR = "/default_profile.jpg";
 
 const formatDate = (dateString) => {
   if (!dateString) return '';
@@ -51,9 +51,9 @@ function ProfileDisplayCard() { // Remove the 'userId' prop here, it comes from 
   if (error) return <div className="text-center p-6 text-red-500">Error: {error}</div>;
   if (!profileUser) return <div className="text-center p-6">Profile not found.</div>;
 
-  const isRaketista = profileUser.role === "raketista"; 
+  const isRaketista = profileUser.type === "Raketista"; 
 
-  const fullProfilePictureUrl = profileUser.profilePicture || DEFAULT_AVATAR;
+  const fullProfilePictureUrl = `http://localhost:9000/raketnow/${profileUser.profilePicture}` || `http://localhost:9000/raketnow/default_profile.jpg`;
   return (
     <div className="bg-white shadow-md rounded-xl p-6 max-w-xl mx-auto my-10 border">
       {/* HEADER SECTION */}
@@ -68,7 +68,7 @@ function ProfileDisplayCard() { // Remove the 'userId' prop here, it comes from 
           <div>
             <h2 className="text-xl font-bold">{`${profileUser.firstName} ${profileUser.lastName}`}</h2>
             <div className="flex items-center gap-2 text-sm text-gray-600 mt-1">
-              <span className="bg-orange-100 text-orange-600 px-2 py-0.5 rounded-full text-xs font-medium capitalize">{profileUser.role}</span>
+              <span className="bg-orange-100 text-orange-600 px-2 py-0.5 rounded-full text-xs font-medium capitalize">{profileUser.type}</span>
               <span>• Joined {formatDate(profileUser.createdAt)}</span>
             </div>
             <div className="flex items-center text-gray-600 mt-1">
