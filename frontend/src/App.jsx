@@ -22,6 +22,7 @@ import BecomeRaketista from "./pages/BecomeRaketista";
 import UserRakets from "./pages/MyRakets";
 import BoostPost from "./pages/Boost";
 import AdminDashboard from "./pages/AdminDashboard";
+import AdminUsersTable from "./pages/AdminUsersTable";
 
 function AppContent() {
   const location = useLocation();
@@ -60,6 +61,7 @@ function AppContent() {
 
           {/* admin page */}
           <Route path="/admin-dashboard" element={<AdminDashboard />} />
+          <Route path="/admin-users-table" element={<AdminUsersTable />} />
         </Routes>
 
         {showFooter && <Footer />}
