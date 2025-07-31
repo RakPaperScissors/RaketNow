@@ -10,6 +10,7 @@ import { Skills } from '../skills/entities/skill.entity';
 import { RaketistaSkill } from '../raketista-skill/entities/raketista-skill.entity';
 import { RaketistaSkillService } from '../raketista-skill/raketista-skill.service';
 import { Organization } from '../organization/entities/organization.entity';
+import { Rating } from '../rating/entities/rating.entity';
 
 @Injectable()
 export class UserService {
@@ -24,6 +25,8 @@ export class UserService {
     private readonly raketistaRepo: Repository<Raketista>,
     @InjectRepository(Organization) 
     private readonly organizationRepository: Repository<Organization>,
+    @InjectRepository(Rating)
+    private readonly ratingRepo: Repository<Rating>, 
   ){}
 
   // --- Basic CRUD operations for USER entity ---
@@ -215,6 +218,7 @@ async patch(uid: number, updateUserDto: UpdateUserDto): Promise<any> {
     });
 
     if (user) {
+      const { averageRating,totalReviews} = await this.getAverageRatingForRaketista(uid); 
       return {
         uid: user.uid,
         firstName: user.firstName,
@@ -230,6 +234,8 @@ async patch(uid: number, updateUserDto: UpdateUserDto): Promise<any> {
         aveResponseTime: user.aveResponseTime,
         isAutoReplyEnabled: user.isAutoReplyEnabled,
         autoReplyMessage: user.autoReplyMessage,
+        averageRating,
+        totalReviews,
         raketistaSkills: user.raketistaSkills.map((rs: RaketistaSkill) => ({
           id: rs.id,
           skill: {
@@ -259,5 +265,47 @@ async patch(uid: number, updateUserDto: UpdateUserDto): Promise<any> {
       };
     }
   }
+
+  // get average rating
+  async getAverageRatingForRaketista(uid: number): Promise<{ averageRating: number; totalReviews: number }> {
+    const ratings = await this.ratingRepo.find({
+      where: { raketistaId: uid },
+    });
+
+    const totalReviews = ratings.length;
+    if (!totalReviews) {
+      return { averageRating: 0, totalReviews: 0 };
+    }
+
+    const total = ratings.reduce((sum, r) => sum + r.rating, 0);
+    const averageRating = Number((total / totalReviews).toFixed(2));
+
+    return { averageRating, totalReviews };
+  }
+
+  async findAllRaketistasWithRatings() {
+    const raketistas = await this.raketistaRepo.find({
+      relations: ['raketistaSkills', 'raketistaSkills.skill'],
+    });
+
+    return await Promise.all(
+      raketistas.map(async (raketista) => {
+        const ratings = await this.ratingRepo.find({
+          where: { raketistaId: raketista.uid },
+        });
+        const totalReviews = ratings.length;
+        const averageRating = totalReviews
+          ? Number((ratings.reduce((sum, r) => sum + r.rating, 0) / totalReviews).toFixed(2))
+          : 0;
+
+        return {
+          ...raketista,
+          averageRating,
+          totalReviews,
+        };
+      })
+    );
+  }
+
 
 }

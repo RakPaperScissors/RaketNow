@@ -6,12 +6,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Raketista } from './entities/raketista.entity';
 import { userRole } from '../user/entities/user.entity';
 import { NotFoundError } from 'rxjs';
+import { Rating } from '../rating/entities/rating.entity';
 
 @Injectable()
 export class RaketistaService {
   constructor(
     @InjectRepository(Raketista)
-    private readonly raketistas: Repository<Raketista>) {}
+    private readonly raketistas: Repository<Raketista>,
+    @InjectRepository(Rating)
+    private readonly ratingRepo: Repository<Rating>) {}
 
   // --- Basic CRUD functions for Raketistas ---
   // 1. Create a new Raketista
@@ -24,7 +27,33 @@ export class RaketistaService {
 
   // 2. Find all Raketistas
   async findAll() {
-    return await this.raketistas.find();
+    const raketistas = await this.raketistas.find({
+      relations: ['raketistaSkills', 'raketistaSkills.skill'],
+    });
+
+    return Promise.all(
+      raketistas.map(async (raketista) => {
+        const ratings = await this.ratingRepo.find({
+          where: { raketistaId: raketista.uid },
+        });
+
+        const totalReviews = ratings.length;
+        const averageRating = totalReviews
+          ? Number((ratings.reduce((sum, r) => sum + r.rating, 0) / totalReviews).toFixed(2))
+          : 0;
+
+        return {
+          uid: raketista.uid,
+          firstName: raketista.firstName,
+          lastName: raketista.lastName,
+          type: raketista.type,
+          profilePicture: raketista.profilePicture,
+          averageRating,
+          totalReviews,
+          skills: raketista.raketistaSkills.map(rs => rs.skill.skillName),
+        };
+      })
+    );
   }
 
   // 3. Find one raketista by uid
