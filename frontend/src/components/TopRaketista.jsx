@@ -51,6 +51,11 @@ import { useRaketistas } from "../hooks/useRaketistas";
 const TopRaketista = () => {
   const { raketistas, loading, message } = useRaketistas();
   
+  const handleOpenUserProfile = (uid) => {
+    const profilePageUrl = `/profile-display/${uid}`;
+    window.open(profilePageUrl, '_blank');
+  };
+  
   if (loading) return <LoadingSpinner />;
   if (message) return <p className="p-4 text-red-500">{message}</p>;
 
@@ -74,7 +79,8 @@ const TopRaketista = () => {
               className="min-w-[250px] max-w-[250px] bg-white rounded-2xl shadow-md p-5 flex-shrink-0 flex flex-col items-center text-center "
             >
               {/* Profile image */}
-              <div className="w-20 h-20 rounded-full border-4 border-orange-500 overflow-hidden mb-3">
+              <div className="w-20 h-20 rounded-full border-4 border-orange-500 overflow-hidden mb-3" 
+              onClick={() => handleOpenUserProfile(r.id)}>
                 {r.img ? (
                   <img src={r.img} 
                   alt={r.name} 
@@ -86,8 +92,8 @@ const TopRaketista = () => {
               </div>
 
               {/* Name and Role */}
-              <h3 className="text-base font-semibold text-[#0C2C57]">{r.name}</h3>
-              <p className="text-sm text-gray-600 capitalize">{r.type}</p>
+              <h3 className="text-base font-semibold text-[#0C2C57]" onClick={() => handleOpenUserProfile(r.id)} >{r.name}</h3>
+              <p className="text-sm text-gray-600 capitalize">{r.role}</p>
 
               {/* Rating */}
               <div className="flex items-center justify-center mt-2">

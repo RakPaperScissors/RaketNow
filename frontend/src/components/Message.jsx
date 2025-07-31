@@ -52,6 +52,11 @@ function Message() {
     }
   };
 
+  const handleOpenUserProfile = (uid) => {
+    const profilePageUrl = `/profile-display/${uid}`;
+    window.open(profilePageUrl, '_blank');
+  };
+
   // EFFECTSSSSSSSSSSS
   useEffect(() => {
     if (selectedConversation && !loading) {
@@ -219,12 +224,19 @@ function Message() {
                   DEFAULT_AVATAR
                 }
                 alt={getOtherParticipant(selectedConversation)?.firstName}
-                className="w-10 h-10 rounded-full object-cover"
+                className="w-10 h-10 rounded-full object-cover cursor-pointer"
+                onClick={() =>
+                  handleOpenUserProfile(getOtherParticipant(selectedConversation)?.uid)
+                }
               />
               <div>
-                <p className="font-semibold text-sm">
-                  {getOtherParticipant(selectedConversation)?.firstName ||
-                    "Chat"}
+                <p
+                  className="font-semibold text-sm cursor-pointer"
+                  onClick={() =>
+                    handleOpenUserProfile(getOtherParticipant(selectedConversation)?.uid)
+                  }
+                >
+                  {getOtherParticipant(selectedConversation)?.firstName || "Chat"}
                 </p>
                 {Object.values(isTyping).some((val) => val) &&
                 Object.keys(isTyping)
@@ -296,9 +308,10 @@ function Message() {
                   >
                     {/* PROFILE PIC */}
                     <img
-                      src={senderProfilePic} // Use the correctly formatted URL
-                      alt={msg.sender.name || msg.sender.lastName} // Fallback to last name if name is missing
-                      className="w-8 h-8 rounded-full object-cover flex-shrink-0"
+                      src={senderProfilePic}
+                      alt={msg.sender.firstName || msg.sender.name}
+                      className="w-8 h-8 rounded-full object-cover flex-shrink-0 cursor-pointer"
+                      onClick={() => handleOpenUserProfile(msg.sender.id)} // Click handler
                     />
 
                     {/* MESSAGE BUBBLE */}
@@ -311,7 +324,10 @@ function Message() {
                     >
                       {/* SENDER NAME */}
                       {!isMyMessage && (
-                        <p className="font-medium text-xs mb-1 text-gray-600">
+                        <p 
+                          className="font-medium text-xs mb-1 text-gray-600 cursor-pointer"
+                          onClick={() => handleOpenUserProfile(msg.sender.id)} // Click handler
+                        >
                           {msg.sender.firstName || msg.sender.name}
                         </p>
                       )}

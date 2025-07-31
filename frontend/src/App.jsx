@@ -25,6 +25,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import MyApplications from "./pages/Applications";
 import Raket from "./pages/test_api_pages/Raket";
 import AdminUsersTable from "./pages/AdminUsersTable";
+import ProfileDisplayCard from "./components/ProfileDisplayCard";
 
 function AppContent() {
   const location = useLocation();
@@ -62,6 +63,7 @@ function AppContent() {
           <Route path="/boost" element={<BoostPost />} />
           <Route path="/raket/:raketId/applications" element={<MyApplications />} />
           <Route path="/rakets/:id" element={<Raket />} />
+          <Route path="/profile-display/:userId" element={<ProfileDisplayCard />} /> 
 
           {/* admin page */}
           <Route path="/admin-dashboard" element={<AdminDashboard />} />
