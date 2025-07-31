@@ -88,6 +88,7 @@ export class RaketsService {
       budget: r.budget,
       dateCreated: r.dateCreated,
       completedAt: r.completedAt,
+      category: r.category,
       user: r.user ? {
         uid: r.user.uid,
         email: r.user.email,
