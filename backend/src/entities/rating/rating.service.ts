@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Rating } from './entities/rating.entity';
 import { Raket, RaketStatus } from '../rakets/entities/raket.entity';
-import { RaketApplication } from '../raket-application/entities/raket-application.entity';
+import { RaketApplication, RaketApplicationStatus } from '../raket-application/entities/raket-application.entity';
 import { Users } from '../user/entities/user.entity';
 import { CreateRatingDto } from './dto/create-rating.dto';
 import { UpdateRatingDto } from './dto/update-rating.dto';
@@ -22,24 +22,53 @@ export class RatingService {
   ) {}
 
   async create(createRatingDto: CreateRatingDto, userId: number, raketId: number) {
-    const user = await this.usersRepository.findOne({ where: { uid: userId } });
-    if (!user) throw new NotFoundException('User not found');
+  const user = await this.usersRepository.findOne({ where: { uid: userId } });
+  if (!user) throw new NotFoundException('User not found');
 
-    const raket = await this.raketsRepository.findOne({ where: { raketId: raketId } });
-    if (!raket) throw new NotFoundException('Raket not found');
+  const raket = await this.raketsRepository.findOne({ where: { raketId } });
+  if (!raket) throw new NotFoundException('Raket not found');
 
-    if (raket.status !== RaketStatus.COMPLETED) {
-      throw new BadRequestException('You can only rate completed rakets.');
-    }
-
-    const rating = this.ratingsRepository.create({
-      ...createRatingDto,
-      user,
-      raket,
-    });
-
-    return this.ratingsRepository.save(rating);
+  if (raket.status !== RaketStatus.COMPLETED) {
+    throw new BadRequestException('You can only rate completed rakets.');
   }
+
+  // ✅ Prevent duplicate ratings
+  const existingRating = await this.ratingsRepository.findOne({
+    where: {
+      user: { uid: userId },
+      raket: { raketId }
+    }
+  });
+  if (existingRating) {
+    throw new BadRequestException('You have already rated this raket.');
+  }
+
+  const application = await this.raketApplicationsRepository.findOne({
+    where: { raket: { raketId }, status: RaketApplicationStatus.ACCEPTED },
+    relations: ['raketista'],
+  });
+
+  if (!application) {
+    throw new BadRequestException('No accepted raketista found for this raket.');
+  }
+
+  const raketistaId = application.raketista.uid;
+
+  const rating = this.ratingsRepository.create({
+    ...createRatingDto,
+    user,
+    raket,
+    raketistaId,
+  });
+
+  await this.ratingsRepository.save(rating);
+
+  // ✅ Update raket so frontend knows it's rated (locks stars after refresh)
+  await this.raketsRepository.update(raketId, { myRating: true });
+
+  return rating;
+}
+
 
   findAll() {
     return this.ratingsRepository.find({ relations: ['user', 'raket'] });

@@ -13,20 +13,25 @@ import { Users } from '../user/entities/user.entity';
 import { RaketApplication, RaketApplicationStatus } from '../raket-application/entities/raket-application.entity';
 import { Notification } from '../notification/entities/notification.entity';
 import { NotificationService } from '../notification/notification.service';
-
+import { Rating } from '../rating/entities/rating.entity';
 @Injectable()
 export class RaketsService {
-  constructor(
-    @InjectRepository(Raket)
-    private readonly raketRepo: Repository<Raket>,
-    @InjectRepository(Users)
-    private readonly userRepo: Repository<Users>,
-    @InjectRepository(RaketApplication)
-    private readonly appRepo: Repository<RaketApplication>,
-    @InjectRepository(Notification)
-    private readonly notifRepo: Repository<Notification>,
-    private readonly notifService: NotificationService
-  ) {}
+  
+
+constructor(
+  @InjectRepository(Raket)
+  private readonly raketRepo: Repository<Raket>,
+  @InjectRepository(Users)
+  private readonly userRepo: Repository<Users>,
+  @InjectRepository(RaketApplication)
+  private readonly appRepo: Repository<RaketApplication>,
+  @InjectRepository(Notification)
+  private readonly notifRepo: Repository<Notification>,
+  @InjectRepository(Rating) // ADD THIS
+  private readonly ratingRepo: Repository<Rating>,
+  private readonly notifService: NotificationService
+) {}
+
 
   async create(createRaketDto: CreateRaketDto, creator: Users): Promise<Raket> {
     const raket = this.raketRepo.create({ ...createRaketDto, user: creator });
@@ -179,34 +184,50 @@ async clientRejectsCompletionRequest(raketId: number, clientId: number) {
     await this.raketRepo.remove(raket);
   }
 
-  // fetches for GET /raket/myrakets
+  // fetches for GET /raket/my-rakets
 async findMyRakets(userId: number) {
   const rakets = await this.raketRepo.find({
     where: { user: { uid: userId } },
     relations: {
-      applications: {
-        raketista: true,
-      },
+      applications: { raketista: true },
     },
-    order: {
-      dateCreated: 'DESC',
-    },
+    order: { dateCreated: 'DESC' },
   });
 
-  return rakets.map(raket => {
-    const acceptedApp = raket.applications.find(app => app.status === RaketApplicationStatus.ACCEPTED);
+  const results: (Raket & {
+    myRating: number | null;
+    acceptedRaketista: { firstName: string; lastName: string } | null;
+  })[] = [];
 
-    return {
+  for (const raket of rakets) {
+    const existingRating = await this.ratingRepo.findOne({
+      where: {
+        user: { uid: userId },
+        raket: { raketId: raket.raketId },
+      },
+    });
+
+    const acceptedApp = raket.applications.find(
+      (app) => app.status === RaketApplicationStatus.ACCEPTED
+    );
+
+    results.push({
       ...raket,
+      myRating: existingRating ? existingRating.rating : null,
       acceptedRaketista: acceptedApp?.raketista
         ? {
             firstName: acceptedApp.raketista.firstName,
             lastName: acceptedApp.raketista.lastName,
           }
         : null,
-    };
-  });
+    });
+  }
+
+  return results;
 }
+
+
+
 
 
   async updateRaketStatus(raketId: number, status: RaketStatus, userId: number) {
