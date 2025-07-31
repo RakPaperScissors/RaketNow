@@ -10,6 +10,18 @@ export enum RaketStatus {
     COMPLETED = 'completed',
     CANCELLED = 'cancelled',
 }
+export enum RaketCategory {
+    MAINTENANCE_REPAIR = 'Maintenance & Repair',
+    TECH_ELECTRONICS = 'Tech & Electronics',
+    PERSONAL_HOME_CARE = 'Personal & Home Care',
+    EVENTS_ENTERTAINMENT = 'Events & Entertainment',
+    FOOD_BEVERAGE = 'Food & Beverage',
+    EDUCATION_TUTORING = 'Education and Tutoring',
+    GRAPHIC_DIGITAL_DESIGN = 'Graphic & Digital Design',
+    BUSINESS_PROFESSIONAL_SERVICES = 'Business & Professional Services',
+    AUTOMOTIVE = 'Automotive',
+    MOVING_DELIVERY_SERVICES = 'Moving & Delivery Services',
+}
 
 @Entity()
 export class Raket {
@@ -25,6 +37,9 @@ export class Raket {
 
     @Column({ type: 'varchar', length: 500 })
     description: string;
+
+    @Column({ type: 'enum', enum: RaketCategory, nullable: true })
+    category: RaketCategory;
 
     @Column({ type: 'enum', enum: RaketStatus, default: RaketStatus.OPEN })
     status: RaketStatus;

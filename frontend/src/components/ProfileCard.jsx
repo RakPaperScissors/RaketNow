@@ -50,7 +50,7 @@ function ProfileCard() {
   );
 
   return (
-    <div className="bg-white shadow-md rounded-xl p-6 max-w-4xl mx-auto my-10 border">
+    <div className="bg-white shadow-md rounded-xl p-6 max-w-4xl mx-auto my-10">
       {message && <p className="text-center mb-4 text-sm text-gray-600">{message}</p>}
 
       {/* HEADER SECTION */}

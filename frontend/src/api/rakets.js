@@ -205,3 +205,22 @@ export async function withdrawMyApplication(applicationId) {
 
   return res.json();
 }
+
+export async function postRaket(data) {
+  const res = await fetch('http://localhost:3000/rakets', {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!res.ok) {
+    const error = await res.json();
+    console.log("Server responded with error:", error);
+    throw new Error('Failed to post raket.');
+  }
+
+  return res.json();
+}
