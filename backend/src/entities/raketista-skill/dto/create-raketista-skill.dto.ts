@@ -1,4 +1,10 @@
+import { IsInt, IsNotEmpty, IsOptional } from "class-validator";
+
 export class CreateRaketistaSkillDto {
-    raketistaId: number;
+    @IsOptional()
+    raketistaId?: number;
+    
+    @IsNotEmpty()
+    @IsInt()
     skillId: number;
 }

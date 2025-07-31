@@ -9,6 +9,7 @@ import { Raketista } from './../raketista/entities/raketista.entity';
 import { Skills } from '../skills/entities/skill.entity';
 import { RaketistaSkill } from '../raketista-skill/entities/raketista-skill.entity';
 import { RaketistaSkillService } from '../raketista-skill/raketista-skill.service';
+import { Organization } from '../organization/entities/organization.entity';
 
 @Injectable()
 export class UserService {
@@ -21,6 +22,8 @@ export class UserService {
     private readonly raketistaSkillRepo: Repository<RaketistaSkill>,
     @InjectRepository(Raketista)
     private readonly raketistaRepo: Repository<Raketista>,
+    @InjectRepository(Organization) 
+    private readonly organizationRepository: Repository<Organization>,
   ){}
 
   // --- Basic CRUD operations for USER entity ---
@@ -41,16 +44,50 @@ export class UserService {
   }
 
   // 4. Update user by uid
-  async patch(uid: number, updateUserDto: UpdateUserDto) {
-    // Find user by uid
-    const findUser = await this.findOne(uid);
-    // Check if user exists
-    if (!findUser){
-      throw new NotFoundException('User not found');
+async patch(uid: number, updateUserDto: UpdateUserDto): Promise<any> {
+    // Determine the correct repository based on the user's role or type
+    // First, find the user to know their exact type/role
+    const user = await this.users.findOne({ where: { uid } });
+    if (!user) {
+      throw new NotFoundException(`User with ID ${uid} not found.`);
     }
-    // Update user details based on input
-    Object.assign(findUser, updateUserDto);
-    return await this.users.save(findUser);
+
+    let targetRepo: Repository<any>;
+    // IMPORTANT: Your user.entity has a 'type' column for @TableInheritance.
+    // Use this 'type' column, not 'role', to select the correct child repository.
+    // Ensure 'type' is mapped correctly in your Users entity.
+    switch (user.type) {
+      case 'Raketista': // This should match the @ChildEntity name for Raketista
+        targetRepo = this.raketistaRepo;
+        break;
+      case 'Organization': // This should match the @ChildEntity name for Organization
+        targetRepo = this.organizationRepository;
+        break;
+      default:
+        targetRepo = this.users; // Default to base User repo for Client/Admin
+    }
+
+    // Now, fetch the specific entity instance using the correct repository
+    // (We use `findOneBy` if you have `uid` mapped as PK in child entities too)
+    // Or if `uid` is only in base, then use `findOne` on the base entity and apply updates.
+    const entityToUpdate = await targetRepo.findOne({ where: { uid } }); // Using findOne because `uid` is PK for all children
+
+    if (!entityToUpdate) { // Should not happen if `user` was found above
+      throw new NotFoundException(`Specific user type entity for ID ${uid} not found.`);
+    }
+
+    // Apply updates using Object.assign or direct property assignment
+    Object.assign(entityToUpdate, updateUserDto);
+
+    // Save using the correct repository
+    const updatedEntity = await targetRepo.save(entityToUpdate);
+
+    // Return a clean response
+    return {
+      statusCode: 200,
+      message: 'User updated successfully.',
+      data: updatedEntity, // Return the updated entity
+    };
   }
 
   // 5. Delete user by uid
