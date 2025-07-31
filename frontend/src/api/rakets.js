@@ -107,7 +107,7 @@ export async function fetchApplicationsForRaket(raketId) {
 // applying to a raket
 export async function applyToRaket({ raketId, raketistaId, priceProposal }) {
   console.log("Sending:", { raketId, raketistaId, priceProposal });
-  const response = await fetch('http://localhost:3000/rrake', {
+  const response = await fetch('http://localhost:3000/raket-application', {
     method: 'POST',
     credentials: 'include',
     headers: {
