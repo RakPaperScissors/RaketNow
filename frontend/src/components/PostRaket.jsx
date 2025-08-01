@@ -18,6 +18,7 @@ const categories = [
 const PostRaket = () => {
   const { submitRaket, loading, error, success} = usePostRaket();
   const [isOpen, setIsOpen] = useState(false);
+  const [message, setMessage] = useState("");
   const [form, setForm] = useState({
     title: "",
     description: "",
@@ -53,6 +54,7 @@ const PostRaket = () => {
 
       await submitRaket(raketData);
       console.log("Raket posted successfully");
+      setMessage("Raket posted successfully!");
 
       setForm({
         title: "",
@@ -61,12 +63,16 @@ const PostRaket = () => {
         price: "",
         photos: [],
       });
+
+      setTimeout(() => {
+        setMessage("");
+        setIsOpen(false);
+      }, 2000);
       
     } catch (err) {
       console.error("Error submittin raket:", err);
     }
     console.log("Posting raket:", form);
-    setIsOpen(false);
   };
 
   return (
@@ -91,6 +97,18 @@ const PostRaket = () => {
             </button>
 
             <h2 className="text-lg font-semibold text-gray-800 mb-4 text-center">Post a Raket</h2>
+
+            {/* Success and Error Messages */}
+            {message && (
+              <div className="bg-green-100 text-green-800 px-4 py-2 rounded-xl text-sm mb-4 text-center">
+                {message}
+              </div>
+            )}
+            {error && (
+              <div className="bg-red-100 text-red-800 px-4 py-2 rounded-xl text-sm mb-4 text-center">
+                {error}
+              </div>
+            )}
             <form onSubmit={handleSubmit} className="space-y-4 text-sm text-gray-800">
               <div>
                 <label className="block font-medium mb-1">Title</label>

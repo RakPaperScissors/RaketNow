@@ -43,6 +43,7 @@ function ProfileCard() {
   console.log("Is user raketista?", isRaketista);
   console.log("bio:", user.bio);
   console.log("currentSkills:", currentSkills);
+  console.log("Profile picture:", user.profilePicture);
 
   // Filter out skills that are already in the user's list for the dropdown
   const availableSkills = allSkills.filter(
