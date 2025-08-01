@@ -108,20 +108,41 @@ async patch(uid: number, updateUserDto: UpdateUserDto): Promise<any> {
 
   // --- Search and Filter functions ---
   // 1. Search by name
-  async searchByName(name: string) {
-    // Finds user by name using ILike for incomplete search (only first name etc.)
-    return await this.users.find({ 
+  async searchByName(name: string): Promise<any[]> {
+    const users = await this.users.find({
       where: [
         { firstName: ILike(`%${name}%`) },
         { lastName: ILike(`%${name}%`) }
-      ]
+      ],
+      select: ['uid', 'firstName', 'lastName', 'email', 'profilePicture', 'role', 'type'],
     });
+    return users.map(user => ({
+      uid: user.uid,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      profilePicture: user.profilePicture ? user.profilePicture : null,
+      role: user.role,
+      type: user.type,
+    }));
   }
 
   // 2. Search by email
-  async searchByEmail(email: string) {
-    // Finds user by email using ILike for incomplete search (only part of email)
-    return await this.users.find({ where: { email: ILike(`%${email}%`) } });
+  async searchByEmail(email: string): Promise<any> {
+      const user = await this.users.findOne({
+        where: { email },
+        select: ['uid', 'firstName', 'lastName', 'email', 'profilePicture', 'role', 'type'], // Explicitly select public fields
+      });
+      if (!user) return null;
+      return {
+        uid: user.uid,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        profilePicture: user.profilePicture ? user.profilePicture : null,
+        role: user.role,
+        type: user.type,
+      };
   }
 
   // 3. Filter by role

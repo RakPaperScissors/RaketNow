@@ -57,14 +57,14 @@ export class UserController {
 
   // --- Search and Filter functions ---
   // GETs user by name
-  @Roles('admin', 'client', 'raketista', 'organization')
+  @Public()
   @Get('search/name/:name')
   searchByName(@Param('name') name: string) {
     return this.userService.searchByName(name);
   }
 
   // GETs user by email
-  @Roles('admin', 'client', 'raketista', 'organization')
+  @Public()
   @Get('search/email/:email')
   searchByEmail(@Param('email') email: string) {
     return this.userService.searchByEmail(email);

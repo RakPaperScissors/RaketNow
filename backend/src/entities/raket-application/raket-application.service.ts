@@ -8,6 +8,8 @@ import { Raket, RaketStatus } from '../rakets/entities/raket.entity';
 import { CreateRaketApplicationDto } from './dto/create-raket-application.dto';
 import { UpdateRaketApplicationDto } from './dto/update-raket-application.dto';
 import { BadRequestException } from '@nestjs/common';
+import { ConversationService } from '../conversation/conversation.service';
+import { CreateConversationDto } from '../conversation/dto/create-conversation.dto';
 
 @Injectable()
 export class RaketApplicationService {
@@ -20,6 +22,7 @@ export class RaketApplicationService {
     private readonly raketRepository: Repository<Raket>,
     @InjectRepository(Users)
     private readonly usersRepository: Repository<Users>,
+    private readonly conversationService: ConversationService,
   ) {}
 
   async create(dto: CreateRaketApplicationDto, user: Users) {
@@ -139,6 +142,18 @@ export class RaketApplicationService {
       isRead: false,
       actionable: false,
     });
+
+    const conversationDto: CreateConversationDto = {
+        participantIds: [application.raketista.uid],
+    };
+    const clientUid = application.raket.user.uid;
+
+    try {
+        const conversation = await this.conversationService.create(conversationDto, clientUid);
+    } catch (conversationError) {
+        console.error('Failed to create/find conversation during application acceptance:', conversationError);
+    }
+
     // rejects all other application when the client accepts one application
     const rejectedApplications = await this.raketApplicationRepository.find({
       where: {

@@ -4,7 +4,7 @@ import { useRaketApplications } from "../hooks/useRaketApplications";
 import { useMyRaketApplications } from "../hooks/useMyRaketApplications";
 import { acceptApplication, rejectApplication } from "../api/notifications";
 import { useCurrentUser } from "../hooks/useCurrentUser";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import DebugPanel from "../components/DebugPanel";
 
 // money formatting
@@ -20,6 +20,7 @@ function Applications() {
     const { apps: myApplications, loading: myLoading, error: myError, refetch: refreshMine,} = useMyRaketApplications();
     const currentUser = useCurrentUser();
     const [actionLoading, setActionLoading] = useState(false);
+    const navigate = useNavigate();
 
 if (isNaN(numericRaketId) || numericRaketId <= 0) {
   return <p className="text-center text-red-500 mt-6">Invalid Raket ID.</p>;
@@ -29,11 +30,14 @@ if (isNaN(numericRaketId) || numericRaketId <= 0) {
 
     const handleAccept = async (id) => {
         try {
-        setActionLoading(true);
-        await acceptApplication(id);
-        await refresh();
+            setActionLoading(true);
+            await acceptApplication(id);
+            await refresh();
+            setTimeout(() => {
+                navigate("/message");
+            }, 200);
         } finally {
-        setActionLoading(false);
+            setActionLoading(false);
         }
     };
 

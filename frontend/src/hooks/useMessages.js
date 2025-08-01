@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { io } from 'socket.io-client';
 import { getConversations, createConversation, getMessages, sendMessage } from '../api/message';
 import { useUser } from './useUsers';
+import { searchUsers } from '../api/users';
 
 const SOCKET_SERVER_URL = 'http://localhost:3000';
 
@@ -20,6 +21,11 @@ export function useMessages() {
     const [hasMoreMessages, setHasMoreMessages] = useState(true);
 
     const lastOptimisticIdRef = useRef(null);
+
+    const [searchTerm, setSearchTerm] = useState('');
+    const [searchResults, setSearchResults] = useState([]);
+    const [searchLoading, setSearchLoading] = useState(false);
+    const [searchError, setSearchError] = useState(null);
 
     // --- Socket.IO Connection and Event Handling ---
     useEffect(() => {
@@ -119,7 +125,7 @@ export function useMessages() {
         } finally {
             setLoading(false);
         }
-    }, []);
+    }, [user?.uid]);
 
     // Handles selecting a conversation and fetching its messages
     const selectConversation = useCallback(async (conversation) => {
@@ -234,6 +240,53 @@ export function useMessages() {
         }
     }, [selectedConversation]);
 
+const handleSearch = useCallback(async (query) => {
+    setSearchTerm(query);
+    if (!query.trim()) {
+        setSearchResults([]);
+        return;
+    }
+
+    setSearchLoading(true);
+    setSearchError(null);
+    try {
+        const results = await searchUsers(query); // This now reliably returns an array
+        setSearchResults(results.filter(u => u.uid !== user.uid));
+    } catch (err) {
+        setSearchError(err.message || 'Failed to search users.');
+        console.error('User search error:', err);
+    } finally {
+        setSearchLoading(false);
+    }
+}, []);
+
+    const startConversationWithUser = useCallback(async (targetUserUid) => {
+        if (!user || !targetUserUid) return;
+
+        try {
+            const newOrExistingConversation = await createConversation([targetUserUid]);
+        
+            setConversations(prev => {
+                const existsInList = prev.some(c => c.id === newOrExistingConversation.id);
+                if (!existsInList) {
+                    return [newOrExistingConversation, ...prev]; 
+                }
+                return prev.map(c => c.id === newOrExistingConversation.id ? newOrExistingConversation : c); 
+            });
+            
+            setSelectedConversation(newOrExistingConversation);
+            setSearchResults([]);
+            setSearchTerm(''); 
+
+            if (socketRef.current) {
+                socketRef.current.emit('joinConversations', [newOrExistingConversation.id]);
+            }
+        } catch (err) {
+            setError(err.message || 'Failed to start conversation.');
+            console.error('Start conversation error:', err);
+        }
+    }, [user, setConversations, setSelectedConversation, socketRef]);
+
     return {
         conversations,
         selectedConversation,
@@ -247,5 +300,11 @@ export function useMessages() {
         sendTextMessage,
         startNewConversation,
         emitTyping,
+        searchTerm,
+        searchResults,
+        searchLoading,
+        searchError,
+        handleSearch, 
+        startConversationWithUser,
     };
 }

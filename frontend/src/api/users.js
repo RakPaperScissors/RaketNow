@@ -43,3 +43,32 @@ export async function getPublicUserProfile(uid) {
     }
     return response.json();
 }
+
+export async function searchUsers(query) {
+    if (!query) return []; // Return empty array if query is empty
+
+    // Determine if it's likely an email based on presence of '@'
+    const isEmail = query.includes('@');
+    const endpoint = isEmail ? 'search/email' : 'search/name';
+    const param = isEmail ? query : encodeURIComponent(query); // Encode name for URL
+
+    const url = `http://localhost:3000/user/search/name/${param}`;
+    console.log("Searching URL:", url);
+
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: 'include', // Essential for cookie-based auth
+    });
+
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || `Failed to search users by ${isEmail ? 'email' : 'name'}.`);
+    }
+
+    const data = await response.json();
+    console.log(data)
+    return isEmail ? (data || []) : (data.users || []); // Assuming searchByEmail returns user or null, searchByName returns {users:[]}
+}
