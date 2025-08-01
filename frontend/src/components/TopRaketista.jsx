@@ -46,6 +46,23 @@ import { useRaketistas } from "../hooks/useRaketistas";
 //   },
 // ];
 
+function renderStars(rating) {
+  const stars = [];
+  const rounded = Math.round(rating * 2) / 2;
+  for (let i = 1; i <= 5; i++) {
+    if (i <= Math.floor(rounded)) {
+      // full star
+      stars.push(<Star key={i} size={16} className="text-yellow-400 fill-yellow-400" />);
+    } else if (i - 0.5 === rounded) {
+      // half star
+      stars.push(<Star key={i} size={16} className="text-yellow-400 fill-yellow-200" />);
+    } else {
+      // empty star
+      stars.push(<Star key={i} size={16} className="text-gray-300" />);
+    }
+  }
+  return stars;
+}
 
 
 const TopRaketista = () => {
@@ -93,16 +110,11 @@ const TopRaketista = () => {
 
               {/* Name and Role */}
               <h3 className="text-base font-semibold text-[#0C2C57]" onClick={() => handleOpenUserProfile(r.id)} >{r.name}</h3>
-              <p className="text-sm text-gray-600 capitalize">{r.role}</p>
+              <p className="text-sm text-gray-600 capitalize">{r.type}</p>
 
               {/* Rating */}
               <div className="flex items-center justify-center mt-2">
-                {[...Array(Math.floor(parseFloat(r.rating) || 0))].map((_, i) => (
-                  <Star key={i} size={16} className="text-yellow-400 fill-yellow-400" />
-                ))}
-                {r.rating % 1 !== 0 && (
-                  <Star size={16} className="text-yellow-400 fill-yellow-200" />
-                )}
+                {renderStars(r.rating)}
                 <span className="text-xs text-gray-600 ml-1">({r.rating})</span>
               </div>
 

@@ -22,6 +22,12 @@ function Message() {
     loadMoreMessages,
     sendTextMessage,
     emitTyping,
+    searchTerm,
+    searchResults,
+    searchLoading,
+    searchError,
+    handleSearch,
+    startConversationWithUser,
   } = useMessages();
 
   const [messageInput, setMessageInput] = useState("");
@@ -143,57 +149,84 @@ function Message() {
         <h2 className="text-xl font-semibold mb-2 text-[#0C2C57]">Messages</h2>
         <input
           type="text"
-          placeholder="Search users or conversations"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search users to start a new chat"
+          value={searchTerm}
+          onChange={(e) => handleSearch(e.target.value)}
           className="w-full mb-4 px-4 py-2 rounded-full border border-gray-200 focus:outline-none focus:ring-1 focus:ring-[#FF7C2B]"
         />
-        <div className="overflow-y-auto flex-1">
-          {conversations.length === 0 ? (
-            <p className="p-4 text-gray-500">
-              No conversations yet. Start one by searching a user!
-            </p>
+        {/* --- Search Results Display --- */}
+        {searchTerm.trim() && (
+            <div className="mb-4 border-b pb-2">
+                {searchLoading ? (
+                    <p className="text-center text-sm text-gray-500">Searching...</p>
+                ) : searchError ? (
+                    <p className="text-center text-sm text-red-500">{searchError}</p>
+                ) : searchResults.length > 0 ? (
+                    <div className="space-y-1">
+                        <p className="text-xs font-semibold text-gray-500 mb-1">Search Results:</p>
+                        {searchResults.map(user => (
+                            <div 
+                                key={user.uid} 
+                                className="flex items-center gap-3 px-3 py-2 cursor-pointer hover:bg-blue-50 rounded-md"
+                                onClick={() => startConversationWithUser(user.uid)}
+                            >
+                                <img 
+                                    src={user.profilePicture || DEFAULT_AVATAR} 
+                                    alt={user.firstName} 
+                                    className="w-8 h-8 rounded-full object-cover" 
+                                />
+                                <div className="flex-1 text-sm font-medium">{user.firstName} {user.lastName}</div>
+                                <Plus size={16} className="text-gray-500" />
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <p className="text-center text-sm text-gray-500">No users found.</p>
+                )}
+            </div>
+        )}
+                {/* Existing Conversations List */}
+<div className="overflow-y-auto flex-1">
+          <p className="text-xs font-semibold text-gray-500 mb-2">Your Conversations:</p>
+          {conversations.length === 0 && !searchLoading ? ( // Only show if no convos AND not searching
+            <p className="p-4 text-gray-500">No conversations yet. Start one by searching a user!</p>
           ) : (
-            conversations.map((conv) => {
-              const otherParticipant = getOtherParticipant(conv);
-              const otherParticipantProfilePic =
-                otherParticipant?.profilePicture
-                  ? `${USER_PROFILE_PIC_BASE_URL}${otherParticipant.profilePicture}`
-                  : DEFAULT_AVATAR;
+            conversations
+              .map((conv) => {
+                const otherParticipant = getOtherParticipant(conv);
+                const otherParticipantProfilePic = otherParticipant?.profilePicture 
+                    ? `${USER_PROFILE_PIC_BASE_URL}${otherParticipant.profilePicture}`
+                    : DEFAULT_AVATAR;
 
-              return (
-                <div
-                  key={conv.id}
-                  onClick={() => handleSelectConversation(conv)}
-                  className={`flex items-center gap-3 px-4 py-3 cursor-pointer transition-all mb-2 rounded-md ${
-                    selectedConversation?.id === conv.id
-                      ? "bg-[#FFF6F2] border-l-4 border-[#FF7C2B]"
-                      : "hover:bg-gray-100"
-                  }`}
-                >
-                  <div className="relative">
-                    <img
-                      src={otherParticipantProfilePic}
-                      alt={otherParticipant?.firstName}
-                      className="w-10 h-10 rounded-full object-cover"
-                    />
+                return (
+                  <div
+                    key={conv.id}
+                    onClick={() => handleSelectConversation(conv)}
+                    className={`flex items-center gap-3 px-4 py-3 cursor-pointer transition-all mb-2 rounded-md ${
+                      selectedConversation?.id === conv.id
+                        ? "bg-[#FFF6F2] border-l-4 border-[#FF7C2B]"
+                        : "hover:bg-gray-100"
+                    }`}
+                  >
+                    <div className="relative">
+                      <img
+                        src={otherParticipantProfilePic}
+                        alt={otherParticipant?.firstName}
+                        className="w-10 h-10 rounded-full object-cover"
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-semibold text-sm">{otherParticipant?.firstName || "Unknown User"}</p>
+                      {conv.lastMessage && (
+                        <p className="text-xs text-gray-500 truncate w-40">
+                          {conv.lastMessage.sender?.uid === currentUser.uid ? 'You: ' : `${conv.lastMessage.sender?.name || 'They'}: `}
+                          {conv.lastMessage.text}
+                        </p>
+                      )}
+                    </div>
                   </div>
-                  <div className="flex-1">
-                    <p className="font-semibold text-sm">
-                      {otherParticipant?.firstName || "Unknown User"}
-                    </p>
-                    {conv.lastMessage && (
-                      <p className="text-xs text-gray-500 truncate w-40">
-                        {conv.lastMessage.sender?.uid === currentUser.uid
-                          ? "You: "
-                          : `${conv.lastMessage.sender?.name || "They"}: `}
-                        {conv.lastMessage.text}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              );
-            })
+                );
+              })
           )}
         </div>
       </div>
@@ -292,9 +325,7 @@ function Message() {
               {messages.map((msg) => {
                 const isMyMessage =
                   Number(msg.sender.id) === Number(currentUser.uid);
-                const senderProfilePic = msg.sender.profilePicture
-                  ? `${USER_PROFILE_PIC_BASE_URL}${msg.sender.profilePicture}`
-                  : DEFAULT_AVATAR;
+                const senderProfilePic =  msg.sender.profilePictureUrl || DEFAULT_AVATAR;
 
                 return (
                   <div

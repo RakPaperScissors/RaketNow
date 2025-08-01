@@ -43,6 +43,7 @@ function ProfileCard() {
   console.log("Is user raketista?", isRaketista);
   console.log("bio:", user.bio);
   console.log("currentSkills:", currentSkills);
+  console.log("Profile picture:", user.profilePicture);
 
   // Filter out skills that are already in the user's list for the dropdown
   const availableSkills = allSkills.filter(
@@ -50,7 +51,7 @@ function ProfileCard() {
   );
 
   return (
-    <div className="bg-white shadow-md rounded-xl p-6 max-w-4xl mx-auto my-10 border">
+    <div className="bg-white shadow-md rounded-xl p-6 max-w-4xl mx-auto my-10">
       {message && <p className="text-center mb-4 text-sm text-gray-600">{message}</p>}
 
       {/* HEADER SECTION */}
@@ -99,7 +100,7 @@ function ProfileCard() {
           {isEditing ? (
             <textarea value={bio} onChange={e => setBio(e.target.value)} rows={4} className="w-full p-2 border rounded-md" placeholder="Tell us about your services..." />
           ) : (
-            <p className="text-gray-700 whitespace-pre-wrap">{user.bio || "No bio has been added yet."}</p>
+            <p className="text-gray-700 whitespace-pre-wrap">{bio || "No bio has been added yet."}</p>
           )}
         </div>
       )}

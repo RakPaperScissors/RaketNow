@@ -10,6 +10,7 @@ import { Skills } from '../skills/entities/skill.entity';
 import { RaketistaSkill } from '../raketista-skill/entities/raketista-skill.entity';
 import { RaketistaSkillService } from '../raketista-skill/raketista-skill.service';
 import { Organization } from '../organization/entities/organization.entity';
+import { Rating } from '../rating/entities/rating.entity';
 
 @Injectable()
 export class UserService {
@@ -24,6 +25,8 @@ export class UserService {
     private readonly raketistaRepo: Repository<Raketista>,
     @InjectRepository(Organization) 
     private readonly organizationRepository: Repository<Organization>,
+    @InjectRepository(Rating)
+    private readonly ratingRepo: Repository<Rating>, 
   ){}
 
   // --- Basic CRUD operations for USER entity ---
@@ -105,20 +108,41 @@ async patch(uid: number, updateUserDto: UpdateUserDto): Promise<any> {
 
   // --- Search and Filter functions ---
   // 1. Search by name
-  async searchByName(name: string) {
-    // Finds user by name using ILike for incomplete search (only first name etc.)
-    return await this.users.find({ 
+  async searchByName(name: string): Promise<any[]> {
+    const users = await this.users.find({
       where: [
         { firstName: ILike(`%${name}%`) },
         { lastName: ILike(`%${name}%`) }
-      ]
+      ],
+      select: ['uid', 'firstName', 'lastName', 'email', 'profilePicture', 'role', 'type'],
     });
+    return users.map(user => ({
+      uid: user.uid,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      profilePicture: user.profilePicture ? user.profilePicture : null,
+      role: user.role,
+      type: user.type,
+    }));
   }
 
   // 2. Search by email
-  async searchByEmail(email: string) {
-    // Finds user by email using ILike for incomplete search (only part of email)
-    return await this.users.find({ where: { email: ILike(`%${email}%`) } });
+  async searchByEmail(email: string): Promise<any> {
+      const user = await this.users.findOne({
+        where: { email },
+        select: ['uid', 'firstName', 'lastName', 'email', 'profilePicture', 'role', 'type'], // Explicitly select public fields
+      });
+      if (!user) return null;
+      return {
+        uid: user.uid,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        profilePicture: user.profilePicture ? user.profilePicture : null,
+        role: user.role,
+        type: user.type,
+      };
   }
 
   // 3. Filter by role
@@ -136,8 +160,12 @@ async patch(uid: number, updateUserDto: UpdateUserDto): Promise<any> {
 
   // --- User profile and role management ---
   // 1. Update profile picture
-  async updateProfilePicture(userId: number, key: string) {
-    await this.users.update(userId, { profilePicture: key, });
+  async updateProfilePicture(userId: number, newKey: string): Promise<Users> {
+    const user = await this.users.findOneBy({ uid: userId });
+    if (!user) throw new NotFoundException();
+
+    user.profilePicture = newKey;
+    return await this.users.save(user);
   }
 
   // 2. Get profile picture
@@ -215,6 +243,7 @@ async patch(uid: number, updateUserDto: UpdateUserDto): Promise<any> {
     });
 
     if (user) {
+      const { averageRating,totalReviews} = await this.getAverageRatingForRaketista(uid); 
       return {
         uid: user.uid,
         firstName: user.firstName,
@@ -230,6 +259,8 @@ async patch(uid: number, updateUserDto: UpdateUserDto): Promise<any> {
         aveResponseTime: user.aveResponseTime,
         isAutoReplyEnabled: user.isAutoReplyEnabled,
         autoReplyMessage: user.autoReplyMessage,
+        averageRating,
+        totalReviews,
         raketistaSkills: user.raketistaSkills.map((rs: RaketistaSkill) => ({
           id: rs.id,
           skill: {
@@ -259,5 +290,47 @@ async patch(uid: number, updateUserDto: UpdateUserDto): Promise<any> {
       };
     }
   }
+
+  // get average rating
+  async getAverageRatingForRaketista(uid: number): Promise<{ averageRating: number; totalReviews: number }> {
+    const ratings = await this.ratingRepo.find({
+      where: { raketistaId: uid },
+    });
+
+    const totalReviews = ratings.length;
+    if (!totalReviews) {
+      return { averageRating: 0, totalReviews: 0 };
+    }
+
+    const total = ratings.reduce((sum, r) => sum + r.rating, 0);
+    const averageRating = Number((total / totalReviews).toFixed(2));
+
+    return { averageRating, totalReviews };
+  }
+
+  async findAllRaketistasWithRatings() {
+    const raketistas = await this.raketistaRepo.find({
+      relations: ['raketistaSkills', 'raketistaSkills.skill'],
+    });
+
+    return await Promise.all(
+      raketistas.map(async (raketista) => {
+        const ratings = await this.ratingRepo.find({
+          where: { raketistaId: raketista.uid },
+        });
+        const totalReviews = ratings.length;
+        const averageRating = totalReviews
+          ? Number((ratings.reduce((sum, r) => sum + r.rating, 0) / totalReviews).toFixed(2))
+          : 0;
+
+        return {
+          ...raketista,
+          averageRating,
+          totalReviews,
+        };
+      })
+    );
+  }
+
 
 }

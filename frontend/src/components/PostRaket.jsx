@@ -1,8 +1,24 @@
 import React, { useState } from "react";
 import { Plus, X, Image as ImageIcon } from "lucide-react";
+import { usePostRaket } from "../hooks/usePostRaket";
+
+const categories = [
+  "Maintenance & Repair",
+  "Tech & Electronics",
+  "Personal & Home Care",
+  "Events & Entertainment",
+  "Food & Beverage",
+  "Education and Tutoring",
+  "Graphic & Digital Design",
+  "Business & Professional Services",
+  "Automotive",
+  "Moving & Delivery Services",
+];
 
 const PostRaket = () => {
+  const { submitRaket, loading, error, success} = usePostRaket();
   const [isOpen, setIsOpen] = useState(false);
+  const [message, setMessage] = useState("");
   const [form, setForm] = useState({
     title: "",
     description: "",
@@ -12,18 +28,51 @@ const PostRaket = () => {
   });
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    const { name, value, files } = e.target;
+    if (name === "photos") {
+      setForm((prev) => ({ ...prev, photos: [...files] }));
+    } else {
+      setForm((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
-  const handlePhotoUpload = (e) => {
-    setForm((prev) => ({ ...prev, photos: [...e.target.files] }));
-  };
+  // const handlePhotoUpload = (e) => {
+  //   setForm((prev) => ({ ...prev, photos: [...e.target.files] }));
+  // };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    try {
+      const raketData = {
+        title: form.title,
+        description: form.description,
+        category: form.category,
+        budget: Number(form.price),
+        photos: form.photos,
+      };
+
+      await submitRaket(raketData);
+      console.log("Raket posted successfully");
+      setMessage("Raket posted successfully!");
+
+      setForm({
+        title: "",
+        description: "",
+        category: "",
+        price: "",
+        photos: [],
+      });
+
+      setTimeout(() => {
+        setMessage("");
+        setIsOpen(false);
+      }, 2000);
+      
+    } catch (err) {
+      console.error("Error submittin raket:", err);
+    }
     console.log("Posting raket:", form);
-    setIsOpen(false);
   };
 
   return (
@@ -48,6 +97,18 @@ const PostRaket = () => {
             </button>
 
             <h2 className="text-lg font-semibold text-gray-800 mb-4 text-center">Post a Raket</h2>
+
+            {/* Success and Error Messages */}
+            {message && (
+              <div className="bg-green-100 text-green-800 px-4 py-2 rounded-xl text-sm mb-4 text-center">
+                {message}
+              </div>
+            )}
+            {error && (
+              <div className="bg-red-100 text-red-800 px-4 py-2 rounded-xl text-sm mb-4 text-center">
+                {error}
+              </div>
+            )}
             <form onSubmit={handleSubmit} className="space-y-4 text-sm text-gray-800">
               <div>
                 <label className="block font-medium mb-1">Title</label>
@@ -84,12 +145,12 @@ const PostRaket = () => {
                   required
                   className="w-full rounded-xl border border-gray-300 px-4 py-2 focus:outline-none focus:ring-1 focus:ring-gray-300 bg-gray-50 appearance-none"
                 >
-                  <option value="">Select a category</option>
-                  <option value="Maintenance & Repair">Maintenance & Repair</option>
-                  <option value="Tech & Electronics">Tech & Electronics</option>
-                  <option value="Personal & Home Care">Personal & Home Care</option>
-                  <option value="Events & Entertainment">Events & Entertainment</option>
-                  <option value="Food & Beverage">Food & Beverage</option>
+                  <option value="">--Select a category--</option>
+                  {categories.map((cat) => (
+                    <option key={cat} value={cat}>
+                      {cat}
+                    </option>
+                  ))}
                 </select>
               </div>
 
@@ -176,9 +237,10 @@ const PostRaket = () => {
                 </button>
                 <button
                   type="submit"
+                  disabled={loading}
                   className="bg-[#FF7C2B] text-white px-5 py-2 rounded-xl hover:bg-[#e66e20] transition shadow-sm"
                 >
-                  Post Raket
+                  {loading ? "Posting..." : "Post Raket"}
                 </button>
               </div>
             </form>

@@ -2,9 +2,6 @@ import React from "react";
 import JobCard from "./RaketCard";
 import Mockup from "../assets/images/raketnow-mockup.png";
 
-// 4 lang ka featured jobs para aesthetic dont touch thank you
-// to be replaced with actual data from API? basta go backend
-
 const jobs = [
   {
     image: Mockup,

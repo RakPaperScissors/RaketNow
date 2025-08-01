@@ -123,7 +123,7 @@ export function useProfile() {
 
             // Execute all API calls concurrently
             await Promise.all(promises);
-
+            await fetchProfileData();
             setMessage("Profile updated successfully!");
             setIsEditing(false);
 

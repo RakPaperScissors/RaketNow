@@ -22,6 +22,8 @@ import BecomeRaketista from "./pages/BecomeRaketista";
 import UserRakets from "./pages/MyRakets";
 import BoostPost from "./pages/Boost";
 import AdminDashboard from "./pages/AdminDashboard";
+import MyApplications from "./pages/Applications";
+import Raket from "./pages/test_api_pages/Raket";
 import AdminUsersTable from "./pages/AdminUsersTable";
 import ProfileDisplayCard from "./components/ProfileDisplayCard";
 
@@ -59,6 +61,8 @@ function AppContent() {
           <Route path="/become-raketista" element={<BecomeRaketista />} />
           <Route path="/my-rakets" element={<UserRakets />} />
           <Route path="/boost" element={<BoostPost />} />
+          <Route path="/raket/:raketId/applications" element={<MyApplications />} />
+          <Route path="/rakets/:id" element={<Raket />} />
           <Route path="/profile-display/:userId" element={<ProfileDisplayCard />} /> 
 
           {/* admin page */}

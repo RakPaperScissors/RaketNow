@@ -9,10 +9,11 @@ import { RaketistaSkill } from '../raketista-skill/entities/raketista-skill.enti
 import { RaketistaService } from '../raketista/raketista.service';
 import { Organization } from '../organization/entities/organization.entity';
 import { Raketista } from '../raketista/entities/raketista.entity';
+import { Rating } from '../rating/entities/rating.entity';
 
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Users, RaketistaSkill, Organization, Raketista]), SkillsModule, RaketistaSkillModule],
+  imports: [TypeOrmModule.forFeature([Users, RaketistaSkill, Organization, Raketista, Rating]), SkillsModule, RaketistaSkillModule],
   controllers: [UserController],
   providers: [UserService, RaketistaService],
   exports: [UserService, TypeOrmModule.forFeature([Users, Raketista, Organization])],

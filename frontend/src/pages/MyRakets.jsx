@@ -4,7 +4,13 @@ import SideNav from "../components/SideNav";
 import UserRakets from "../components/UserRakets"; 
 import RaketStatus from "../components/RaketStatus";
 
+// for debugging
+// import DebugPanel from "../components/DebugPanel"; 
+import { useCurrentUser } from "../hooks/useCurrentUser";
+import MyApplications from "../components/MyApplications";
+
 const MyRakets = () => {
+  const currentUser = useCurrentUser();
   return (
     <div className="flex h-screen bg-[#f9fafb]">
       {/* Fixed Sidebar */}
@@ -22,7 +28,8 @@ const MyRakets = () => {
         {/* Scrollable Content */}
         <div className="flex-1 overflow-y-auto px-8 py-6 space-y-6">
           <UserRakets />
-          <RaketStatus />
+          {currentUser?.role === "raketista" && <RaketStatus />}
+          <MyApplications />
         </div>
       </div>
     </div>

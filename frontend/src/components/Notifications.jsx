@@ -1,43 +1,97 @@
 import React, { useState, useEffect } from "react";
+import { fetchNotifications } from "../api/notifications";
+import { useNavigate } from "react-router-dom";
 
-const mockNotifications = [
-  {
-    id: 1,
-    name: "Juan Dela Cruz",
-    message: "Juan Dela Cruz has applied to your raket",
-    timestamp: "July 22, 2025",
-    profilePic: "https://i.pravatar.cc/150?img=1",
-    status: "Unread",
-  },
-  {
-    id: 2,
-    name: "Jane Smith",
-    message: "Jane Smith has sent you a message",
-    timestamp: "July 21, 2025",
-    profilePic: "https://i.pravatar.cc/150?img=2",
-    status: "Read",
-  },
-  {
-    id: 3,
-    name: "System",
-    message: "Your profile was successfully verified",
-    timestamp: "July 20, 2025",
-    profilePic: "https://i.pravatar.cc/150?img=3",
-    status: "Read",
-  },
-];
+// const mockNotifications = [
+//   {
+//     id: 1,
+//     name: "Juan Dela Cruz",
+//     message: "Juan Dela Cruz has applied to your raket",
+//     timestamp: "July 22, 2025",
+//     profilePic: "https://i.pravatar.cc/150?img=1",
+//     status: "Unread",
+//   },
+//   {
+//     id: 2,
+//     name: "Jane Smith",
+//     message: "Jane Smith has sent you a message",
+//     timestamp: "July 21, 2025",
+//     profilePic: "https://i.pravatar.cc/150?img=2",
+//     status: "Read",
+//   },
+//   {
+//     id: 3,
+//     name: "System",
+//     message: "Your profile was successfully verified",
+//     timestamp: "July 20, 2025",
+//     profilePic: "https://i.pravatar.cc/150?img=3",
+//     status: "Read",
+//   
+
 
 const UserNotifications = () => {
   const [notifications, setNotifications] = useState([]);
   const [activeTab, setActiveTab] = useState("Unread");
+  const navigate = useNavigate();
+
+  // useEffect(() => {
+  //   setNotifications(mockNotifications);
+  // }, []);
 
   useEffect(() => {
-    setNotifications(mockNotifications);
+    const getNotifications = async () => {
+      try {
+        const data = await fetchNotifications();
+        setNotifications(
+          data.map((n) => ({
+            id: n.id,
+            name: "System",
+            message: n.message,
+            timestamp: new Date(n.createdAt).toLocaleDateString("en-PH", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            }),
+            profilePic: "https://i.pravatar.cc/150?img=3",
+            isRead: n.isRead,
+            actionable: n.actionable,
+          }))
+        );
+      } catch (err) {
+        console.error("Failed to fetch notifications", err);
+      }
+    };
+    getNotifications();
   }, []);
 
-  const filtered = notifications.filter((n) =>
-    activeTab === "All" ? true : n.status === activeTab
-  );
+  const filtered = notifications.filter((notif) => {
+    if (activeTab === "Unread") return notif.isRead === false;
+    if (activeTab === "Read") return notif.isRead === true;
+    return true;
+  });
+
+
+  const handleNotificationClick = async (notif) => {
+    if (!notif.isRead) {
+      try {
+        await fetch(`http://localhost:3000/notification/${notif.id}/read`, {
+          method: "PATCH",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ isRead: true }),
+        });
+        setNotifications((prev) =>
+          prev.map((n) =>
+            n.id === notif.id ? { ...n, isRead: true } : n
+          )
+        );
+      } catch (error) {
+        console.error("Failed to mark as read:", error);
+      }
+    }
+    navigate("/my-rakets");
+  };
+
 
   return (
     <div className="p-6">
@@ -72,8 +126,9 @@ const UserNotifications = () => {
           {filtered.map((notif) => (
             <div
               key={notif.id}
+              onClick={() => handleNotificationClick(notif)}
               className={`p-4 rounded-lg shadow flex space-x-4 items-start transition ${
-                notif.status === "Unread"
+                !notif.isRead
                   ? "bg-[#F4F7FE] border border-blue-200"
                   : "bg-white"
               }`}
@@ -87,21 +142,17 @@ const UserNotifications = () => {
 
               {/* Content */}
               <div className="flex-1">
-                <p
-                  className={`text-sm font-semibold ${
-                    notif.status === "Unread" ? "text-[#0C2C57]" : "text-gray-800"
-                  }`}
-                >
+                <p className={`text-sm font-semibold ${!notif.isRead ? "text-[#0C2C57]" : "text-gray-800"}`}>
                   {notif.name}
                 </p>
                 <p className="text-sm text-gray-700 mt-1">
-                   {notif.message}
+                  {notif.message}
                 </p>
                 <p className="text-xs text-gray-500 mt-1">{notif.timestamp}</p>
               </div>
 
               {/* Badge */}
-              {notif.status === "Unread" && (
+              {!notif.isRead && (
                 <span className="bg-blue-100 text-blue-800 text-xs px-2 py-0.5 rounded-full font-medium">
                   Unread
                 </span>
@@ -110,6 +161,7 @@ const UserNotifications = () => {
           ))}
         </div>
       )}
+
     </div>
   );
 };

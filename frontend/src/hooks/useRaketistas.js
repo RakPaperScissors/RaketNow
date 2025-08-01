@@ -22,10 +22,13 @@ export function useRaketistas() {
                     raketistaMap[r.uid] = {
                         id: r.uid,
                         name: `${r.firstName} ${r.lastName}`,
-                        role: r.role || "N/A",
-                        rating: (Math.random() * 2 + 3).toFixed(1), // Example rating
+                        type: r.type || "N/A",
+                        rating: r.averageRating ?? 0,
+                        totalReviews: r.totalReviews ?? 0,
                         skills: [],
-                        img: r.profilePicture ? `http://localhost:9000/raketnow/${r.profilePicture}` : 'http://localhost:9000/raketnow/default_profile.jpg',
+                        img: r.profilePicture
+                            ? `http://localhost:9000/raketnow/${r.profilePicture}`
+                            : "http://localhost:9000/raketnow/default_profile.jpg",
                         email: r.email,
                     };
                 }

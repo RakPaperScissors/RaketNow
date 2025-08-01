@@ -1,20 +1,23 @@
-import { Users } from "src/entities/user/entities/user.entity";
-import { RaketStatus } from "../entities/raket.entity";
-import { IsDate } from "class-validator";
+import { RaketCategory, RaketStatus } from "../entities/raket.entity";
+import { IsString, IsNumber, IsOptional, IsEnum } from 'class-validator';
+import { Type } from "class-transformer";
 
 export class CreateRaketDto {
+  @IsString()
+  title: string;
 
-    title: string;
+  @IsString()
+  description: string;
 
-    description: string;
+  @IsOptional()
+  @IsEnum(RaketStatus)
+  status?: RaketStatus;
 
-    status: RaketStatus;
+  @IsEnum(RaketCategory)
+  category: RaketCategory
 
-    budget: number;
+  @IsNumber()
+  @Type(() => Number)
+  budget: number;
 
-    @IsDate()
-    dateCreated: Date;
-
-    @IsDate()
-    completedAt: Date;
 }

@@ -1,43 +1,33 @@
 import React, { useState } from "react";
-import { Star, MessageCircle, ListFilter } from "lucide-react";
+import { ListFilter, MessageCircle } from "lucide-react";
+import { useEffect, useCallback } from "react";
+import { updateRaketStatus, fetchAssignedRakets, requestCompletion, cancelCompletionRequest, deleteRaketById, cancelOngoingRaket, cancelOpenRaket, rejectCompletionRequest, withdrawFromRaket  } from "../api/rakets";
+import { useCurrentUser } from "../hooks/useCurrentUser";
+import { useNavigate } from "react-router-dom";
+// import { Star } from "lucide-react";
+import StarRating from "../components/Rating";
 
-const initialRakets = [
-  {
-    id: 1,
-    title: "Logo Design for Startup",
-    description: "Created a brand identity and logo design.",
-    status: "Completed",
-    date: "June 1, 2025",
-    price: "₱3,500",
-    rating: 4,
-    author: "Sarah Lopez",
-  },
-  {
-    id: 2,
-    title: "Home Plumbing Repair",
-    description: "Fixed kitchen sink leakage and replaced pipe.",
-    status: "Ongoing",
-    date: "July 15, 2025",
-    price: "₱1,200",
-    rating: 0,
-    author: "Mark Dela Cruz",
-  },
-  {
-    id: 3,
-    title: "Private Math Tutoring",
-    description: "Tutored Grade 10 student for quarterly exam.",
-    status: "Pending",
-    date: "July 20, 2025",
-    price: "₱500",
-    rating: 0,
-    author: "Aimee Santos",
-  },
-];
+// const StarRating = ({ count }) => (
+//   <div className="flex space-x-1">
+//     {Array(count)
+//       .fill(0)
+//       .map((_, i) => (
+//         <span key={i} className="text-yellow-400 text-xl">★</span> 
+//       ))}
+//   </div>
+// );
 
-const statuses = ["All", "Pending", "Ongoing", "Completed"];
+const statusMap = {
+  open: "Pending",
+  in_progress: "Ongoing",
+  pending_confirmation: "Ongoing", // treat this same as in_progress
+  completed: "Completed",
+  cancelled: "Completed", // show this in Completed list with a tag
+};
 
-const getStatusStyle = (status) => {
-  switch (status) {
+const mapStatusToLabel = (status) => statusMap[status] || "Other";
+const getStatusStyle = (label) => {
+  switch (label) {
     case "Completed":
       return "bg-green-100 text-green-600";
     case "Ongoing":
@@ -49,37 +39,211 @@ const getStatusStyle = (status) => {
   }
 };
 
-const StarRating = ({ value, onRate }) => (
-  <div className="flex gap-1 mt-2">
-    {[...Array(5)].map((_, i) => (
-      <button key={i} onClick={() => onRate(i + 1)} type="button">
-        <Star
-          className={`w-5 h-5 ${
-            i < value ? "fill-yellow-400 text-yellow-400" : "stroke-yellow-400"
-          }`}
-        />
-      </button>
-    ))}
-  </div>
-);
+const formatDateTime = (timestamp) => {
+  if (!timestamp) return "N/A";
+
+  const date = new Date(timestamp);
+
+  const formattedDate = date.toLocaleDateString("en-PH", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
+  const formattedTime = date.toLocaleTimeString("en-PH", {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  });
+
+  return { formattedDate, formattedTime };
+};
+
 
 const RaketStatus = () => {
-  const [rakets, setRakets] = useState(initialRakets);
+  // const [rakets, setRakets] = useState([]);
   const [statusFilter, setStatusFilter] = useState("All");
   const [showDropdown, setShowDropdown] = useState(false);
+  const currentUser = useCurrentUser();
+  const [rakets, setRakets] = useState([]);
+  const [assignedRakets, setAssignedRakets] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [updatingId, setUpdatingId] = useState(null);
+  const navigate = useNavigate();
+  const statuses = ["All", "Completed", "Ongoing", "Pending"];
+  
+  // for fetching data
+      const fetchRaketsData = useCallback(async () => {
+        try {
+          const rakets = await fetchAssignedRakets(); 
+          setAssignedRakets(rakets);
+          return rakets;
+          // const assignedRaketsData = await fetchAssignedRakets();
+          // setAssignedRakets(assignedRaketsData);
+        } catch (err) {
+          console.error("Error fetching assigned rakets:", err);
+          setError("Failed to fetch assigned rakets.");
+        } finally {
+          setLoading(false);
+        }
+      }, []);
 
-  const handleStatusChange = (id, newStatus) => {
-    setRakets((prev) =>
-      prev.map((r) =>
-        r.id === id
-          ? {
-              ...r,
-              status: newStatus,
-              rating: newStatus === "Completed" ? r.rating : 0,
-            }
-          : r
-      )
-    );
+      useEffect(() => {
+        fetchRaketsData();
+      }, [fetchRaketsData]);
+
+      // raket button functions (CRUD)
+      const handleStatusChange = async (raketId, newStatus) => {
+          try {
+          setUpdatingId(raketId);
+          const raket = rakets.find((r) => r.raketId === raketId);
+          const wasPending = raket.status === "pending_confirmation";
+          await updateRaketStatus(raketId, newStatus);
+          if (wasPending && newStatus === "in_progress") {
+              await cancelCompletionRequest(raketId);
+          }
+          await fetchRaketsData();
+          } catch (err) {
+          console.error("Failed to update status:", err);
+          alert("Failed to update status. Try again.");
+          } finally {
+          setUpdatingId(null);
+          }
+      };
+  
+      const handleMarkCompleted = async (raketId) => {
+        try {
+          setUpdatingId(raketId);
+          await requestCompletion(raketId);
+          await fetchRaketsData();
+          // const updatedData = await fetchRaketsData(); 
+          // const updatedRaket = updatedData.find(r => r.raketId == raketId);
+          // console.log("raketId arg:", raketId, "typeof:", typeof raketId);
+          // console.log("updatedData IDs:", updatedData.map(r => [r.raketId, typeof r.raketId]));
+          // console.log("Updated raket status (after refetch):", updatedRaket?.status);
+        } catch (err) {
+          console.error("Failed to mark as completed:", err);
+          alert("Something went wrong. Try again.");
+        } finally {
+          setUpdatingId(null);
+        }
+      };
+
+      const handleCancelConfirmation = async (raketId) => {
+          try {
+          setUpdatingId(raketId);
+          await cancelCompletionRequest(raketId);
+          await fetchRaketsData();
+          } catch (err) {
+          console.error("Failed to cancel confirmation:", err);
+          alert("Something went wrong. Try again.");
+          } finally {
+          setUpdatingId(null);
+          }
+      };
+  
+      // const handleClientConfirmCompleted = async (raketId) => {
+      //     try {
+      //     setUpdatingId(raketId);
+      //     await updateRaketStatus(raketId, "completed");
+      //     await fetchRaketsData();
+      //     } catch (err) {
+      //     console.error("Failed to confirm completion:", err);
+      //     alert("Something went wrong. Try again.");
+      //     } finally {
+      //     setUpdatingId(null);
+      //     }
+      // };
+  
+      // const handleDelete = async (raketId) => {
+      //   const confirmDelete = confirm("Are you sure you want to permanently delete this raket?");
+      //   if (!confirmDelete) return;
+
+      //   try {
+      //     await deleteRaketById(raketId);
+      //     setRakets(prev => prev.filter(r => r.id !== raketId));
+      //   } catch (err) {
+      //     console.error("Failed to delete raket:", err);
+      //     alert("Something went wrong while deleting.");
+      //   }
+      // };
+  
+      // const handleCancel = async (raketId) => {
+      //     const confirmCancel = window.confirm("Are you sure you want to cancel this ongoing raket?");
+      //     if (!confirmCancel) return;
+  
+      //     try {
+      //     setUpdatingId(raketId);
+      //     await cancelOngoingRaket(raketId);
+      //     await fetchRaketsData();
+      //     } catch (err) {
+      //     console.error("Failed to cancel raket:", err);
+      //     alert("Failed to cancel raket. Please try again.");
+      //     } finally {
+      //     setUpdatingId(null);
+      //     }
+      // };
+
+      // const handleCancelOpen = async (raketId) => {
+      //   const confirmCancel = confirm("Cancel this open raket? Applicants will be notified.");
+      //   if (!confirmCancel) return;
+
+      //   try {
+      //     await cancelOpenRaket(raketId);
+      //     setRakets(prev => prev.filter(r => r.id !== raketId));
+      //     await fetchRaketsData();
+      //   } catch (err) {
+      //     console.error("Failed to cancel raket:", err);
+      //     alert("Something went wrong while cancelling.");
+      //   }
+      // };
+  
+      // const handleRejectCompletionRequest = async (raketId) => {
+      //     const confirmReject = window.confirm("Are you sure you want to reject the completion request?");
+      //     if (!confirmReject) return;
+  
+      //     try {
+      //     setUpdatingId(raketId);
+      //     await rejectCompletionRequest(raketId);
+      //     await fetchRaketsData();
+      //     } catch (err) {
+      //     console.error("Failed to reject completion request:", err);
+      //     alert("Something went wrong. Try again.");
+      //     } finally {
+      //     setUpdatingId(null);
+      //     }
+      // };
+  
+      const handleWithdraw = async (raketId) => {
+          const confirm = window.confirm("Are you sure you want to withdraw? The raket will return to open status.");
+          if (!confirm) return;
+  
+          try {
+          setUpdatingId(raketId);
+          await withdrawFromRaket(raketId);
+          await fetchRaketsData();
+          } catch (err) {
+          console.error("Failed to withdraw:", err);
+          alert("Failed to withdraw from raket.");
+          } finally {
+          setUpdatingId(null);
+          }
+      };
+      // format
+      const formatStatus = (status) =>
+          status
+          .replace(/_/g, " ")
+          .replace(/\b\w/g, (c) => c.toUpperCase());
+
+  const filteredRakets =
+  statusFilter === "All"
+    ? rakets
+    : rakets.filter((r) => mapStatusToLabel(r.status) === statusFilter);
+
+  const handleFilterChange = (status) => {
+    setStatusFilter(status);
+    setShowDropdown(false);
   };
 
   const handleRate = (id, rating) => {
@@ -88,16 +252,11 @@ const RaketStatus = () => {
     );
   };
 
-  const filteredRakets =
-    statusFilter === "All"
-      ? rakets
-      : rakets.filter((r) => r.status === statusFilter);
-
   return (
     <div className="p-6">
       {/* Title and Filter */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4 gap-4">
-        <h1 className="text-2xl font-bold text-[#0C2C57]">Raket Status (Show if Client)</h1>
+        <h1 className="text-2xl font-bold text-[#0C2C57]">Assigned Rakets</h1>
       </div>
 
       {/* Filters Section */}
@@ -145,71 +304,104 @@ const RaketStatus = () => {
       </div>
 
       {/* Raket Cards */}
-      {filteredRakets.length === 0 ? (
-        <p className="text-center text-gray-500 mt-20">No rakets found.</p>
-      ) : (
-        <div className="space-y-4">
-          {filteredRakets.map((raket) => (
-            <div
-              key={raket.id}
-              className="bg-white p-5 rounded-lg shadow hover:shadow-lg transition"
-            >
-              {/* Title + Author + Message Icon */}
-              <div className="flex justify-between items-center mb-2">
-                <h2 className="text-lg font-semibold text-[#0C2C57]">{raket.title}</h2>
-                <div className="flex items-center space-x-4 text-sm text-gray-600">
-                  <span>by {raket.author}</span>
-                  <button
-                    title={`Message ${raket.author}`}
-                    className="bg-gray-100 hover:bg-gray-200 text-gray-700 p-2 rounded-full transition"
+      {currentUser?.role === "raketista" && (
+        <div>
+          {loading ? (
+            <p className="text-gray-500">Loading assigned rakets...</p>
+          ) : error ? (
+            <p className="text-red-500">{error}</p>
+          ) : assignedRakets.length === 0 ? (
+            <p className="text-gray-500">No rakets have been assigned to you yet.</p>
+          ) : (
+            <div className="space-y-4">
+              {assignedRakets.map((raket) => {
+                return (
+                  <div
+                    key={raket.raketId}
+                    className="bg-white p-5 rounded-lg shadow hover:shadow-lg transition"
                   >
-                    <MessageCircle className="w-5 h-5" />
-                  </button>
-                </div>
-              </div>
+                    <h2 className="text-lg font-semibold text-[#0C2C57] mb-1">{raket.title}</h2>
+                    <p className="text-sm text-gray-600">Client: {raket.clientName || "Unknown"}</p>
 
-              {/* Divider */}
-              <div className="border-b border-gray-200 mb-3" />
+                    <div className="border-b border-gray-200 mb-3" />
+                    
+                    <p className="text-gray-700 text-sm mb-3">{raket.description || ""}</p>
+                    <p className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${getStatusStyle(
+                      mapStatusToLabel(raket.status)
+                    )}`}>
+                      {mapStatusToLabel(raket.status)}
+                    </p>
 
-              {/* Star Rating (if Completed) */}
-              {raket.status === "Completed" && raket.rating > 0 && (
-                <div className="mb-2">
-                  <StarRating value={raket.rating} onRate={() => {}} />
-                </div>
-              )}
-              {raket.status === "Completed" && raket.rating === 0 && (
-                <div className="mb-2">
-                  <StarRating value={0} onRate={(rating) => handleRate(raket.id, rating)} />
-                </div>
-              )}
 
-              {/* Description and Date */}
-              <p className="text-gray-700 text-sm mb-1">{raket.description}</p>
-              <div className="text-sm text-gray-500 mb-2">{raket.date}</div>
+                    {/* Raketista-specific actions */}
+                    {raket.status === "in_progress" && (
+                      <div className="mt-3 space-x-3">
+                        <button
+                          onClick={() => handleMarkCompleted(raket.raketId)}
+                          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+                          disabled={updatingId === raket.raketId}
+                        >
+                          {updatingId === raket.raketId ? "Processing..." : "Mark as Completed"}
+                        </button>
+                        <button
+                          onClick={() => handleWithdraw(raket.raketId)}
+                          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
+                          disabled={updatingId === raket.raketId}
+                        >
+                          Withdraw
+                        </button>
+                      </div>
+                    )}
 
-              {/* Price + Status */}
-              <div className="flex justify-between items-center mt-3">
-                <p className="text-[#FF7C2B] font-semibold">{raket.price}</p>
-                <select
-                  value={raket.status}
-                  onChange={(e) => handleStatusChange(raket.id, e.target.value)}
-                  className={`text-sm rounded-full px-3 py-1 font-medium border ${getStatusStyle(
-                    raket.status
-                  )}`}
-                >
-                  {statuses
-                    .filter((s) => s !== "All")
-                    .map((s) => (
-                      <option key={s} value={s}>
-                        {s}
-                      </option>
-                    ))}
-                </select>
-              </div>
+                    {raket.status === "pending_confirmation" && (
+                      <div className="mt-3 space-x-3">
+                        <button
+                          disabled
+                          className="bg-yellow-300 text-yellow-800 px-4 py-2 rounded"
+                        >
+                          Pending Client Confirmation
+                        </button>
+                        <button
+                          onClick={() => handleCancelConfirmation(raket.raketId)}
+                          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
+                          disabled={updatingId === raket.raketId}
+                        >
+                          {updatingId === raket.raketId ? "Processing..." : "Cancel Request"}
+                        </button>
+                      </div>
+                    )}
+
+                    {/* completed */}
+                    {raket.status === "completed" && (
+                      raket.rating ? (
+                        <div className="mt-2 flex items-center gap-2">
+                          <span className="text-sm text-gray-600">Rating:</span>
+                          <StarRating
+                            initialRating={raket.rating}
+                            readOnly={true}
+                          />
+                        </div>
+                      ) : (
+                        currentUser?.role === "client" && (
+                          <StarRating
+                            raketId={raket.raketId}
+                            initialRating={0}
+                            alreadyRated={false}
+                          />
+                        )
+                      )
+                    )}
+
+
+
+                  </div>
+                );
+              })}
             </div>
-          ))}
+          )}
         </div>
       )}
+
     </div>
   );
 };
