@@ -5,46 +5,7 @@ import Miguel from "../assets/images/raketnow-logo.png";
 import Ana from "../assets/images/raketnow-logo.png";
 import Maria from "../assets/images/raketnow-logo.png";
 import { useRaketistas } from "../hooks/useRaketistas";
-
-
-// Filler data muna but go backend
-// const raketistas = [
-//   {
-//     name: "Miguel Santos",
-//     role: "Web Developer",
-//     rating: 4.9,
-//     skills: ["PHP", "Laravel", "React"],
-//     img: Miguel,
-//   },
-//   {
-//     name: "Ana Reyes",
-//     role: "Graphic Designer",
-//     rating: 4.7,
-//     skills: ["Photoshop", "Illustrator"],
-//     img: Ana,
-//   },
-//   {
-//     name: "David Cruz",
-//     role: "UI/UX Designer",
-//     rating: 5.0,
-//     skills: ["Figma", "XD", "Sketch"],
-//     img: "", // placeholder fallback
-//   },
-//   {
-//     name: "Maria Gonzales",
-//     role: "Content Writer",
-//     rating: 4.2,
-//     skills: ["SEO", "Blogs"],
-//     img: Maria,
-//   },
-//   {
-//     name: "Maria Gonzales",
-//     role: "Content Writer",
-//     rating: 4.2,
-//     skills: ["SEO", "Blogs"],
-//     img: Maria,
-//   },
-// ];
+import ViewProfileLink from "./ViewProfileLink";
 
 function renderStars(rating) {
   const stars = [];
@@ -67,11 +28,6 @@ function renderStars(rating) {
 
 const TopRaketista = () => {
   const { raketistas, loading, message } = useRaketistas();
-  
-  const handleOpenUserProfile = (uid) => {
-    const profilePageUrl = `/profile-display/${uid}`;
-    window.open(profilePageUrl, '_blank');
-  };
   
   if (loading) return <LoadingSpinner />;
   if (message) return <p className="p-4 text-red-500">{message}</p>;
@@ -96,20 +52,23 @@ const TopRaketista = () => {
               className="min-w-[250px] max-w-[250px] bg-white rounded-2xl shadow-md p-5 flex-shrink-0 flex flex-col items-center text-center "
             >
               {/* Profile image */}
-              <div className="w-20 h-20 rounded-full border-4 border-orange-500 overflow-hidden mb-3" 
-              onClick={() => handleOpenUserProfile(r.id)}>
-                {r.img ? (
-                  <img src={r.img} 
-                  alt={r.name} 
-                  onError={(e) => (e.target.src = "/default_profile.jpg")} 
-                  className="w-full h-full object-cover" />
-                ) : (
-                  <div className="w-full h-full bg-gray-200" />
-                )}
-              </div>
+              <ViewProfileLink userId={r.id}>
+                <div className="w-20 h-20 rounded-full border-4 border-orange-500 overflow-hidden mb-3" >
+                  {r.img ? (
+                    <img src={r.img} 
+                    alt={r.name} 
+                    onError={(e) => (e.target.src = "/default_profile.jpg")} 
+                    className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="w-full h-full bg-gray-200" />
+                  )}
+                </div>
+              </ViewProfileLink>
 
               {/* Name and Role */}
-              <h3 className="text-base font-semibold text-[#0C2C57]" onClick={() => handleOpenUserProfile(r.id)} >{r.name}</h3>
+              <ViewProfileLink userId={r.id}>
+                <h3 className="text-base font-semibold text-[#0C2C57]">{r.name}</h3>
+              </ViewProfileLink>
               <p className="text-sm text-gray-600 capitalize">{r.type}</p>
 
               {/* Rating */}

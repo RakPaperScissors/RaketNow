@@ -26,6 +26,8 @@ import MyApplications from "./pages/Applications";
 import Raket from "./pages/test_api_pages/Raket";
 import AdminUsersTable from "./pages/AdminUsersTable";
 import ProfileDisplayCard from "./components/ProfileDisplayCard";
+import ViewProfile from "./pages/ViewProfile";
+import { View } from "lucide-react";
 
 function AppContent() {
   const location = useLocation();
@@ -64,6 +66,7 @@ function AppContent() {
           <Route path="/raket/:raketId/applications" element={<MyApplications />} />
           <Route path="/rakets/:id" element={<Raket />} />
           <Route path="/profile-display/:userId" element={<ProfileDisplayCard />} /> 
+          <Route path="/view-profile/:userId" element={<ViewProfile />} />
 
           {/* admin page */}
           <Route path="/admin-dashboard" element={<AdminDashboard />} />

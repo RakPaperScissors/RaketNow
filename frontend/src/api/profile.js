@@ -12,6 +12,14 @@ export async function getProfile() {
     return await response.json();
 }
 
+export async function getProfileById(userId) {
+    const res = await fetch(`http://localhost:3000/user/${userId}`);
+    if (!res.ok) {
+        throw new Error("Failed to fetch user profile");
+    }
+    return await res.json();
+}
+
 // To update profile picture
 export async function uploadProfilePicture(file) {
     const formData = new FormData();
