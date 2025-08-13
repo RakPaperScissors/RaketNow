@@ -1,5 +1,7 @@
+const API_URL = import.meta.env.VITE_API_URL;
+
 export async function fetchNotifications() {
-  const response = await fetch('http://localhost:3000/notification', {
+  const response = await fetch(`${API_URL}/notification`, {
     credentials: 'include',
   });
   if (!response.ok) throw new Error('Failed to fetch notifications');
@@ -7,7 +9,7 @@ export async function fetchNotifications() {
 }
 
 export async function acceptApplication(id) {
-  const response = await fetch(`http://localhost:3000/raket-application/${id}/accept`, {
+  const response = await fetch(`${API_URL}/raket-application/${id}/accept`, {
     method: 'PATCH',
     credentials: 'include',
   });
@@ -16,7 +18,7 @@ export async function acceptApplication(id) {
 }
 
 export async function rejectApplication(id) {
-  const response = await fetch(`http://localhost:3000/raket-application/${id}/reject`, {
+  const response = await fetch(`${API_URL}/raket-application/${id}/reject`, {
     method: 'PATCH',
     credentials: 'include',
   });

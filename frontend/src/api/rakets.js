@@ -219,7 +219,7 @@ export async function postRaket(data) {
     formData.append("images", photo);
   });
 
-  const res = await fetch(`${API_URL}/rakets` {
+  const res = await fetch(`${API_URL}/rakets`, {
     method: 'POST',
     credentials: 'include',
     body: formData,
