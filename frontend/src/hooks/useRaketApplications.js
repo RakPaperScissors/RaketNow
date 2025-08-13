@@ -11,7 +11,6 @@ export function useRaketApplications(raketId) {
   setLoading(true);
   try {
     const data = await fetchApplicationsForRaket(raketId);
-    console.log("Fetched raket applications:", data);
     setRaketApplications(data);
     setError("");
   } catch (err) {

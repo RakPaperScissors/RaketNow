@@ -82,10 +82,7 @@ export async function fetchAssignedRakets() {
   });
 
   if (!response.ok) throw new Error('Failed to fetch assigned rakets');
-
-  const data = await response.json();
-  console.log('Fetched assigned rakets:', data);
-  return data;
+  return response.json();
 }
 
 // fetching raket applications from the client side
@@ -108,7 +105,6 @@ export async function fetchApplicationsForRaket(raketId) {
 
 // applying to a raket
 export async function applyToRaket({ raketId, raketistaId }) {
-  console.log("Sending:", { raketId, raketistaId });
   const response = await fetch(`${API_URL}/raket-application`, {
     method: 'POST',
     credentials: 'include',
