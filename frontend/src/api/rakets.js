@@ -1,6 +1,8 @@
+const API_URL = import.meta.env.VITE_API_URL;
+
 // fetch all rakets
 export async function fetchRakets() {
-  const response = await fetch('http://localhost:3000/rakets', {
+  const response = await fetch(`${API_URL}/rakets`, {
     credentials: 'include',
   });
   if (!response.ok) throw new Error('Failed to fetch rakets');
@@ -9,7 +11,7 @@ export async function fetchRakets() {
 
 // open specific raket details
 export async function getRaketById(id) {
-  const response = await fetch(`http://localhost:3000/rakets/${id}`, {
+  const response = await fetch(`${API_URL}/rakets/${id}`, {
     credentials: 'include',
   });
   if (!response.ok) throw new Error("Failed to fetch raket.");
@@ -18,7 +20,7 @@ export async function getRaketById(id) {
 
 // delete rakets
 export async function deleteRaketById(raketId) {
-  const response = await fetch(`http://localhost:3000/rakets/${raketId}`, {
+  const response = await fetch(`${API_URL}/rakets/${raketId}`, {
     method: "DELETE",
     credentials: 'include',
   });
@@ -29,7 +31,7 @@ export async function deleteRaketById(raketId) {
 
 // cancel ongoing rakets
 export async function cancelOngoingRaket(raketId) {
-  const response = await fetch(`http://localhost:3000/rakets/${raketId}/cancel-ongoing`, {
+  const response = await fetch(`${API_URL}/rakets/${raketId}/cancel-ongoing`, {
     method: "PATCH",
     credentials: 'include',
     headers: {
@@ -42,7 +44,7 @@ export async function cancelOngoingRaket(raketId) {
 
 // cancel open rakets
 export const cancelOpenRaket = async (raketId) => {
-  const res = await fetch(`http://localhost:3000/rakets/${raketId}/cancel-open`, {
+  const res = await fetch(`${API_URL}/rakets/${raketId}/cancel-open`, {
     method: 'PATCH',
     credentials: 'include',
   });
@@ -53,7 +55,7 @@ export const cancelOpenRaket = async (raketId) => {
 
 // fetch my rakets
 export async function fetchMyRakets() {
-  const res = await fetch("http://localhost:3000/rakets/myrakets", {
+  const res = await fetch(`${API_URL}/rakets/myrakets`, {
     method: "GET",
     credentials: 'include',
   });
@@ -65,7 +67,7 @@ export async function fetchMyRakets() {
 
 // update raket status (only clients can do this to their raket)
 export async function updateRaketStatus(id, status) {
-  const response = await fetch(`http://localhost:3000/rakets/${id}/status?status=${status}`, {
+  const response = await fetch(`${API_URL}/rakets/${id}/status?status=${status}`, {
     method: "PATCH",
     credentials: 'include',
   });
@@ -75,20 +77,17 @@ export async function updateRaketStatus(id, status) {
 
 // fetch rakets assigned to me
 export async function fetchAssignedRakets() {
-  const response = await fetch('http://localhost:3000/rakets/assigned-to-me', {
+  const response = await fetch(`${API_URL}/rakets/assigned-to-me`, {
     credentials: 'include',
   });
 
   if (!response.ok) throw new Error('Failed to fetch assigned rakets');
-
-  const data = await response.json();
-  console.log('Fetched assigned rakets:', data);
-  return data;
+  return response.json();
 }
 
 // fetching raket applications from the client side
 export async function fetchRaketApplications() {
-  const response = await fetch('http://localhost:3000/raket-application', {
+  const response = await fetch(`${API_URL}/raket-application`, {
     credentials: 'include',
   });
   if (!response.ok) throw new Error('Failed to fetch raket applications');
@@ -97,7 +96,7 @@ export async function fetchRaketApplications() {
 
 // fetch application based on raket for filtering
 export async function fetchApplicationsForRaket(raketId) {
-  const response = await fetch(`http://localhost:3000/raket-application/raket/${raketId}/applications`, {
+  const response = await fetch(`${API_URL}/raket-application/raket/${raketId}/applications`, {
     credentials: 'include',
   });
   if (!response.ok) throw new Error('Failed to fetch applications');
@@ -106,8 +105,7 @@ export async function fetchApplicationsForRaket(raketId) {
 
 // applying to a raket
 export async function applyToRaket({ raketId, raketistaId }) {
-  console.log("Sending:", { raketId, raketistaId });
-  const response = await fetch('http://localhost:3000/raket-application', {
+  const response = await fetch(`${API_URL}/raket-application`, {
     method: 'POST',
     credentials: 'include',
     headers: {
@@ -125,7 +123,7 @@ export async function applyToRaket({ raketId, raketistaId }) {
 
 // accepting or rejecting raket application
 export async function acceptApplication(id) {
-  const res = await fetch(`http://localhost:3000/raket-application/${id}/accept`, {
+  const res = await fetch(`${API_URL}/raket-application/${id}/accept`, {
     method: 'PATCH',
     credentials: 'include',
   });
@@ -138,7 +136,7 @@ export async function acceptApplication(id) {
 }
 
 export async function rejectApplication(id) {
-  const res = await fetch(`http://localhost:3000/raket-application/${id}/reject`, {
+  const res = await fetch(`${API_URL}/raket-application/${id}/reject`, {
     method: 'PATCH',
     credentials: 'include',
   });
@@ -151,7 +149,7 @@ export async function rejectApplication(id) {
 
 // request raket completion
 export const requestCompletion = async (raketId) => {
-  const res = await fetch(`http://localhost:3000/rakets/${raketId}/request-completion`, {
+  const res = await fetch(`${API_URL}/rakets/${raketId}/request-completion`, {
     method: "PATCH",
     credentials: 'include',
   });
@@ -161,7 +159,7 @@ export const requestCompletion = async (raketId) => {
 
 // cancel confirmation request
 export const cancelCompletionRequest = async (raketId) => {
-  const res = await fetch(`http://localhost:3000/rakets/${raketId}/cancel-completion`, {
+  const res = await fetch(`${API_URL}/rakets/${raketId}/cancel-completion`, {
     method: "PATCH",
     credentials: 'include',
   });
@@ -171,7 +169,7 @@ export const cancelCompletionRequest = async (raketId) => {
 
 // client rejects completion request
 export async function rejectCompletionRequest(raketId) {
-  const res = await fetch(`http://localhost:3000/rakets/${raketId}/reject-completion`, {
+  const res = await fetch(`${API_URL}/rakets/${raketId}/reject-completion`, {
     method: "PATCH",
     credentials: 'include',
   });
@@ -181,7 +179,7 @@ export async function rejectCompletionRequest(raketId) {
 
 // raketista withdraws from raket
 export async function withdrawFromRaket(raketId) {
-  const response = await fetch(`http://localhost:3000/rakets/${raketId}/withdraw`, {
+  const response = await fetch(`${API_URL}/rakets/${raketId}/withdraw`, {
     method: 'PATCH',
     credentials: 'include',
   });
@@ -192,7 +190,7 @@ export async function withdrawFromRaket(raketId) {
 
 // raketista withdraws application
 export async function withdrawMyApplication(applicationId) {
-  const res = await fetch(`http://localhost:3000/raket-application/${applicationId}/withdraw`, {
+  const res = await fetch(`${API_URL}/raket-application/${applicationId}/withdraw`, {
     method: 'PATCH',
     credentials: 'include',
   });
@@ -217,7 +215,7 @@ export async function postRaket(data) {
     formData.append("images", photo);
   });
 
-  const res = await fetch('http://localhost:3000/rakets', {
+  const res = await fetch(`${API_URL}/rakets`, {
     method: 'POST',
     credentials: 'include',
     body: formData,

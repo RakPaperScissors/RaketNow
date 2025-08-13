@@ -1,6 +1,8 @@
+const API_URL = import.meta.env.VITE_API_URL;
+
 // Get user profile
 export async function getProfile() {
-    const response = await fetch('http://localhost:3000/auth/me', {
+    const response = await fetch(`${API_URL}/auth/me`, {
         headers: {
             "Content-Type": "application/json",
         },
@@ -13,7 +15,7 @@ export async function getProfile() {
 }
 
 export async function getProfileById(userId) {
-    const res = await fetch(`http://localhost:3000/user/${userId}`);
+    const res = await fetch(`${API_URL}/user/${userId}`);
     if (!res.ok) {
         throw new Error("Failed to fetch user profile");
     }
@@ -25,7 +27,7 @@ export async function uploadProfilePicture(file) {
     const formData = new FormData();
     formData.append("file", file);
 
-    const response = await fetch(`http://localhost:3000/profile/upload`, {
+    const response = await fetch(`${API_URL}/profile/upload`, {
         method: 'POST',
         body: formData,
         credentials: "include",
@@ -40,7 +42,7 @@ export async function uploadProfilePicture(file) {
 
 // To update raketista bio
 export async function updateBio(uid, bio) {
-    const response = await fetch(`http://localhost:3000/user/${uid}`, {
+    const response = await fetch(`${API_URL}/user/${uid}`, {
         method: "PATCH",
         headers: {
             "Content-Type": "application/json",
@@ -56,7 +58,7 @@ export async function updateBio(uid, bio) {
 
 // To get all skills
 export async function getAllSkills() {
-    const response = await fetch('http://localhost:3000/skills');
+    const response = await fetch(`${API_URL}/skills`);
     if (!response.ok) {
         throw new Error("Failed to fetch skills");
     }
@@ -66,7 +68,7 @@ export async function getAllSkills() {
 // To assign a skill to the raketista
 export async function addSkill(raketistaId, skillId) {
     console.log("📤 Sending skill assignment request:", { raketistaId, skillId });
-    const response = await fetch(`http://localhost:3000/raketista-skill`, {
+    const response = await fetch(`${API_URL}/raketista-skill`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -76,7 +78,7 @@ export async function addSkill(raketistaId, skillId) {
     });
     console.log("📥 Response status:", response.status);
     if (!response.ok) {
-        console.error("❌ Error response:", text);
+        console.error("❌ Error response");
         throw new Error("Failed to assign skill to raketista.");
     }
     // console.log("✅ Skill assignment success:", result);
@@ -85,7 +87,7 @@ export async function addSkill(raketistaId, skillId) {
 
 // To remove a skill from the raketista
 export async function deleteSkill(raketistaSkillId) {
-    const response = await fetch(`http://localhost:3000/raketista-skill/${raketistaSkillId}`, {
+    const response = await fetch(`${API_URL}/raketista-skill/${raketistaSkillId}`, {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json",

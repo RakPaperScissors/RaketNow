@@ -238,8 +238,6 @@ const UserRakets = () => {
       };
 
       const handleRate = (raket) => {
-        console.log("currentUser.userId:", currentUser?.userId);
-        console.log("raket.acceptedRaketista.userId:", raket?.acceptedRaketista?.userId);
         setRatingRaketId(raket.raketId);
       };
 
