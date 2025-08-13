@@ -1,6 +1,8 @@
+const API_URL = import.meta.env.VITE_API_URL;
+
 export async function submitRating(raketId, rating) {
   try {
-    const response = await fetch(`http://localhost:3000/ratings/${raketId}`, {
+    const response = await fetch(`${API_URL}/ratings/${raketId}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include", // sends cookies for JWT
