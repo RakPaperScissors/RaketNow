@@ -55,7 +55,7 @@ const ViewProfile = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="border-5 mt-6 pt-6">
+                    <div className="mt-6 pt-6 ">
                         <h3 className="text-lg font-semibold mb-2 text-orange-500 flex items-center gap-2"><User className="w-5 h-5" /> Bio</h3>
                         <p className="text-gray-700 whitespace-pre-wrap">{user.bio || "No bio has been added yet."}</p>
                     </div>
