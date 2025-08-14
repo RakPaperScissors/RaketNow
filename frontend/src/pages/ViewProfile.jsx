@@ -13,13 +13,13 @@ const formatDate = (dateString) => {
 
 const ViewProfile = () => {
     const { userId } = useParams();
-    const { user, loading, error } = useViewProfile(userId);
+    const { user, skills, loading, error } = useViewProfile(userId);
 
     if (loading) return <LoadingSpinner fullScreen/>
     if (error) return <p className="text-center text-red-500">{error}</p>
 
     if (!user) return <p className="text-center text-gray-500">User not found.</p>
-    
+    console.log("User skills:", skills);
     return (
         <div className="flex min-h-screen bg-gray-50">
             <SideNav />
@@ -55,9 +55,24 @@ const ViewProfile = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="mt-6 pt-6 ">
+                    <div className="border-t mt-6 pt-4 ">
                         <h3 className="text-lg font-semibold mb-2 text-orange-500 flex items-center gap-2"><User className="w-5 h-5" /> Bio</h3>
                         <p className="text-gray-700 whitespace-pre-wrap">{user.bio || "No bio has been added yet."}</p>
+                    </div>
+                    <div className="mt-6">
+                        <h3 className="text-lg font-semibold mb-2 text-orange-500 flex items-center gap-2"><Hammer className="2-5 h-5"/> Skills</h3>
+                        <div className="flex flex-wrap gap-2">
+                            {skills.length > 0 ? (
+                                skills.map(skill => (
+                                <span key={skill.skill.skill_Id} className="bg-gray-100 text-gray-700 text-sm px-3 py-1 rounded-full flex items-center gap-2">
+                                    {skill.skill.skillName}
+                                </span>
+                            ))
+                            ) : (
+                                <p className="text-gray-500 text-sm">User has no skills yet.</p>
+                            )}
+                            
+                        </div>
                     </div>
                 </div>
 
