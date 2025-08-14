@@ -31,15 +31,15 @@ const ViewProfile = () => {
                     <div className="flex items-start justify-between">
                         <div className="flex items-center gap-4">
                             <div className="relative">
-                                {/* <img
-                                src={selectedImageFile ? URL.createObjectURL(selectedImageFile) : (user.profilePicture || "https://randomuser.me/api/portraits/lego/6.jpg")}
+                                <img
+                                src={user.profilePicture ? user.profilePicture : "/default_profile.jpg"}
                                 onError={(e) => {
                                     e.target.onerror = null;
                                     e.target.src = "/default_profile.jpg"
                                 }}
                                 alt="Profile"
                                 className="w-20 h-20 rounded-full object-cover border-2 border-orange-300"
-                                />    */}
+                                />   
 
                             </div>
                             <div>
