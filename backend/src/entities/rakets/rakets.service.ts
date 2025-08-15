@@ -505,5 +505,17 @@ async clientRejectsCompletionRequest(raketId: number, clientId: number) {
     await this.raketRepo.delete(raketId);
   }
 
+  async getRaketsOfUser(userId: number) {
+    const userRakets = await this.raketRepo.find({
+      where: { user: { uid: userId }},
+    });
+
+    if (!userRakets || userRakets.length === 0) {
+      throw new NotFoundException('No rakets found for this user');
+    }
+    
+    return userRakets;
+  }
+
 
 }

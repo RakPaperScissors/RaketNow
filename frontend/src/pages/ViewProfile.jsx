@@ -4,6 +4,8 @@ import { useParams } from "react-router-dom";
 import { useViewProfile } from "../hooks/useViewProfile";
 import LoadingSpinner from "../components/LoadingSpinner";
 import SideNav from "../components/SideNav";
+import RecentActivity from "../components/RecentActivity";
+import FinishedJobs from "../components/FinishedJobs";
 
 const formatDate = (dateString) => {
     if (!dateString) return '';
@@ -13,7 +15,7 @@ const formatDate = (dateString) => {
 
 const ViewProfile = () => {
     const { userId } = useParams();
-    const { user, skills, loading, error } = useViewProfile(userId);
+    const { user, skills, userRakets, loading, error } = useViewProfile(userId);
 
     if (loading) return <LoadingSpinner fullScreen/>
     if (error) return <p className="text-center text-red-500">{error}</p>
@@ -21,10 +23,11 @@ const ViewProfile = () => {
     if (!user) return <p className="text-center text-gray-500">User not found.</p>
     console.log("User skills:", skills);
     return (
-        <div className="flex min-h-screen bg-gray-50">
-            <SideNav />
-
-            <main className="flex-1 p-8">
+        <div className="min-h-screen bg-gray-50">
+            <div className="fixed top-0 left-0 h-screen w-64 bg-white shadow-md">
+                <SideNav />
+            </div>
+            <main className="ml-64 flex-1 p-8 h-screen overflow-y-auto">
                 <h1 className="text-2xl font-bold text-[#0c2c57] mb-6">{user.firstName}'s Profile</h1>
                 {/* Profile Card Section */}
                 <div className="bg-white shadow-md rounded-xl p-6 max-w-4xl mx-auto my-10">
@@ -77,6 +80,10 @@ const ViewProfile = () => {
                 </div>
 
                 {/* Rakets Section */}
+                <RecentActivity rakets={userRakets} />
+
+                {/* Completed Jobs Section */}
+                <FinishedJobs />
             </main>
         </div>
     );

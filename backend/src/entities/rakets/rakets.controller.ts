@@ -155,4 +155,9 @@ export class RaketsController {
   findAll() {
     return this.raketsService.findAll();
   }
+
+  @Get('/rakets-by-user/:userId')
+  async getRaketsOfUser(@Param('userId') userId: number, @Req() req: RequestWithUser) {
+    return this.raketsService.getRaketsOfUser(userId);
+  }
 }

@@ -231,3 +231,16 @@ export async function postRaket(data) {
 
   return res.json();
 }
+
+export async function getRaketOfUser(userId) {
+  const res = await fetch(`http://localhost:3000/rakets/rakets-by-user/${userId}`, {
+    method: 'GET',
+    credentials: 'include',
+  });
+
+  if (!res.ok) {
+    throw new Error('Failed to fetch rakets of user');
+  }
+
+  return res.json();
+}
