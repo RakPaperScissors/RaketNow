@@ -3,6 +3,7 @@ import SideNav from "../components/SideNav";
 import ProfileCard from "../components/ProfileCard";
 import { useAuth } from "../context/AuthContext";
 import RecentActivity from "../components/RecentActivity";
+import FinishedJobs from "../components/FinishedJobs";
 import LoadingSpinner from "../components/LoadingSpinner";
 
 function ProfilePage() {
@@ -19,6 +20,7 @@ function ProfilePage() {
         <h1 className="text-2xl font-bold text-[#0c2c57] mb-6">My Profile</h1>
         <ProfileCard />
         <RecentActivity />
+        <FinishedJobs />
       </main>
     </div>
   );
