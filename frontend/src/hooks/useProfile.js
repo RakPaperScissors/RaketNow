@@ -7,6 +7,7 @@ import {
     addSkill, 
     deleteSkill 
 } from "../api/profile";
+import { fetchMyRakets } from "../api/rakets";
 
 export function useProfile() {
     // Core data states
@@ -14,6 +15,7 @@ export function useProfile() {
     const [allSkills, setAllSkills] = useState([]);
     const [loading, setLoading] = useState(true);
     const [message, setMessage] = useState("");
+    const [myRakets, setMyRakets] = useState([]);
 
     // States for managing the UI in edit mode
     const [isEditing, setIsEditing] = useState(false);
@@ -29,10 +31,11 @@ export function useProfile() {
         setMessage("");
         try {
             // Fetch profile and all skills in parallel for a faster load time
-            const [userData, skillsData] = await Promise.all([getProfile(), getAllSkills()]);
+            const [userData, skillsData, myRakets] = await Promise.all([getProfile(), getAllSkills(), fetchMyRakets()]);
             
             setUser(userData);
             setAllSkills(skillsData);
+            setMyRakets(myRakets);
             
             // Initialize the states used for editing
             setBio(userData.bio || "");
@@ -139,6 +142,7 @@ export function useProfile() {
 
     return {
         user,
+        myRakets,
         loading,
         skillsLoading,
         message,

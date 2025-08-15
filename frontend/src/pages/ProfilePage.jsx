@@ -19,8 +19,8 @@ function ProfilePage() {
       <main className="flex-1 p-8">
         <h1 className="text-2xl font-bold text-[#0c2c57] mb-6">My Profile</h1>
         <ProfileCard />
-        <RecentActivity />
-        <FinishedJobs />
+        {/* <RecentActivity />
+        <FinishedJobs /> */}
       </main>
     </div>
   );
