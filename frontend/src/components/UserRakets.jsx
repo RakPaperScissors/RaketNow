@@ -366,16 +366,16 @@ const UserRakets = () => {
                   <button
                     disabled={updatingId === raket.raketId}
                     onClick={() => handleClientConfirmCompleted(raket.raketId)}
-                    className="bg-green-500 text-white px-3 py-1 rounded-md hover:bg-green-600 transition"
+                    className="bg-green-500 text-white px-2.5 py-1 text-sm rounded-md hover:bg-green-400 transition"
                   >
-                    Confirm Completion
+                    Confirm Completion Request
                   </button>
                   <button
                     disabled={updatingId === raket.raketId}
                     onClick={() => handleRejectCompletionRequest(raket.raketId)}
-                    className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 transition"
+                    className="bg-red-500 text-white px-2.5 py-1 text-sm rounded-md hover:bg-red-400 transition ml-2"
                   >
-                    Reject Completion
+                    Reject Completion Request
                   </button>
                 </div>
               )}
