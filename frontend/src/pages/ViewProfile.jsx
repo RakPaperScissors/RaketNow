@@ -15,7 +15,7 @@ const formatDate = (dateString) => {
 
 const ViewProfile = () => {
     const { userId } = useParams();
-    const { user, skills, userRakets, loading, error } = useViewProfile(userId);
+    const { user, skills, userRakets, userCompletedRakets, loading, error } = useViewProfile(userId);
 
     if (loading) return <LoadingSpinner fullScreen/>
     if (error) return <p className="text-center text-red-500">{error}</p>
@@ -83,7 +83,7 @@ const ViewProfile = () => {
                 <RecentActivity rakets={userRakets} />
 
                 {/* Completed Jobs Section */}
-                <FinishedJobs />
+                <FinishedJobs jobs={userCompletedRakets} />
             </main>
         </div>
     );

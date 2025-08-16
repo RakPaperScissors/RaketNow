@@ -1,22 +1,9 @@
 import { Calendar, Star } from 'lucide-react';
 
-export default function FinishedJobs() {
-    const jobs = [
-        {
-            title: "Job 1",
-            client: "Xander",
-            description: "ofmdmad",
-            date: "2024-10-01",
-            rating: 3.5
-        },
-        {
-            title: "Job 2",
-            client: "Jhaye",
-            description: "ofmdmad",
-            date: "2024-20-01",
-            rating: 3.5
-        },
-    ];
+export default function FinishedJobs({ jobs }) {
+    if (!jobs || jobs.length === 0) {
+        return null;
+    }
 
     return (
         <div className="bg-white shadow-md rounded-xl p-6 max-w-4xl mx-auto my-10">
@@ -34,7 +21,7 @@ export default function FinishedJobs() {
                         <div className="flex justify-between items-start">
                             <div>
                                 <h3 className="font-semibold text-gray-800">{job.title}</h3>
-                                <p className="text-sm text-gray-500">Client: {job.client}</p>
+                                <p className="text-sm text-gray-500">Client: {job.client.firstName} {job.client.lastName}</p>
                             </div>
                             <span className="bg-green-100 text-green-600 text-xs px-3 py-1 rounded-full">
                                 Completed
@@ -46,7 +33,9 @@ export default function FinishedJobs() {
                         <div className="flex justify-between items-center mt-2">
                             <div className="flex items-center text-gray-500 text-sm">
                                 <Calendar className='w-4 h-4 mr-1' />
-                                Completed: {job.date}
+                                Completed: {new Date(job.completedAt).toLocaleDateString("en-US", {
+                                    year: "numeric", month: "long", day: "numeric"
+                                })}
                             </div>
                             <div className="flex items-center text-yellow-500 text-sm font-medium">
                                 <Star className="w-4 h-4 mr-1 fill-yellow-500" />

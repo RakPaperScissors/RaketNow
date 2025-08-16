@@ -255,3 +255,16 @@ export async function fetchMyCompletedRakets() {
 
   return res.json();
 }
+
+export async function fetchCompletedRaketsOfUser(userId) {
+  const res = await fetch(`${API_URL}/rakets/completed/${userId}`, {
+    method: 'GET',
+    credentials: 'include',
+  });
+
+  if (!res.ok) {
+    throw new Error('Failed to fetch completed rakets of user');
+  }
+
+  return res.json();
+}

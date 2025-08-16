@@ -175,4 +175,10 @@ export class RaketsController {
     const raketistaId = req.user.uid; 
     return this.raketsService.findCompletedRaketsAsRaketista(raketistaId);
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('completed/:userId')
+  async getCompletedRaketsByUser(@Param('userId') userId: string) {
+    return this.raketsService.findCompletedRaketsAsRaketista(Number(userId));
+  }
 }
