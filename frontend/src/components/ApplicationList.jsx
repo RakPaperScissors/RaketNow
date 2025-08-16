@@ -103,39 +103,43 @@ if (isNaN(numericRaketId) || numericRaketId <= 0) {
 
                         return (
                             <div
-                            key={app.applicationId}
-                            className="bg-white p-5 rounded-lg shadow hover:shadow-lg transition"
+                                key={app.applicationId}
+                                className="bg-white p-5 rounded-2xl shadow-md hover:shadow-lg transition flex justify-between items-center"
                             >
-                            <div className="mb-2">
-                                <strong>Raket:</strong> {app.raket?.title || "No title"}
-                            </div>
-                            <div className="mb-2">
-                                <strong>Raketista:</strong> {raketistaName}
-                            </div>
-                            <div className="mb-4">
-                                <strong>Status:</strong> {app.status}
-                            </div>
+                                {/* Left Info Section */}
+                                <div className="flex flex-col gap-1">
+                                <div className="text-lg font-semibold text-gray-800">
+                                    {app.raket?.title || "No title"}
+                                </div>
+                                <div className="text-sm text-gray-600">
+                                    <span className="font-medium">Applicant:</span> {raketistaName}
+                                </div>
+                                <div className="text-sm text-gray-600">
+                                    <span className="font-medium">Application Status:</span> {app.status}
+                                </div>
+                                </div>
 
-                            {isOwner && (
+                                {/* Right Buttons Section */}
+                                {isOwner && (
                                 <div className="flex gap-2">
-                                <button
+                                    <button
                                     disabled={actionLoading}
                                     onClick={() => handleAccept(app.applicationId)}
-                                    className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition"
-                                >
+                                    className="bg-green-500 text-white px-4 py-2 rounded-xl hover:bg-green-600 transition disabled:opacity-50"
+                                    >
                                     Accept
-                                </button>
-                                <button
+                                    </button>
+                                    <button
                                     disabled={actionLoading}
                                     onClick={() => handleReject(app.applicationId)}
-                                    className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
-                                >
+                                    className="bg-red-500 text-white px-4 py-2 rounded-xl hover:bg-red-600 transition disabled:opacity-50"
+                                    >
                                     Reject
-                                </button>
+                                    </button>
                                 </div>
-                            )}
+                                )}
                             </div>
-                        );
+                            );
                         })}
                     </div>
                     </>
@@ -150,20 +154,33 @@ if (isNaN(numericRaketId) || numericRaketId <= 0) {
 
                         return (
                             <div
-                            key={app.applicationId}
-                            className="bg-white p-5 rounded-lg shadow hover:shadow-lg transition"
+                                key={app.applicationId}
+                                className="bg-white p-5 rounded-lg shadow hover:shadow-lg transition"
                             >
-                            <div className="mb-2">
-                                <strong>Raket:</strong> {app.raket?.title || "No title"}
+                                <div className="flex flex-col gap-1">
+                                    <div className="text-lg font-semibold text-gray-800">
+                                        {app.raket?.title || "No title"}
+                                    </div>
+                                    <div className="text-sm text-gray-600">
+                                        <span className="font-medium">Applicant:</span> {raketistaName}
+                                    </div>
+                                    <div className="text-sm text-gray-600">
+                                        <span className="font-medium">Application Status:</span>
+                                        <span
+                                        className={`px-2 py-1 rounded text-sm ${
+                                            app.status === "ACCEPTED"
+                                            ? "bg-green-100 text-green-700"
+                                            : app.status === "REJECTED"
+                                            ? "bg-red-100 text-red-700"
+                                            : "bg-gray-100 text-gray-700"
+                                        }`}
+                                        >
+                                        {app.status}
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
-                            <div className="mb-2">
-                                <strong>Raketista:</strong> {raketistaName}
-                            </div>
-                            <div className="mb-2">
-                                <strong>Status:</strong> {app.status}
-                            </div>
-                            </div>
-                        );
+                            );
                         })}
                     </div>
                     </>

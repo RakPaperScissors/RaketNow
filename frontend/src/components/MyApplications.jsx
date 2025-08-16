@@ -45,40 +45,53 @@ function MyApplications() {
         <div className="space-y-6">
             {myApplications.map((app) => (
             <div
-                key={app.applicationId}
-                className="bg-white p-5 rounded-lg shadow hover:shadow-lg transition"
+              key={app.applicationId}
+              className="bg-white p-5 rounded-lg shadow hover:shadow-lg transition"
             >
-                {/* Raket Title */}
-                <h3 className="text-lg font-semibold text-[#0C2C57] mb-2">
-                {app.raket?.title || "No title"}
-                </h3>
+              <div className="flex flex-col gap-2">
+                {/* Title */}
+                <div className="text-lg font-semibold text-gray-800">
+                  {app.raket?.title || "No title"}
+                </div>
 
-                {/* Client Name */}
-                <p className="text-gray-700 mb-1">
-                <strong>Client:</strong>{" "}
-                {app.raket?.user?.firstName} {app.raket?.user?.lastName || ""}
-                </p>
+                {/* Client */}
+                <div className="text-sm text-gray-600">
+                  <span className="font-medium">Client:</span>{" "}
+                  {app.raket?.user?.firstName} {app.raket?.user?.lastName || ""}
+                </div>
 
                 {/* Budget */}
-                <p className="text-gray-700 mb-3">
-                <strong>Budget:</strong> PHP {app.raket?.budget || 0}
-                </p>
+                <div className="text-sm text-gray-600">
+                  <span className="font-medium">Budget:</span> PHP {app.raket?.budget || 0}
+                </div>
 
                 {/* Status */}
-                <p className="text-gray-600 mb-4">
-                <strong>Status:</strong> {app.status}
-                </p>
+                <div className="text-sm text-gray-600">
+                  <span className="font-medium">Application Status:</span>{" "}
+                  <span
+                    className={`px-2 py-1 rounded text-sm ${
+                      app.status === "ACCEPTED"
+                        ? "bg-green-100 text-green-700"
+                        : app.status === "REJECTED"
+                        ? "bg-red-100 text-red-700"
+                        : "bg-gray-100 text-gray-700"
+                    }`}
+                  >
+                    {app.status}
+                  </span>
+                </div>
 
-                {/* Withdraw button if pending */}
+                {/* Withdraw button (only if pending) */}
                 {app.status?.toUpperCase() === "PENDING" && (
-                <button
+                  <button
                     disabled={actionLoading}
                     onClick={() => handleWithdraw(app.applicationId)}
-                    className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
-                >
+                    className="self-start bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition disabled:opacity-50"
+                  >
                     Withdraw
-                </button>
+                  </button>
                 )}
+              </div>
             </div>
             ))}
         </div>
