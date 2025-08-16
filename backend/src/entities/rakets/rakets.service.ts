@@ -503,7 +503,7 @@ async clientRejectsCompletionRequest(raketId: number, clientId: number) {
     return userRakets;
   }
 
-  // fetch the completed rakets
+  // fetch the completed rakets for clients
   async findCompletedRakets(userId: number) {
     const rakets = await this.raketRepo.find({
       where: {
@@ -529,7 +529,7 @@ async clientRejectsCompletionRequest(raketId: number, clientId: number) {
         description: raket.description,
         budget: raket.budget,
         completedAt: raket.completedAt,
-        rating: raket.rating ?? null,
+        rating: raket.rating ? raket.rating.rating : null,
         acceptedRaketista: acceptedApp
           ? {
               id: acceptedApp.raketista.uid,
@@ -540,5 +540,42 @@ async clientRejectsCompletionRequest(raketId: number, clientId: number) {
       };
     });
   }
+
+  // fetch the completed rakets for raketista
+  async findCompletedRaketsAsRaketista(userId: number) {
+    const rakets = await this.raketRepo.find({
+      where: {
+        status: RaketStatus.COMPLETED,
+        applications: {
+          raketista: { uid: userId },
+          status: RaketApplicationStatus.ACCEPTED,
+        },
+      },
+      relations: [
+        'user',
+        'applications',
+        'applications.raketista',
+        'rating',
+      ],
+      order: { completedAt: 'DESC' },
+    });
+
+    return rakets.map(raket => ({
+      raketId: raket.raketId,
+      title: raket.title,
+      description: raket.description,
+      budget: raket.budget,
+      completedAt: raket.completedAt,
+      rating: raket.rating ? raket.rating.rating : null,
+      client: raket.user
+        ? {
+            id: raket.user.uid,
+            firstName: raket.user.firstName,
+            lastName: raket.user.lastName,
+          }
+        : null,
+    }));
+  }
+
 
 }
