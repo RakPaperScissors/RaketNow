@@ -7,30 +7,6 @@ import { useNavigate } from "react-router-dom";
 import DebugPanel from "../components/DebugPanel";
 import StarRating from "../components/Rating";
 
-
-// const StarRating = ({ count = 5, selected = 0, onSelect }) => {
-//   const [hovered, setHovered] = useState(null);
-
-//   return (
-//     <div className="flex space-x-1 cursor-pointer">
-//       {Array.from({ length: count }, (_, i) => (
-//         <span
-//           key={i}
-//           className={`text-xl ${
-//             (hovered ?? selected) > i ? "text-yellow-400" : "text-gray-300"
-//           }`}
-//           onMouseEnter={() => setHovered(i + 1)}
-//           onMouseLeave={() => setHovered(null)}
-//           onClick={() => onSelect(i + 1)}
-//         >
-//           ★
-//         </span>
-//       ))}
-//     </div>
-//   );
-// };
-
-
 const statusMap = {
   open: "Pending",
   in_progress: "Ongoing",

@@ -335,17 +335,17 @@ const RaketStatus = () => {
 
                     {/* Raketista-specific actions */}
                     {raket.status === "in_progress" && (
-                      <div className="mt-3 space-x-3">
+                      <div className="mt-3 flex justify-end items-center space-x-3">
                         <button
                           onClick={() => handleMarkCompleted(raket.raketId)}
-                          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+                          className="bg-[#0C2C57] text-white px-4 py-2 rounded-md hover:bg-[#123870] transition text-sm"
                           disabled={updatingId === raket.raketId}
                         >
                           {updatingId === raket.raketId ? "Processing..." : "Mark as Completed"}
                         </button>
                         <button
                           onClick={() => handleWithdraw(raket.raketId)}
-                          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
+                          className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300 transition text-sm"
                           disabled={updatingId === raket.raketId}
                         >
                           Withdraw
@@ -354,16 +354,13 @@ const RaketStatus = () => {
                     )}
 
                     {raket.status === "pending_confirmation" && (
-                      <div className="mt-3 space-x-3">
-                        <button
-                          disabled
-                          className="bg-yellow-300 text-yellow-800 px-4 py-2 rounded"
-                        >
+                      <div className="mt-3 flex justify-end items-center space-x-3">
+                        <span className="bg-yellow-100 text-yellow-700 px-4 py-2 rounded-md text-sm">
                           Pending Client Confirmation
-                        </button>
+                        </span>
                         <button
                           onClick={() => handleCancelConfirmation(raket.raketId)}
-                          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
+                          className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300 transition text-sm"
                           disabled={updatingId === raket.raketId}
                         >
                           {updatingId === raket.raketId ? "Processing..." : "Cancel Request"}
