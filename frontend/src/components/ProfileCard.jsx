@@ -212,7 +212,9 @@ function ProfileCard() {
                   <div className="flex justify-between items-center mt-2">
                       <div className="flex items-center text-gray-500 text-sm">
                           <Calendar className='w-4 h-4 mr-1' />
-                          Completed: {job.date}
+                          Completed: {new Date(job.completedAt).toLocaleDateString("en-US", {
+                            year: "numeric", month: "long", day: "numeric"
+                          })}
                       </div>
                       <div className="flex items-center text-yellow-500 text-sm font-medium">
                           <Star className="w-4 h-4 mr-1 fill-yellow-500" />
