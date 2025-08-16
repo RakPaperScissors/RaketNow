@@ -22,6 +22,9 @@ const ViewProfile = () => {
 
     if (!user) return <p className="text-center text-gray-500">User not found.</p>
     console.log("User skills:", skills);
+
+    const isRaketista = user.type === "Raketista";
+
     return (
         <div className="min-h-screen bg-gray-50">
             <div className="fixed top-0 left-0 h-screen w-64 bg-white shadow-md">
@@ -58,11 +61,14 @@ const ViewProfile = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="border-t mt-6 pt-4 ">
-                        <h3 className="text-lg font-semibold mb-2 text-orange-500 flex items-center gap-2"><User className="w-5 h-5" /> Bio</h3>
-                        <p className="text-gray-700 whitespace-pre-wrap">{user.bio || "No bio has been added yet."}</p>
-                    </div>
-                    <div className="mt-6">
+                    {isRaketista && (
+                        <div className="border-t mt-6 pt-4 ">
+                            <h3 className="text-lg font-semibold mb-2 text-orange-500 flex items-center gap-2"><User className="w-5 h-5" /> Bio</h3>
+                            <p className="text-gray-700 whitespace-pre-wrap">{user.bio || "No bio has been added yet."}</p>
+                        </div>
+                    )}
+                    {isRaketista && (
+                        <div className="mt-6">
                         <h3 className="text-lg font-semibold mb-2 text-orange-500 flex items-center gap-2"><Hammer className="2-5 h-5"/> Skills</h3>
                         <div className="flex flex-wrap gap-2">
                             {skills.length > 0 ? (
@@ -74,9 +80,9 @@ const ViewProfile = () => {
                             ) : (
                                 <p className="text-gray-500 text-sm">User has no skills yet.</p>
                             )}
-                            
                         </div>
                     </div>
+                    )}
                 </div>
 
                 {/* Rakets Section */}
