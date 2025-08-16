@@ -71,7 +71,7 @@ const RaketStatus = () => {
   const [error, setError] = useState("");
   const [updatingId, setUpdatingId] = useState(null);
   const navigate = useNavigate();
-  const statuses = ["All", "Completed", "Ongoing", "Pending"];
+  const statuses = ["All", "Completed", "Ongoing"];
   
   // for fetching data
       const fetchRaketsData = useCallback(async () => {
@@ -238,8 +238,8 @@ const RaketStatus = () => {
 
   const filteredRakets =
   statusFilter === "All"
-    ? rakets
-    : rakets.filter((r) => mapStatusToLabel(r.status) === statusFilter);
+    ? assignedRakets
+    : assignedRakets.filter((r) => mapStatusToLabel(r.status) === statusFilter);
 
   const handleFilterChange = (status) => {
     setStatusFilter(status);
@@ -314,7 +314,7 @@ const RaketStatus = () => {
             <p className="text-gray-500">No rakets have been assigned to you yet.</p>
           ) : (
             <div className="space-y-4">
-              {assignedRakets.map((raket) => {
+              {filteredRakets.map((raket) => {
                 return (
                   <div
                     key={raket.raketId}
