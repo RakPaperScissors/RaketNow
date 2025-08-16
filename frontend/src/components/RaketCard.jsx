@@ -14,7 +14,7 @@ const categoryColors = {
   "Education & Tutoring": "bg-green-100 text-green-800",
   "Graphic & Digital Design": "bg-indigo-100 text-indigo-800",
   "Business & Professional Services": "bg-orange-100 text-orange-800",
-  "Automotive": "bg-gray-200 text-gray-800",
+  Automotive: "bg-gray-200 text-gray-800",
   "Moving & Delivery Services": "bg-teal-100 text-teal-800",
 };
 
@@ -51,9 +51,13 @@ const RaketCard = ({
   const closeModal = () => setModalOpen(false);
 
   const goPrev = () =>
-    setActiveIndex((prev) => (prev === 0 ? displayedImages.length - 1 : prev - 1));
+    setActiveIndex((prev) =>
+      prev === 0 ? displayedImages.length - 1 : prev - 1
+    );
   const goNext = () =>
-    setActiveIndex((prev) => (prev === displayedImages.length - 1 ? 0 : prev + 1));
+    setActiveIndex((prev) =>
+      prev === displayedImages.length - 1 ? 0 : prev + 1
+    );
 
   useEffect(() => {
     const handleKey = (e) => {
@@ -86,10 +90,12 @@ const RaketCard = ({
       )}
 
       {/* Title */}
-      <h2 className="font-semibold text-lg text-[#0C2C57] mt-10 mb-2">{title}</h2>
+      <h2 className="font-semibold text-lg text-[#0C2C57] mb-2">{title}</h2>
 
       {/* Description */}
-      <p className="text-sm text-gray-600 mb-3 whitespace-pre-wrap">{description}</p>
+      <p className="text-sm text-gray-600 mb-3 whitespace-pre-wrap">
+        {description}
+      </p>
 
       {/* Image Grid */}
       {displayedImages.length > 0 && (
@@ -176,7 +182,9 @@ const RaketCard = ({
         )}
 
         {applyError && <p className="text-red-500 text-xs">{applyError}</p>}
-        {applySuccess && <p className="text-green-500 text-xs">Application sent!</p>}
+        {applySuccess && (
+          <p className="text-green-500 text-xs">Application sent!</p>
+        )}
       </div>
     </div>
   );
