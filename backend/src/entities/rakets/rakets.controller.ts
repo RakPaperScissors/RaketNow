@@ -156,8 +156,16 @@ export class RaketsController {
     return this.raketsService.findAll();
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('/rakets-by-user/:userId')
   async getRaketsOfUser(@Param('userId') userId: number, @Req() req: RequestWithUser) {
     return this.raketsService.getRaketsOfUser(userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('completed')
+  async getCompletedRakets(@Req() req) {
+    const userId = req.user.uid;
+    return this.raketsService.findCompletedRakets(userId);
   }
 }

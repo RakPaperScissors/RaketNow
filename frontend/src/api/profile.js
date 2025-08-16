@@ -99,3 +99,17 @@ export async function deleteSkill(raketistaSkillId) {
     }
     return await response.json();
 }
+
+// fetch completed rakets
+export async function fetchCompletedRakets() {
+    const response = await fetch(`${API_URL}/rakets/completed`, {
+        method: "GET",
+        credentials: "include",
+    });
+
+    if (!response.ok) {
+        throw new Error("Failed to fetch completed rakets");
+    }
+
+    return response.json();
+}
