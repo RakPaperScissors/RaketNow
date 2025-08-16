@@ -25,8 +25,6 @@ function Applications() {
 if (isNaN(numericRaketId) || numericRaketId <= 0) {
   return <p className="text-center text-red-500 mt-6">Invalid Raket ID.</p>;
 }
-    console.log("🔢 numericRaketId:", numericRaketId);
-    console.log("🚀 raketId from URL params:", raketId);
 
     const handleAccept = async (id) => {
         try {
@@ -80,8 +78,6 @@ if (isNaN(numericRaketId) || numericRaketId <= 0) {
         (app) => app.status?.toUpperCase() !== "PENDING"
     );
 
-    console.log("🔑 currentUser:", currentUser);
-    console.log("👤 app.raket.user.uid:", applications.raket?.user?.uid);
     const raketTitle = applications?.[0]?.raket?.title || "Raket";
 
     return (

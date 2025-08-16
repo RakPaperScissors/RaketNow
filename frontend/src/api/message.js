@@ -1,7 +1,7 @@
-const API_BASE_URL = 'http://localhost:3000';
+const API_URL = import.meta.env.VITE_API_URL;
 
 export async function getConversations() {
-    const response = await fetch(`${API_BASE_URL}/conversations`, {
+    const response = await fetch(`${API_URL}/conversations`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -17,7 +17,7 @@ export async function getConversations() {
 }
 
 export async function createConversation(participantIds) {
-    const response = await fetch(`${API_BASE_URL}/conversations`, {
+    const response = await fetch(`${API_URL}/conversations`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -34,7 +34,7 @@ export async function createConversation(participantIds) {
 }
 
 export async function getMessages(conversationId, page = 1, limit = 50) {
-    const response = await fetch(`${API_BASE_URL}/messages/conversation/${conversationId}?page=${page}&limit=${limit}`, {
+    const response = await fetch(`${API_URL}/messages/conversation/${conversationId}?page=${page}&limit=${limit}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -50,7 +50,7 @@ export async function getMessages(conversationId, page = 1, limit = 50) {
 }
 
 export async function sendMessage(conversationId, text, images = []) {
-    const response = await fetch(`${API_BASE_URL}/messages`, {
+    const response = await fetch(`${API_URL}/messages`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

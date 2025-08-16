@@ -1,6 +1,8 @@
+const API_URL = import.meta.env.VITE_API_URL;
+
 // For getting the name
 export async function getMe() {
-    const response = await fetch('http://localhost:3000/auth/me', { 
+    const response = await fetch(`${API_URL}/auth/me`, { 
         credentials: 'include',
     });
     if (!response.ok) {
@@ -11,7 +13,7 @@ export async function getMe() {
 
 // For getting the rakets
 export async function getRakets() {
-    const response = await fetch('http://localhost:3000/rakets', {
+    const response = await fetch(`${API_URL}/rakets`, {
         credentials: 'include',
     });
     if (!response.ok) {
@@ -22,7 +24,7 @@ export async function getRakets() {
 
 // For getting the raketistas
 export async function getRaketistas() {
-    const response = await fetch('http://localhost:3000/user?role=raketista', {
+    const response = await fetch(`${API_URL}/user?role=raketista`, {
         credentials: 'include',
     });
     if (!response.ok) {
@@ -33,7 +35,7 @@ export async function getRaketistas() {
 
 // For posting a new raket
 export async function postRaket(data) {
-    const response = await fetch('http://localhost:3000/rakets', {
+    const response = await fetch(`${API_URL}/rakets`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
