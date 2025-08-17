@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { SendHorizontal, Image as ImageIcon, ArrowLeft, Plus } from "lucide-react";
+import { SendHorizontal, Image as ImageIcon, ArrowLeft, View, Plus } from "lucide-react";
 import { useMessages } from "../hooks/useMessages";
 import { useUser } from "../hooks/useUsers";
 import JobInfoBanner from "../components/JobInfoBanner";
+import ViewProfileLink from "./ViewProfileLink";
 
 const DEFAULT_AVATAR = "/default_profile.jpg";
 const USER_PROFILE_PIC_BASE_URL =
@@ -55,11 +56,6 @@ function Message() {
     if (window.innerWidth < 768) {
       setShowChatPanel(true);
     }
-  };
-
-  const handleOpenUserProfile = (uid) => {
-    const profilePageUrl = `/profile-display/${uid}`;
-    window.open(profilePageUrl, '_blank');
   };
 
   // EFFECTSSSSSSSSSSS
@@ -255,28 +251,24 @@ function Message() {
               >
                 <ArrowLeft size={20} />
               </button>
-              <img
-                src={
-                  getOtherParticipant(selectedConversation)?.profilePicture
-                    ? `${USER_PROFILE_PIC_BASE_URL}${getOtherParticipant(selectedConversation).profilePicture}`
-                    : DEFAULT_AVATAR
-                }
-                onError={(e) => (e.target.src = DEFAULT_AVATAR)}
-                alt={getOtherParticipant(selectedConversation)?.firstName}
-                className="w-10 h-10 rounded-full object-cover cursor-pointer"
-                onClick={() =>
-                  handleOpenUserProfile(getOtherParticipant(selectedConversation)?.uid)
-                }
-              />
-              <div>
-                <p
-                  className="font-semibold text-sm cursor-pointer"
-                  onClick={() =>
-                    handleOpenUserProfile(getOtherParticipant(selectedConversation)?.uid)
+              <ViewProfileLink userId={getOtherParticipant(selectedConversation)?.uid}>
+                <img
+                  src={
+                    getOtherParticipant(selectedConversation)?.profilePicture
+                      ? `${USER_PROFILE_PIC_BASE_URL}${getOtherParticipant(selectedConversation).profilePicture}`
+                      : DEFAULT_AVATAR
                   }
-                >
-                  {getOtherParticipant(selectedConversation)?.firstName || "Chat"}
-                </p>
+                  onError={(e) => (e.target.src = DEFAULT_AVATAR)} 
+                  alt={getOtherParticipant(selectedConversation)?.firstName}
+                  className="w-10 h-10 rounded-full object-cover cursor-pointer"
+                />
+              </ViewProfileLink>
+              <div>
+                <ViewProfileLink userId={getOtherParticipant(selectedConversation)?.uid}>
+                  <p className="font-semibold text-sm cursor-pointer">
+                    {getOtherParticipant(selectedConversation)?.firstName || "Chat"}
+                  </p>
+                </ViewProfileLink>
                 {Object.values(isTyping).some((val) => val) &&
                 Object.keys(isTyping)
                   .filter((k) => isTyping[k])
@@ -346,14 +338,15 @@ function Message() {
                     style={{ maxWidth: "75%" }}
                   >
                     {/* PROFILE PIC */}
-                    <img
-                      src={senderProfilePic}
-                      onError={(e) => {e.target.src = '/default_profile.jpg'}}
-                      alt={msg.sender.firstName || msg.sender.name}
-                      className="w-8 h-8 rounded-full object-cover flex-shrink-0 cursor-pointer"
-                      onClick={() => handleOpenUserProfile(msg.sender.id)} // Click handler
-                    />
-
+                    <ViewProfileLink userId={msg.sender.id}>
+                      <img
+                        src={senderProfilePic}
+                        onError={(e) => {e.target.src = '/default_profile.jpgwd'}}
+                        alt={msg.sender.firstName || msg.sender.name}
+                        className="w-8 h-8 rounded-full object-cover flex-shrink-0 cursor-pointer"
+                      />
+                    </ViewProfileLink>
+                    
                     {/* MESSAGE BUBBLE */}
                     <div
                       className={`p-3 rounded-2xl text-sm shadow flex-1 ${
@@ -364,12 +357,11 @@ function Message() {
                     >
                       {/* SENDER NAME */}
                       {!isMyMessage && (
-                        <p 
-                          className="font-medium text-xs mb-1 text-gray-600 cursor-pointer"
-                          onClick={() => handleOpenUserProfile(msg.sender.id)} // Click handler
-                        >
+                        <ViewProfileLink userId={msg.sender.id}>
+                        <p className="font-medium text-xs mb-1 text-gray-600 cursor-pointer">
                           {msg.sender.firstName || msg.sender.name}
                         </p>
+                        </ViewProfileLink>
                       )}
                       <p>{msg.text}</p>
                       {msg.images && msg.images.length > 0 && (

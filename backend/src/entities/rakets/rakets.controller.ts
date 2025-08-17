@@ -155,4 +155,30 @@ export class RaketsController {
   findAll() {
     return this.raketsService.findAll();
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/rakets-by-user/:userId')
+  async getRaketsOfUser(@Param('userId') userId: number, @Req() req: RequestWithUser) {
+    return this.raketsService.getRaketsOfUser(userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('completed')
+  async getCompletedRakets(@Req() req) {
+    const userId = req.user.uid;
+    return this.raketsService.findCompletedRakets(userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('completed/assigned')
+  async getCompletedAssignedRakets(@Req() req) {
+    const raketistaId = req.user.uid; 
+    return this.raketsService.findCompletedRaketsAsRaketista(raketistaId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('completed/:userId')
+  async getCompletedRaketsByUser(@Param('userId') userId: string) {
+    return this.raketsService.findCompletedRaketsAsRaketista(Number(userId));
+  }
 }

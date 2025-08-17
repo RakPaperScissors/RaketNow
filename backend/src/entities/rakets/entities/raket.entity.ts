@@ -55,7 +55,7 @@ export class Raket {
     dateCreated: Date;
 
     @Column({ type: 'timestamp', nullable: true })
-    completedAt: Date;
+    completedAt?: Date;
 
     @OneToMany(() => RaketApplication, application => application.raket)
     applications: RaketApplication[];

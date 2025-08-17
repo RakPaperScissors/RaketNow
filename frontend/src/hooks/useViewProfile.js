@@ -1,12 +1,18 @@
 import { useState, useEffect, useCallback } from "react";
 import { getProfileById } from "../api/profile";
+import { getAllSkills } from "../api/skills";
+import { getRaketOfUser, fetchCompletedRaketsOfUser } from "../api/rakets";
 
 export function useViewProfile(userId) {
     const [user, setUser] = useState(null);
+    const [skills, setSkills] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    const [userRakets, setUserRakets] = useState([]);
+    const [userCompletedRakets, setUserCompletedRakets] = useState([]);
 
     const fetchProfile = useCallback(async () => {
+        console.log("🔍 fetchProfile called with userId:", userId);
         if (!userId) {
             setError("No user ID provided");
             setLoading(false);
@@ -15,9 +21,19 @@ export function useViewProfile(userId) {
 
         setLoading(true);
         setError("");
+
         try {
-            const data = await getProfileById(userId);
-            setUser(data);
+            console.log("📡 Fetching profile and skills...");
+            const [profileData, allSkills, userRakets, userCompletedRakets] = await Promise.all([getProfileById(userId), getAllSkills(), getRaketOfUser(userId), fetchCompletedRaketsOfUser(userId)]);
+            console.log("✅ Profile data received:", profileData);
+            console.log("✅ All skills received:", allSkills);
+            setUser(profileData);
+            const userSkills = allSkills.filter(item => { return item.raketista?.uid === Number(userId) });
+            console.log(`🎯 Filtered skills for userId ${userId}:`, userSkills);
+            setSkills(userSkills);
+            console.log("✅ User rakets received:", userRakets);
+            setUserRakets(userRakets);
+            setUserCompletedRakets(userCompletedRakets);
         } catch (err) {
             setError(err.message || "Failed to load profile");
         } finally {
@@ -29,5 +45,5 @@ export function useViewProfile(userId) {
         fetchProfile();
     }, [fetchProfile]);
 
-    return { user, loading, error, refetch: fetchProfile };
+    return { user, skills, userRakets, userCompletedRakets, loading, error, refetch: fetchProfile };
 }

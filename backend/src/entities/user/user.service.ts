@@ -43,7 +43,17 @@ export class UserService {
 
   // 3. Get user by uid
   async findOne(uid: number) {
-    return await this.users.findOne({where: {uid}});
+    const user = await this.users.findOne({where: {uid}}); 
+    if (!user) {
+      throw new NotFoundException(`User with ID ${uid} not found.`);
+    }
+    const { password, providerId, authProvider, deletedAt, ...rest } = user;
+    return {
+      ...rest,
+      profilePicture: user.profilePicture
+        ? `http://localhost:9000/raketnow/${user.profilePicture}`
+        : "http://localhost:9000/raketnow/user-profile-pictures/default_profile.jpg",
+    };
   }
 
   // 4. Update user by uid
@@ -141,7 +151,7 @@ async patch(uid: number, updateUserDto: UpdateUserDto): Promise<any> {
         email: user.email,
         profilePicture: user.profilePicture ? user.profilePicture : null,
         role: user.role,
-        type: user.type,
+        type: user.type,           
       };
   }
 
