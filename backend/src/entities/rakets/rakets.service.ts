@@ -288,52 +288,38 @@ async clientRejectsCompletionRequest(raketId: number, clientId: number) {
     });
   }
 
-
-
+  // updating status of the Raket
   async updateRaketStatus(raketId: number, status: RaketStatus, userId: number) {
-  const raket = await this.getEntityById(raketId);
+    const raket = await this.getEntityById(raketId);
 
-  if (!Object.values(RaketStatus).includes(status)) {
-    throw new BadRequestException(`Invalid status: ${status}`);
+    if (!Object.values(RaketStatus).includes(status)) {
+      throw new BadRequestException(`Invalid status: ${status}`);
+    }
+
+    if (raket.user.uid !== userId) {
+      throw new ForbiddenException();
+    }
+
+    // Allow status change to COMPLETED only if currently pending confirmation or in_progress
+    if (
+      raket.status === RaketStatus.PENDING_CONFIRMATION &&
+      status === RaketStatus.COMPLETED
+    ) {
+      await this.notifRepo.delete({
+        raketId: raketId,
+        actionable: true,
+      });
+    }
+
+    raket.status = status;
+    if (status === RaketStatus.COMPLETED) {
+      raket.completedAt = new Date();
+    }
+
+    await this.raketRepo.save(raket);
+
+    return { message: `Raket status updated to ${status}` };
   }
-
-  if (raket.user.uid !== userId) {
-    throw new ForbiddenException();
-  }
-
-  // Allow status change to COMPLETED only if currently pending confirmation or in_progress
-  if (
-    raket.status === RaketStatus.PENDING_CONFIRMATION &&
-    status === RaketStatus.COMPLETED
-  ) {
-    await this.notifRepo.delete({
-      raketId: raketId,
-      actionable: true,
-    });
-  }
-
-  raket.status = status;
-  if (status === RaketStatus.COMPLETED) {
-    raket.completedAt = new Date();
-  }
-
-  await this.raketRepo.save(raket);
-
-  return { message: `Raket status updated to ${status}` };
-}
-
-
-  // async getRaketsAssignedToUser(uid: number) {
-  //   const acceptedApps = await this.appRepo.find({
-  //     where: { raketista: { uid }, status: RaketApplicationStatus.ACCEPTED },
-  //     relations: ['raket', 'raket.user'],
-  //   });
-
-  //   return acceptedApps.map(app => ({
-  //     ...app.raket,
-  //     clientName: `${app.raket.user?.firstName} ${app.raket.user?.lastName}`,
-  //   }));
-  // }
 
   async getRaketsAssignedToUser(uid: number) {
     const acceptedApps = await this.appRepo.find({
@@ -503,6 +489,92 @@ async clientRejectsCompletionRequest(raketId: number, clientId: number) {
     }
 
     await this.raketRepo.delete(raketId);
+  }
+
+  async getRaketsOfUser(userId: number) {
+    const userRakets = await this.raketRepo.find({
+      where: { user: { uid: userId }},
+    });
+
+    if (!userRakets || userRakets.length === 0) {
+      throw new NotFoundException('No rakets found for this user');
+    }
+    
+    return userRakets;
+  }
+
+  // fetch the completed rakets for clients
+  async findCompletedRakets(userId: number) {
+    const rakets = await this.raketRepo.find({
+      where: {
+        user: { uid: userId },
+        status: RaketStatus.COMPLETED,
+      },
+      relations: [
+        'applications',
+        'applications.raketista',
+        'rating',
+      ],
+      order: { completedAt: 'DESC' },
+    });
+
+    return rakets.map(raket => {
+      const acceptedApp = raket.applications.find(
+        app => app.status === 'ACCEPTED',
+      );
+
+      return {
+        raketId: raket.raketId,
+        title: raket.title,
+        description: raket.description,
+        budget: raket.budget,
+        completedAt: raket.completedAt,
+        rating: raket.rating ? raket.rating.rating : null,
+        acceptedRaketista: acceptedApp
+          ? {
+              id: acceptedApp.raketista.uid,
+              firstName: acceptedApp.raketista.firstName,
+              lastName: acceptedApp.raketista.lastName,
+            }
+          : null,
+      };
+    });
+  }
+
+  // fetch the completed rakets for raketista
+  async findCompletedRaketsAsRaketista(userId: number) {
+    const rakets = await this.raketRepo.find({
+      where: {
+        status: RaketStatus.COMPLETED,
+        applications: {
+          raketista: { uid: userId },
+          status: RaketApplicationStatus.ACCEPTED,
+        },
+      },
+      relations: [
+        'user',
+        'applications',
+        'applications.raketista',
+        'rating',
+      ],
+      order: { completedAt: 'DESC' },
+    });
+
+    return rakets.map(raket => ({
+      raketId: raket.raketId,
+      title: raket.title,
+      description: raket.description,
+      budget: raket.budget,
+      completedAt: raket.completedAt,
+      rating: raket.rating ? raket.rating.rating : null,
+      client: raket.user
+        ? {
+            id: raket.user.uid,
+            firstName: raket.user.firstName,
+            lastName: raket.user.lastName,
+          }
+        : null,
+    }));
   }
 
 
