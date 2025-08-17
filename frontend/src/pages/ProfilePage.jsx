@@ -9,7 +9,7 @@ import LoadingSpinner from "../components/LoadingSpinner";
 function ProfilePage() {
   const { loading } = useAuth();
 
-  if (loading) return <LoadingSpinner fullScreen/>;
+  if (loading) return <LoadingSpinner fullScreen />;
 
   return (
     <div className="flex min-h-screen bg-gray-50">
