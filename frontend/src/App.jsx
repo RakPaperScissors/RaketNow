@@ -32,13 +32,17 @@ import { View, WifiOff, LogOut } from "lucide-react";
 
 
 function AuthGate({ children }) {
-  const { user, loading, error } = useAuth();
+  const { user, loading, error, loggingOut } = useAuth();
 
-  if (loading) {
+  if (loading || loggingOut) {
     return <LoadingSpinner fullScreen />;
   }
 
-  if (!user || error) {
+  if (!user && !error) {
+      return <LoadingSpinner fullScreen/>
+  }
+
+  if (!user && error) {
     const isConnectionError = !!error;
 
     return (

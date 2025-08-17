@@ -6,14 +6,18 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [loggingOut, setLoggingOut] = useState(false);
 
     useEffect(() => {
         const fetchUser = async () => {
             try {
                 const profile = await getProfile();
                 setUser(profile);
+                setError(null);
             } catch (error) {
                 setUser(null);
+                setError(error);
             } finally {
                 setLoading(false);
             }
@@ -25,29 +29,35 @@ export const AuthProvider = ({ children }) => {
         try {
             const data = await getProfile();
             setUser(data);
+            setError(null);
         } catch (err) {
+            setError(err);
             console.error("Failed to fetch profile after login.");
         }
     };
 
     const logout = async () => {
-        setLoading(true);
+        setLoggingOut(true);
         try {
             await fetch("http://localhost:3000/auth/logout", {
                 method: "POST",
                 credentials: "include",
             });
             setUser(null);
+            setError(null);
+            setTimeout(() => (window.location.href = "/login"), 500);
+            
         } catch (err) {
+            setError(err);
             console.error("Logout failed.", err);
         } finally {
-            setLoading(false);
+            setLoggingOut(false);
         }
         
     };
 
     return(
-        <AuthContext.Provider value={{ user, login, logout, loading }}>
+        <AuthContext.Provider value={{ user, login, logout, loading, error, loggingOut }}>
             {children}
         </AuthContext.Provider>
     );
