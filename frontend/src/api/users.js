@@ -72,5 +72,11 @@ export async function searchUsers(query) {
 
     const data = await response.json();
     console.log(data)
-    return isEmail ? (data || []) : (data.users || []); // Assuming searchByEmail returns user or null, searchByName returns {users:[]}
+
+    if (isEmail) {
+        return data ? [data] : [];
+    } 
+
+    return Array.isArray(data) ? data : [];
+    // return isEmail ? (data || []) : (data.users || []); // Assuming searchByEmail returns user or null, searchByName returns {users:[]}
 }
