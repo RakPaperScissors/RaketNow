@@ -341,7 +341,7 @@ function Message() {
                     <ViewProfileLink userId={msg.sender.id}>
                       <img
                         src={senderProfilePic}
-                        onError={(e) => {e.target.src = '/default_profile.jpgwd'}}
+                        onError={(e) => {e.target.src = '/default_profile.jpg'}}
                         alt={msg.sender.firstName || msg.sender.name}
                         className="w-8 h-8 rounded-full object-cover flex-shrink-0 cursor-pointer"
                       />
