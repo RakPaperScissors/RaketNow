@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { SendHorizontal, Image as ImageIcon, ArrowLeft } from "lucide-react";
+import { SendHorizontal, Image as ImageIcon, ArrowLeft, Plus } from "lucide-react";
 import { useMessages } from "../hooks/useMessages";
 import { useUser } from "../hooks/useUsers";
 import JobInfoBanner from "../components/JobInfoBanner";
@@ -31,7 +31,6 @@ function Message() {
   } = useMessages();
 
   const [messageInput, setMessageInput] = useState("");
-  const [search, setSearch] = useState("");
   const [showChatPanel, setShowChatPanel] = useState(false);
 
   const messagesEndRef = useRef(null);
@@ -171,7 +170,10 @@ function Message() {
                                 onClick={() => startConversationWithUser(user.uid)}
                             >
                                 <img 
-                                    src={user.profilePicture}
+                                    src={user.profilePicture
+                                      ? `${USER_PROFILE_PIC_BASE_URL}${user.profilePicture}`
+                                      : DEFAULT_AVATAR
+                                    }
                                     onError={(e) => (e.target.src) = DEFAULT_AVATAR}
                                     alt={user.firstName} 
                                     className="w-8 h-8 rounded-full object-cover" 
@@ -186,6 +188,7 @@ function Message() {
                 )}
             </div>
         )}
+        
                 {/* Existing Conversations List */}
         <div className="overflow-y-auto flex-1">
           <p className="text-xs font-semibold text-gray-500 mb-2">Your Conversations:</p>
@@ -198,7 +201,6 @@ function Message() {
                 const otherParticipantProfilePic = otherParticipant?.profilePicture 
                     ? `${USER_PROFILE_PIC_BASE_URL}${otherParticipant.profilePicture}`
                     : DEFAULT_AVATAR;
-                console.log("Other participant profile pic:", otherParticipantProfilePic);
                 return (
                   <div
                     key={conv.id}
@@ -332,7 +334,7 @@ function Message() {
                 const senderProfilePic =  msg.sender?.profilePictureUrl 
                   ? `${msg.sender.profilePictureUrl}`
                   : DEFAULT_AVATAR;
-                console.log("Sender profile pic in message:", senderProfilePic);
+
                 return (
                   <div
                     key={msg.id}

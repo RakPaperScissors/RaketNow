@@ -251,9 +251,10 @@ const handleSearch = useCallback(async (query) => {
     setSearchError(null);
     try {
         const results = await searchUsers(query); // This now reliably returns an array
-        setSearchResults(results.filter(u => u.uid !== user.uid));
+        setSearchResults((results || []).filter(u => u && u.uid && u.uid !== user?.uid));
     } catch (err) {
         setSearchError(err.message || 'Failed to search users.');
+        setSearchResults([]);
         console.error('User search error:', err);
     } finally {
         setSearchLoading(false);
