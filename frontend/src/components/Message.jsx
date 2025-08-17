@@ -4,9 +4,9 @@ import { useMessages } from "../hooks/useMessages";
 import { useUser } from "../hooks/useUsers";
 import JobInfoBanner from "../components/JobInfoBanner";
 
-const DEFAULT_AVATAR = "https://randomuser.me/api/portraits/lego/1.jpg";
+const DEFAULT_AVATAR = "/default_profile.jpg";
 const USER_PROFILE_PIC_BASE_URL =
-  "http://localhost:9000/user-profile-pictures/"; //recheck sa future
+  "http://localhost:9000/raketnow/"; //recheck sa future
 
 function Message() {
   const { user: currentUser, loading: userLoading } = useUser();
@@ -171,7 +171,8 @@ function Message() {
                                 onClick={() => startConversationWithUser(user.uid)}
                             >
                                 <img 
-                                    src={user.profilePicture || DEFAULT_AVATAR} 
+                                    src={user.profilePicture}
+                                    onError={(e) => (e.target.src) = DEFAULT_AVATAR}
                                     alt={user.firstName} 
                                     className="w-8 h-8 rounded-full object-cover" 
                                 />
@@ -186,7 +187,7 @@ function Message() {
             </div>
         )}
                 {/* Existing Conversations List */}
-<div className="overflow-y-auto flex-1">
+        <div className="overflow-y-auto flex-1">
           <p className="text-xs font-semibold text-gray-500 mb-2">Your Conversations:</p>
           {conversations.length === 0 && !searchLoading ? ( // Only show if no convos AND not searching
             <p className="p-4 text-gray-500">No conversations yet. Start one by searching a user!</p>
@@ -197,7 +198,7 @@ function Message() {
                 const otherParticipantProfilePic = otherParticipant?.profilePicture 
                     ? `${USER_PROFILE_PIC_BASE_URL}${otherParticipant.profilePicture}`
                     : DEFAULT_AVATAR;
-
+                console.log("Other participant profile pic:", otherParticipantProfilePic);
                 return (
                   <div
                     key={conv.id}
@@ -211,6 +212,7 @@ function Message() {
                     <div className="relative">
                       <img
                         src={otherParticipantProfilePic}
+                        onError={(e) => (e.target.src = DEFAULT_AVATAR)}
                         alt={otherParticipant?.firstName}
                         className="w-10 h-10 rounded-full object-cover"
                       />
@@ -231,7 +233,7 @@ function Message() {
         </div>
       </div>
 
-      {/* CHAT PANE */}
+      {/* CHAT PANEL */}
       <div
         className={`w-full md:w-2/3 bg-white rounded-2xl shadow flex flex-col h-[calc(100vh-7rem)] ${
           selectedConversation && showChatPanel
@@ -253,9 +255,11 @@ function Message() {
               </button>
               <img
                 src={
-                  getOtherParticipant(selectedConversation)?.profilePicture ||
-                  DEFAULT_AVATAR
+                  getOtherParticipant(selectedConversation)?.profilePicture
+                    ? `${USER_PROFILE_PIC_BASE_URL}${getOtherParticipant(selectedConversation).profilePicture}`
+                    : DEFAULT_AVATAR
                 }
+                onError={(e) => (e.target.src = DEFAULT_AVATAR)}
                 alt={getOtherParticipant(selectedConversation)?.firstName}
                 className="w-10 h-10 rounded-full object-cover cursor-pointer"
                 onClick={() =>
@@ -325,8 +329,10 @@ function Message() {
               {messages.map((msg) => {
                 const isMyMessage =
                   Number(msg.sender.id) === Number(currentUser.uid);
-                const senderProfilePic =  msg.sender.profilePictureUrl || DEFAULT_AVATAR;
-
+                const senderProfilePic =  msg.sender?.profilePictureUrl 
+                  ? `${msg.sender.profilePictureUrl}`
+                  : DEFAULT_AVATAR;
+                console.log("Sender profile pic in message:", senderProfilePic);
                 return (
                   <div
                     key={msg.id}
@@ -340,6 +346,7 @@ function Message() {
                     {/* PROFILE PIC */}
                     <img
                       src={senderProfilePic}
+                      onError={(e) => {e.target.src = '/default_profile.jpg'}}
                       alt={msg.sender.firstName || msg.sender.name}
                       className="w-8 h-8 rounded-full object-cover flex-shrink-0 cursor-pointer"
                       onClick={() => handleOpenUserProfile(msg.sender.id)} // Click handler
