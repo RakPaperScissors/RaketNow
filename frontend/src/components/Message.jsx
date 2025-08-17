@@ -4,6 +4,7 @@ import { useMessages } from "../hooks/useMessages";
 import { useUser } from "../hooks/useUsers";
 import JobInfoBanner from "../components/JobInfoBanner";
 import ViewProfileLink from "./ViewProfileLink";
+import LoadingSpinner from "./LoadingSpinner";
 
 const DEFAULT_AVATAR = "/default_profile.jpg";
 const USER_PROFILE_PIC_BASE_URL =
@@ -120,9 +121,7 @@ function Message() {
   }
   if (loading && conversations.length === 0 && !selectedConversation) {
     return (
-      <div className="text-center p-4 min-h-screen flex items-center justify-center">
-        Loading conversations...
-      </div>
+      <LoadingSpinner  fullScreen/>
     );
   }
   if (error) {
