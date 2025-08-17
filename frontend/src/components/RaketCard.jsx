@@ -4,6 +4,7 @@ import { Send } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useCurrentUser } from "../hooks/useCurrentUser";
 import { useRaket } from "../hooks/useRaket";
+import ViewProfileLink from "./ViewProfileLink";
 
 const categoryColors = {
   "Maintenance & Repair": "bg-yellow-100 text-yellow-800",
@@ -146,9 +147,11 @@ const RaketCard = ({
             {user && (
               <p>
                 Posted by:{" "}
-                <span className="font-medium text-[#0C2C57]">
-                  {user.firstName} {user.lastName}
-                </span>
+                <ViewProfileLink userId={user.uid}>
+                  <span className="font-medium text-[#0C2C57]">
+                    {user.firstName} {user.lastName}
+                  </span>
+                </ViewProfileLink>
               </p>
             )}
             {(postedAt || location) && (
