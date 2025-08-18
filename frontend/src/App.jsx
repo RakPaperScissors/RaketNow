@@ -97,6 +97,24 @@ function AuthGate({ children }) {
   return children;
 }
 
+function AdminGate({ children }) {
+  const { user, loading } = useAuth();
+
+  if (loading) return <LoadingSpinner fullScreen />;
+
+  if (!user) {
+    window.location.href = "/login";
+    return null;
+  }
+
+  if (user.role !== "admin") {
+    window.location.href = "/home";
+    return null;
+  }
+  
+  return children;
+}
+
 function AppContent() {
   const location = useLocation();
   const currentPath = location.pathname;
@@ -138,8 +156,8 @@ function AppContent() {
           <Route path="/view-profile/:userId" element={<AuthGate> <ViewProfile /> </AuthGate>} />
 
           {/* admin page */}
-          <Route path="/admin-dashboard" element={<AdminDashboard />} />
-          <Route path="/admin-users-table" element={<AdminUsersTable />} />
+          <Route path="/admin-dashboard" element={<AdminGate> <AdminDashboard /> </AdminGate>} />
+          <Route path="/admin-users-table" element={<AdminGate> <AdminUsersTable /> </AdminGate>} />
         </Routes>
 
         {showFooter && <Footer />}
