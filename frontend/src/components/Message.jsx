@@ -4,6 +4,7 @@ import { useMessages } from "../hooks/useMessages";
 import { useUser } from "../hooks/useUsers";
 import JobInfoBanner from "../components/JobInfoBanner";
 import ViewProfileLink from "./ViewProfileLink";
+import LoadingSpinner from "./LoadingSpinner";
 
 const DEFAULT_AVATAR = "/default_profile.jpg";
 const USER_PROFILE_PIC_BASE_URL =
@@ -120,9 +121,7 @@ function Message() {
   }
   if (loading && conversations.length === 0 && !selectedConversation) {
     return (
-      <div className="text-center p-4 min-h-screen flex items-center justify-center">
-        Loading conversations...
-      </div>
+      <LoadingSpinner  fullScreen/>
     );
   }
   if (error) {
@@ -341,7 +340,7 @@ function Message() {
                     <ViewProfileLink userId={msg.sender.id}>
                       <img
                         src={senderProfilePic}
-                        onError={(e) => {e.target.src = '/default_profile.jpgwd'}}
+                        onError={(e) => {e.target.src = '/default_profile.jpg'}}
                         alt={msg.sender.firstName || msg.sender.name}
                         className="w-8 h-8 rounded-full object-cover flex-shrink-0 cursor-pointer"
                       />
