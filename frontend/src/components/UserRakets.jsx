@@ -1,3 +1,7 @@
+// #############################################################
+// MY RAKETS COMPONENT
+// #############################################################
+
 import React from "react";
 import { ListFilter, MessageCircle } from "lucide-react";
 import { useEffect, useState, useCallback } from "react";
@@ -268,13 +272,13 @@ const UserRakets = () => {
   const statuses = ["All", "Completed", "Ongoing", "Pending"];
 
   return (
-    <div className="p-6">
+    <div className="p-6 bg-white shadow-md rounded-xl">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4 gap-4">
         <h1 className="text-2xl font-bold text-[#0C2C57]">My Rakets</h1>
       </div>
 
       {/* Filters Section */}
-      <div className="bg-[#F9FAFB] p-4 rounded-md mb-6 relative">
+      <div className="mb-6">
         <div className="flex items-center gap-4 flex-wrap mb-3">
           <div className="relative inline-block text-left">
             <button
@@ -472,14 +476,14 @@ const UserRakets = () => {
                       onClick={() =>
                         navigate(`/raket/${raket.raketId}/applications`)
                       }
-                      className="text-sm px-3 py-1 rounded-md bg-[#0c2c57] text-[#ffff] hover:bg-blue-500 transition"
+                      className="text-sm px-4 py-2 rounded-md bg-[#0c2c57] text-[#ffff] hover:bg-[#0F3970] transition"
                     >
                       View Applications
                     </button>
                     <button
                       disabled={updatingId === raket.raketId}
                       onClick={() => handleCancelOpen(raket.raketId)}
-                      className="text-sm px-3 py-1 rounded-md font-medium bg-[#ff7c2b] text-[#ffff] hover:bg-orange-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="text-sm px-4 py-2 rounded-md font-medium bg-[#ff7c2b] text-[#ffff] hover:bg-[#FF914D] disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       Withdraw
                     </button>

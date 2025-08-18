@@ -2,7 +2,7 @@ import React from "react";
 import DashboardCard from "./DashboardCard";
 import { Briefcase, Lightbulb, Rocket } from "lucide-react";
 
-// To be replaced with actual data from the backend 
+// To be replaced with actual data from the backend
 const DashboardCardList = () => {
   return (
     <div className="grid md:grid-cols-3 gap-6">

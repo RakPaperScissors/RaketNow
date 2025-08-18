@@ -78,7 +78,7 @@ import React from "react";
 
 function BoostPost() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4 sm:p-6">
+    <div className="flex flex-col items-center justify-start min-h-screen bg-gray-50 p-4 sm:p-6">
       <div className="w-full max-w-5xl bg-gradient-to-b from-[#0C2C57] to-[#FF7C2B] text-white rounded-2xl shadow-xl p-6 sm:p-10 text-center">
         <h1 className="text-2xl sm:text-4xl font-bold mb-2">🚀 Boost Post</h1>
         <p className="text-base sm:text-lg mb-6 opacity-90">

@@ -1,3 +1,7 @@
+// ############################################################
+// SUBMITTED APPLICATIONS COMPONENT
+// ############################################################
+
 import { useState } from "react";
 import { withdrawMyApplication } from "../api/rakets";
 import { useMyRaketApplications } from "../hooks/useMyRaketApplications";
@@ -10,11 +14,18 @@ const formatPeso = new Intl.NumberFormat("en-PH", {
 
 function MyApplications() {
   const currentUser = useCurrentUser();
-  const { apps: myApplications, loading, error, refetch } = useMyRaketApplications();
+  const {
+    apps: myApplications,
+    loading,
+    error,
+    refetch,
+  } = useMyRaketApplications();
   const [actionLoading, setActionLoading] = useState(false);
 
   const handleWithdraw = async (id) => {
-    const confirmed = window.confirm("Are you sure you want to withdraw your application?");
+    const confirmed = window.confirm(
+      "Are you sure you want to withdraw your application?"
+    );
     if (!confirmed) return;
 
     try {
@@ -31,28 +42,33 @@ function MyApplications() {
 
   if (currentUser?.role === "client") return null; // hides if client
 
-    return (
-    <div className="p-6">
+  return (
+    <div className="p-6 bg-white shadow-md rounded-xl">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4 gap-4">
-        <h1 className="text-2xl font-bold text-[#0C2C57]">Submitted Applications</h1>
+        <h1 className="text-2xl font-bold text-[#0C2C57]">
+          Submitted Applications
+        </h1>
       </div>
 
-        {loading ? (
+      {loading ? (
         <div>Loading...</div>
-        ) : error ? (
+      ) : error ? (
         <div className="text-red-500">{error}</div>
-        ) : myApplications && myApplications.length > 0 ? (
+      ) : myApplications && myApplications.length > 0 ? (
         <div className="space-y-6">
-            {myApplications.map((app) => (
+          {myApplications.map((app) => (
             <div
               key={app.applicationId}
               className="bg-white p-5 rounded-lg shadow hover:shadow-lg transition"
             >
               <div className="flex flex-col gap-2">
                 {/* Title */}
-                <div className="text-lg font-semibold text-gray-800">
+                <div className="text-lg font-semibold text-[#0C2C57]">
                   {app.raket?.title || "No title"}
                 </div>
+
+                {/* Divider below title */}
+                <div className="border-b border-gray-200 mb-2" />
 
                 {/* Client */}
                 <div className="text-sm text-gray-600">
@@ -60,16 +76,28 @@ function MyApplications() {
                   {app.raket?.user?.firstName} {app.raket?.user?.lastName || ""}
                 </div>
 
-                {/* Budget */}
-                <div className="text-sm text-gray-600">
-                  <span className="font-medium">Budget:</span> PHP {app.raket?.budget || 0}
+                {/* Budget + Withdraw (if pending) */}
+                <div className="flex items-center justify-between text-sm text-gray-600">
+                  <span>
+                    <span className="font-medium">Budget:</span> PHP{" "}
+                    {app.raket?.budget || 0}
+                  </span>
+                  {app.status?.toUpperCase() === "PENDING" && (
+                    <button
+                      disabled={actionLoading}
+                      onClick={() => handleWithdraw(app.applicationId)}
+                      className="bg-[#ff7c2b] text-white text-sm px-4 py-2 rounded-md hover:bg-[#ff914d]"
+                    >
+                      Withdraw
+                    </button>
+                  )}
                 </div>
 
                 {/* Status */}
                 <div className="text-sm text-gray-600">
                   <span className="font-medium">Application Status:</span>{" "}
                   <span
-                    className={`px-2 py-1 rounded text-sm ${
+                    className={`px-4 py-2 rounded-md text-sm ${
                       app.status === "ACCEPTED"
                         ? "bg-green-100 text-green-700"
                         : app.status === "REJECTED"
@@ -80,29 +108,17 @@ function MyApplications() {
                     {app.status}
                   </span>
                 </div>
-
-                {/* Withdraw button (only if pending) */}
-                {app.status?.toUpperCase() === "PENDING" && (
-                  <button
-                    disabled={actionLoading}
-                    onClick={() => handleWithdraw(app.applicationId)}
-                    className="self-start bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition disabled:opacity-50"
-                  >
-                    Withdraw
-                  </button>
-                )}
               </div>
             </div>
-            ))}
+          ))}
         </div>
-        ) : (
+      ) : (
         <p className="text-center text-gray-500 mt-6">
-            You haven't applied to any rakets yet.
+          You haven't applied to any rakets yet.
         </p>
-        )}
+      )}
     </div>
-    );
+  );
 }
-
 
 export default MyApplications;

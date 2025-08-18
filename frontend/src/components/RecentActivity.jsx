@@ -1,3 +1,7 @@
+// ############################################################
+// COMPONENT IN USE IF POV OF SOMEONE ELSE VIEWING YOUR PROFILE
+// ############################################################
+
 import { Briefcase, Award, Users } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 
@@ -11,8 +15,8 @@ export default function RecentActivity({ rakets }) {
         {rakets.length > 0 ? (
           rakets.map((raket, index) => (
             <div key={index} className="flex items-center space-x-3">
-              <div className="flex-shrink-0 w-10 h-10 bg-orange-100 rounded=full flex items-center justify-center">
-                <Briefcase />
+              <div className="flex-shrink-0 w-10 h-10 bg-[#ff7c2b] rounded-full flex items-center justify-center">
+                <Briefcase className="text-white" />
               </div>
               <div className="flex-1">
                 <p className="text-sm font-medium text-gray-800">
