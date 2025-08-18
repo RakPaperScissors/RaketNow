@@ -24,6 +24,7 @@ function SideNav() {
     setIsLoggingOut(true);
     await logout();
     window.location.href = "/login";
+    setIsLoggingOut(false);
   };
 
   if (loading) return <LoadingSpinner fullScreen/>;
