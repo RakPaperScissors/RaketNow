@@ -20,33 +20,6 @@ const CATEGORIES = [
   "Moving & Delivery Services",
 ];
 
-// const jobs = [
-//   {
-//     images: [Mockup, Sample],
-//     title: "Plumbing Services for Leaky Faucet",
-//     description:
-//       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis, tempora Lorem ipsum dolor sit amet. Sit molestiae voluptates est voluptatem quasi aut ratione unde ab reiciendis eligendi sit reiciendis voluptas hic expedita odio. At dicta error 33 voluptatem illum eos itaque nesciunt aut dolor molestiae et dignissimos animi in recusandae quibusdam. In voluptatem ullam aut molestias voluptate qui doloribus sequi.Est fugit itaque hic autem cupiditate ut voluptatum ipsa nam eligendi quos. Et enim rerum eum velit nisi qui dolorum voluptas 33 suscipit rerum aut sint omnis. Vel magni velit 33 veniam voluptatem est ducimus fugiat.",
-//     budget: 850,
-//     user: "Xander Jay",
-//     postedAt: "1h ago",
-//     location: "Davao City",
-//     rating: 4.8,
-//     category: "Maintenance & Repair",
-//   },
-//   {
-//     images: ["https://via.placeholder.com/300x200", "https://via.placeholder.com/300x201"],
-//     title: "Build a Personal Website",
-//     description: "Need someone to build my portfolio site using React or Next.js.",
-//     budget: 10000,
-//     user: "Jhaye Marie",
-//     postedAt: "3h ago",
-//     location: "Matina",
-//     rating: 5,
-//     category: "Tech & Electronics",
-//   },
-// ];
-
-
 const RaketFeed = ({ searchTerm }) => {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
