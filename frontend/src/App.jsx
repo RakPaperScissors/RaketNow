@@ -7,6 +7,7 @@ import LoadingSpinner from "./components/LoadingSpinner";
 
 import { AuthProvider } from "./context/AuthContext";
 import { useAuth } from "./context/AuthContext";
+import { useTrackVisit } from "./hooks/useAdmin";
 
 // Pages
 import About from "./pages/About";
@@ -167,6 +168,7 @@ function AppContent() {
 }
 
 function App() {
+  useTrackVisit();
   return (
     <BrowserRouter>
       <AuthProvider>

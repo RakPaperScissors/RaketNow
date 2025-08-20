@@ -7,21 +7,24 @@ import {
 } from "lucide-react";
 import adminBanner from "../assets/images/admin-banner.png";
 import { useAuth } from "../context/AuthContext";
-import { useUsers } from "../hooks/useAdmin";
+import { useUsers, useVisits } from "../hooks/useAdmin";
 import LoadingSpinner from "./LoadingSpinner";
 
 
 export default function AdminDashboard() {
     const { user: authUser, loading: authLoading, error: authError } = useAuth();
     const { users, loading, error } = useUsers();
+    const { visits, loading: visitsLoading, error: visitsError } = useVisits();
 
-    if (loading || authLoading) return <LoadingSpinner />;
-    if (error || authError) return <p>Error: {error.message}</p>;
+    if (loading || authLoading || visitsLoading) return <LoadingSpinner />;
+    if (error || authError || visitsError) {
+        const errMsg = error || authError || visitsError;
+        return <p>Error: {errMsg}</p>};
 
     const dashboardStats = [
         {
             title: "Online Users",
-            value: "24",
+            value: "N/A",
             icon: <UserCheck className="w-6 h-6 text-green-600" />,
             color: "bg-green-100",
         },
@@ -33,7 +36,7 @@ export default function AdminDashboard() {
         },
         {
             title: "Error Rate",
-            value: "2.1%",
+            value: "N/A",
             icon: <AlertOctagon className="w-6 h-6 text-red-600" />,
             color: "bg-red-100",
         },
@@ -68,14 +71,14 @@ export default function AdminDashboard() {
                         <Eye className="w-8 h-8 text-blue-600" />
                         <div>
                             <p className="text-sm text-gray-600">Visits This Month</p>
-                            <p className="text-xl font-bold text-gray-800">8,942</p>
+                            <p className="text-xl font-bold text-gray-800">{visits?.thisMonth ?? 0}</p>
                         </div>
                     </div>
                     <div className="flex items-center gap-3">
                         <Eye className="w-8 h-8 text-indigo-600" />
                         <div>
                             <p className="text-sm text-gray-600">Total Visits</p>
-                            <p className="text-xl font-bold text-gray-800">52,341</p>
+                            <p className="text-xl font-bold text-gray-800">{visits?.total ?? 0}</p>
                         </div>
                     </div>
                 </div>
