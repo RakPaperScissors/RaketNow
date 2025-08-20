@@ -6,30 +6,38 @@ import {
     Eye,
 } from "lucide-react";
 import adminBanner from "../assets/images/admin-banner.png";
+import { useAuth } from "../context/AuthContext";
+import { useUsers } from "../hooks/useAdmin";
+import LoadingSpinner from "./LoadingSpinner";
 
-const dashboardStats = [
-    {
-        title: "Online Users",
-        value: "24",
-        icon: <UserCheck className="w-6 h-6 text-green-600" />,
-        color: "bg-green-100",
-    },
-    {
-        title: "Total Users",
-        value: "183",
-        icon: <Users className="w-6 h-6 text-purple-600" />,
-        color: "bg-purple-100",
-    },
-    {
-        title: "Error Rate",
-        value: "2.1%",
-        icon: <AlertOctagon className="w-6 h-6 text-red-600" />,
-        color: "bg-red-100",
-    },
-];
 
 export default function AdminDashboard() {
-    const fullName = "Admin";
+    const { user: authUser, loading: authLoading, error: authError } = useAuth();
+    const { users, loading, error } = useUsers();
+
+    if (loading || authLoading) return <LoadingSpinner />;
+    if (error || authError) return <p>Error: {error.message}</p>;
+
+    const dashboardStats = [
+        {
+            title: "Online Users",
+            value: "24",
+            icon: <UserCheck className="w-6 h-6 text-green-600" />,
+            color: "bg-green-100",
+        },
+        {
+            title: "Total Users",
+            value: users.length,
+            icon: <Users className="w-6 h-6 text-purple-600" />,
+            color: "bg-purple-100",
+        },
+        {
+            title: "Error Rate",
+            value: "2.1%",
+            icon: <AlertOctagon className="w-6 h-6 text-red-600" />,
+            color: "bg-red-100",
+        },
+    ];
 
     return (
         <>
@@ -38,7 +46,7 @@ export default function AdminDashboard() {
                 <div className="relative w-full h-70 bg-gradient-to-r from-[#EFF6FF] to-[#FFF7ED] text-[#0C2C57] flex justify-between items-center px-10 overflow-hidden">
                     <div>
                         <h1 className="text-3xl font-bold mb-2">
-                            Hi, {fullName.split(" ")[0]}!
+                            Hi, {authUser.firstName}!
                         </h1>
                         <p className="text-base">
                             Ready to manage RaketNow and check on today’s performance?            </p>
