@@ -117,11 +117,6 @@ const RaketStatus = () => {
           setUpdatingId(raketId);
           await requestCompletion(raketId);
           await fetchRaketsData();
-          // const updatedData = await fetchRaketsData(); 
-          // const updatedRaket = updatedData.find(r => r.raketId == raketId);
-          // console.log("raketId arg:", raketId, "typeof:", typeof raketId);
-          // console.log("updatedData IDs:", updatedData.map(r => [r.raketId, typeof r.raketId]));
-          // console.log("Updated raket status (after refetch):", updatedRaket?.status);
         } catch (err) {
           console.error("Failed to mark as completed:", err);
           alert("Something went wrong. Try again.");

@@ -49,20 +49,18 @@ export async function getPublicUserProfile(uid) {
 export async function searchUsers(query) {
     if (!query) return []; // Return empty array if query is empty
 
-    // Determine if it's likely an email based on presence of '@'
     const isEmail = query.includes('@');
     const endpoint = isEmail ? 'search/email' : 'search/name';
-    const param = isEmail ? query : encodeURIComponent(query); // Encode name for URL
+    const param = isEmail ? query : encodeURIComponent(query);
 
     const url = `${API_URL}/user/search/name/${param}`;
-    console.log("Searching URL:", url);
 
     const response = await fetch(url, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
         },
-        credentials: 'include', // Essential for cookie-based auth
+        credentials: 'include',
     });
 
     if (!response.ok) {
