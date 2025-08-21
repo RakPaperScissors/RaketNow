@@ -1,5 +1,5 @@
-import { useEffect, useState, useRef } from "react";
-import { fetchUsers, trackVisit, fetchVisits as fetchVisitsApi} from "../api/admin";
+import { useEffect, useState, useRef, useCallback } from "react";
+import { fetchUsers, trackVisit, fetchVisits as fetchVisitsApi, deleteUser } from "../api/admin";
 
 export function useUsers() {
     const [users, setUsers] = useState([]);
@@ -69,4 +69,28 @@ export const useVisits = () => {
     }, []);
 
     return { visits, loading, error };
+}
+
+export function useDeleteUser() {
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const [success, setSuccess] = useState(false);
+
+    const handleDelete = useCallback(async (userId) => {
+        setLoading(true);
+        setError(null);
+        setSuccess(false);
+
+        try {
+            const result = await deleteUser(userId);
+            setSuccess(true);
+            return result;
+        } catch (err) {
+            setError(err.message || "Failed to delete user.");
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
+    return { handleDelete, loading, error, success };
 }

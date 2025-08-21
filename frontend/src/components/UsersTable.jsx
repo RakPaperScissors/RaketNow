@@ -7,21 +7,22 @@ import {
   AlertTriangle,
   ChevronDown,
 } from "lucide-react";
-import { useUsers } from "../hooks/useAdmin";
+import { useUsers, useDeleteUser } from "../hooks/useAdmin";
 import LoadingSpinner from "./LoadingSpinner";
 
 function UserTable() {
-  const { users, loading, error } = useUsers();
+  const { users, loading: userLoading, error: userError } = useUsers();
+  const { handleDelete, loading: deleteLoading, error: errorLoading, success } = useDeleteUser();
 
   const [searchQuery, setSearchQuery] = useState("");
   const [sortOption, setSortOption] = useState("newest");
   const [deleteTarget, setDeleteTarget] = useState(null); // user to delete
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleDelete = (id) => {
-    // setUsers((prev) => prev.filter((u) => u.id !== id));
-    closeModal();
-  };
+  // const handleDelete = (id) => {
+  //   // setUsers((prev) => prev.filter((u) => u.id !== id));
+  //   closeModal();
+  // };
 
   const openModal = (user) => {
     setDeleteTarget(user);
@@ -37,8 +38,8 @@ function UserTable() {
     setSortOption(e.target.value);
   };
 
-  if (loading) return <LoadingSpinner />;
-  if (error) return <p className="text-red-600">Error loading users.</p>;
+  if (userLoading) return <LoadingSpinner />;
+  if (userError) return <p className="text-red-600">Error loading users.</p>;
 
   let filteredUsers = users || [];
   if (sortOption === "client")
@@ -169,12 +170,12 @@ function UserTable() {
                   {new Date(user.createdAt).toLocaleDateString()}
                 </td>
                 <td className="px-6 py-4 text-right">
-                  <button
+                  {/* <button
                     onClick={() => openModal(user)}
                     className="text-red-600 hover:text-red-800"
                   >
                     <Trash2 className="h-5 w-5" />
-                  </button>
+                  </button> */}
                 </td>
               </tr>
             ))}
@@ -199,7 +200,12 @@ function UserTable() {
             </div>
             <p className="text-sm text-gray-700 mb-5">
               Are you sure you want to delete{" "}
-              <span className="font-semibold">{deleteTarget.name}</span>? This
+              <span className="font-semibold">
+                {deleteTarget.type === "Organization"
+                ? deleteTarget.orgName
+                : `${deleteTarget.firstName || ""} ${deleteTarget.lastName || ""}`}
+              </span>
+              ? This
               action cannot be undone.
             </p>
 
@@ -212,11 +218,11 @@ function UserTable() {
                 Cancel
               </button>
               <button
-                onClick={() => handleDelete(deleteTarget.id)}
+                onClick={() => handleDelete(deleteTarget.uid)}
                 className="flex items-center gap-1 text-sm text-red-600 hover:text-red-800"
               >
                 <Trash2 className="h-4 w-4" />
-                Confirm Delete
+                {deleteLoading ? "Deleting..." : "Confirm Delete"}
               </button>
             </div>
           </div>

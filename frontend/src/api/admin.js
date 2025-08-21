@@ -41,3 +41,18 @@ export async function fetchVisits() {
 
     return await response.json();
 }
+
+export async function deleteUser(userId) {
+    if (!userId) throw new Error("deleteUser called without a valid userId");
+
+    const response = await fetch(`${API_URL}/user/${userId}`, {
+        method: "DELETE",
+        credentials: "include"
+    });
+
+    if (!response.ok) {
+        throw new Error("Failed to delete user");
+    }
+
+    return await response.json();
+}
