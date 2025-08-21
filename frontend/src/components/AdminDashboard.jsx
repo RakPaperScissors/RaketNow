@@ -6,30 +6,41 @@ import {
     Eye,
 } from "lucide-react";
 import adminBanner from "../assets/images/admin-banner.png";
+import { useAuth } from "../context/AuthContext";
+import { useUsers, useVisits } from "../hooks/useAdmin";
+import LoadingSpinner from "./LoadingSpinner";
 
-const dashboardStats = [
-    {
-        title: "Online Users",
-        value: "24",
-        icon: <UserCheck className="w-6 h-6 text-green-600" />,
-        color: "bg-green-100",
-    },
-    {
-        title: "Total Users",
-        value: "183",
-        icon: <Users className="w-6 h-6 text-purple-600" />,
-        color: "bg-purple-100",
-    },
-    {
-        title: "Error Rate",
-        value: "2.1%",
-        icon: <AlertOctagon className="w-6 h-6 text-red-600" />,
-        color: "bg-red-100",
-    },
-];
 
 export default function AdminDashboard() {
-    const fullName = "Admin";
+    const { user: authUser, loading: authLoading, error: authError } = useAuth();
+    const { users, loading, error } = useUsers();
+    const { visits, loading: visitsLoading, error: visitsError } = useVisits();
+
+    if (loading || authLoading || visitsLoading) return <LoadingSpinner />;
+    if (error || authError || visitsError) {
+        const errMsg = error || authError || visitsError;
+        return <p>Error: {errMsg}</p>};
+
+    const dashboardStats = [
+        {
+            title: "Online Users",
+            value: "N/A",
+            icon: <UserCheck className="w-6 h-6 text-green-600" />,
+            color: "bg-green-100",
+        },
+        {
+            title: "Total Users",
+            value: users.length,
+            icon: <Users className="w-6 h-6 text-purple-600" />,
+            color: "bg-purple-100",
+        },
+        {
+            title: "Error Rate",
+            value: "N/A",
+            icon: <AlertOctagon className="w-6 h-6 text-red-600" />,
+            color: "bg-red-100",
+        },
+    ];
 
     return (
         <>
@@ -38,10 +49,11 @@ export default function AdminDashboard() {
                 <div className="relative w-full h-70 bg-gradient-to-r from-[#EFF6FF] to-[#FFF7ED] text-[#0C2C57] flex justify-between items-center px-10 overflow-hidden">
                     <div>
                         <h1 className="text-3xl font-bold mb-2">
-                            Hi, {fullName.split(" ")[0]}!
+                            Hi, {authUser.firstName}!
                         </h1>
                         <p className="text-base">
-                            Ready to manage RaketNow and check on today’s performance?            </p>
+                            Ready to manage RaketNow and check on today’s performance?
+                        </p>
                     </div>
                     <img
                         src={adminBanner}
@@ -60,14 +72,14 @@ export default function AdminDashboard() {
                         <Eye className="w-8 h-8 text-blue-600" />
                         <div>
                             <p className="text-sm text-gray-600">Visits This Month</p>
-                            <p className="text-xl font-bold text-gray-800">8,942</p>
+                            <p className="text-xl font-bold text-gray-800">{visits?.thisMonth ?? 0}</p>
                         </div>
                     </div>
                     <div className="flex items-center gap-3">
                         <Eye className="w-8 h-8 text-indigo-600" />
                         <div>
                             <p className="text-sm text-gray-600">Total Visits</p>
-                            <p className="text-xl font-bold text-gray-800">52,341</p>
+                            <p className="text-xl font-bold text-gray-800">{visits?.total ?? 0}</p>
                         </div>
                     </div>
                 </div>

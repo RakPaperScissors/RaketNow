@@ -30,9 +30,11 @@ export const AuthProvider = ({ children }) => {
             const data = await getProfile();
             setUser(data);
             setError(null);
+            return data;
         } catch (err) {
             setError(err);
             console.error("Failed to fetch profile after login.");
+            throw err;
         }
     };
 

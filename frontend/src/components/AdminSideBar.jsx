@@ -1,10 +1,26 @@
 import React from "react";
 import { LayoutDashboard, Users, LogOut } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
 import SideNavItem from "./SideNavItem";
 import SideNavUser from "./SideNavUser";
 import logo from "../assets/images/raketnow-blue-logo.png";
+import LoadingSpinner from "./LoadingSpinner";
 
 function AdminSidebar() {
+  const { user, loading, logout } = useAuth();
+  const [isLoggingOut, setIsLoggingOut] = React.useState(false);
+
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+    await logout();
+    window.location.href = "/login";
+    setIsLoggingOut(false);
+  };
+
+  if (loading) return <LoadingSpinner fullScreen />;
+  if (isLoggingOut) return <LoadingSpinner fullScreen />;
+  if (!user) return <p>You are not logged in.</p>
+
   return (
     <aside className="h-screen w-64 bg-white border-r border-gray-200 flex flex-col justify-between py-6 px-4">
       {/* TOP SECTION */}
@@ -34,21 +50,31 @@ function AdminSidebar() {
         <div className="border-t border-gray-200 my-4" />
 
         {/* Admin Profile (non-clickable) */}
-        <div className="flex items-center gap-3 p-2 rounded">
-          <img
+        {loading ? (
+          <p>Loading user...</p>
+        ) : (
+          <div className="flex items-center gap-3 p-2 rounded">
+            <img
             src="https://randomuser.me/api/portraits/lego/1.jpg"
             alt="Admin Avatar"
             className="w-10 h-10 rounded-full"
-          />
-          <div>
-            <p className="text-sm font-medium">Admin</p>
-            <p className="text-xs text-gray-500">Administrator</p>
+            />
+            <div>
+              <p className="text-sm font-medium">{user.firstName} {user.lastName}</p>
+              <p className="text-xs text-gray-500">Administrator</p>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Logout */}
         <div className="mt-4">
-          <SideNavItem to="/logout" icon={LogOut} label="Logout" />
+          {loading ? (
+            <LoadingSpinner />
+          ) : (
+            <div onClick={handleLogout} style={{ cursor: 'pointer' }}>
+              <SideNavItem to="#" icon={LogOut} label="Logout" />
+            </div>
+          )}
         </div>
       </div>
     </aside>

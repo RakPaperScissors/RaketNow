@@ -28,6 +28,7 @@ import { RaketApplicationModule } from './entities/raket-application/raket-appli
 import { NotificationModule } from './entities/notification/notification.module';
 import { ProfileModule } from './profile/profile.module';
 import { RatingModule } from './entities/rating/rating.module';
+import { VisitsModule } from './entities/visits/visits.module';
 
 @Module({
   imports: [
@@ -65,7 +66,8 @@ import { RatingModule } from './entities/rating/rating.module';
     NotificationModule,
     MessageModule,
     ProfileModule,
-    RatingModule
+    RatingModule,
+    VisitsModule
   ],
   controllers: [AppController],
   providers: [AppService],
