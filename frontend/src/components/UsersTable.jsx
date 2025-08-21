@@ -156,7 +156,7 @@ function UserTable() {
                   >
                     {user.role === "admin"
                     ? "Admin"
-                    : user.type === "client"
+                    : user.type === "Users"
                     ? "Client"
                     : user.type === "raketista"
                     ? "Raketista"
