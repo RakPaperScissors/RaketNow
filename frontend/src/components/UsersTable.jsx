@@ -7,41 +7,19 @@ import {
   AlertTriangle,
   ChevronDown,
 } from "lucide-react";
-
-// sample users
-const sampleUsers = [
-  {
-    id: 1,
-    name: "Juan Dela Cruz",
-    email: "juan@example.com",
-    role: "client",
-    joinedAt: "2025-07-01",
-  },
-  {
-    id: 2,
-    name: "Maria Santos",
-    email: "maria@example.com",
-    role: "raketista",
-    joinedAt: "2025-06-15",
-  },
-  {
-    id: 3,
-    name: "Carlos Reyes",
-    email: "carlos@example.com",
-    role: "client",
-    joinedAt: "2025-07-30",
-  },
-];
+import { useUsers } from "../hooks/useAdmin";
+import LoadingSpinner from "./LoadingSpinner";
 
 function UserTable() {
-  const [users, setUsers] = useState(sampleUsers);
+  const { users, loading, error } = useUsers();
+
   const [searchQuery, setSearchQuery] = useState("");
   const [sortOption, setSortOption] = useState("newest");
   const [deleteTarget, setDeleteTarget] = useState(null); // user to delete
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleDelete = (id) => {
-    setUsers((prev) => prev.filter((u) => u.id !== id));
+    // setUsers((prev) => prev.filter((u) => u.id !== id));
     closeModal();
   };
 
@@ -56,28 +34,36 @@ function UserTable() {
   };
 
   const handleSortChange = (e) => {
-    const value = e.target.value;
-    setSortOption(value);
-
-    let sorted = [...sampleUsers];
-
-    if (value === "newest") {
-      sorted.sort((a, b) => new Date(b.joinedAt) - new Date(a.joinedAt));
-    } else if (value === "oldest") {
-      sorted.sort((a, b) => new Date(a.joinedAt) - new Date(b.joinedAt));
-    } else if (value === "client") {
-      sorted = sorted.filter((u) => u.role === "client");
-    } else if (value === "raketista") {
-      sorted = sorted.filter((u) => u.role === "raketista");
-    }
-
-    setUsers(sorted);
+    setSortOption(e.target.value);
   };
 
-  const filteredUsers = users.filter(
-    (user) =>
-      user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchQuery.toLowerCase())
+  if (loading) return <LoadingSpinner />;
+  if (error) return <p className="text-red-600">Error loading users.</p>;
+
+  let filteredUsers = users || [];
+  if (sortOption === "client")
+    filteredUsers = filteredUsers.filter((u) => u.role === "client");
+  if (sortOption === "raketista")
+    filteredUsers = filteredUsers.filter((u) => u.role === "raketista");
+  if (sortOption === "organization")
+    filteredUsers = filteredUsers.filter((u) => u.role === "organization");
+  if (sortOption === "newest")
+    filteredUsers = [...filteredUsers].sort(
+      (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+    );
+  if (sortOption === "oldest")
+    filteredUsers = [...filteredUsers].sort(
+      (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
+    );
+
+  filteredUsers = filteredUsers.filter((user) => {
+      const fullName = `${user.firstName || ""} ${user.lastName || ""}`.trim();
+      const email = user.email || "";
+      return (
+        fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        email.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    }
   );
 
   return (
@@ -112,6 +98,7 @@ function UserTable() {
               <option value="oldest">Oldest</option>
               <option value="client">Filter: Client</option>
               <option value="raketista">Filter: Raketista</option>
+              <option value="organization">Filter: Organization</option>
             </select>
             <ChevronDown
               className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"
@@ -146,23 +133,35 @@ function UserTable() {
           <tbody className="divide-y divide-gray-100">
             {filteredUsers.map((user) => (
               <tr key={user.id} className="hover:bg-gray-50">
-                <td className="px-6 py-4 text-sm text-gray-900">{user.name}</td>
+                <td className="px-6 py-4 text-sm text-gray-900">{user.firstName} {user.lastName}</td>
                 <td className="px-6 py-4 text-sm text-gray-700">
                   {user.email}
                 </td>
                 <td className="px-6 py-4">
                   <span
                     className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${
-                      user.role === "client"
+                      user.type === "Users"
                         ? "bg-[#ff7c2b]/10 text-[#ff7c2b]"
-                        : "bg-blue-100 text-blue-600"
+                        : user.type === "Raketista"
+                        ? "bg-blue-100 text-blue-600"
+                        : user.type === "Organization"
+                        ? "bg-purple-100 text-purple-600"
+                        : "bg-gray-100 text-gray-600"
                     }`}
                   >
-                    {user.role}
+                    {user.role === "admin"
+  ? "Admin"
+  : user.type === "client"
+  ? "Client"
+  : user.type === "raketista"
+  ? "Raketista"
+  : user.type === "organization"
+  ? "Org"
+  : user.type}
                   </span>
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-600">
-                  {new Date(user.joinedAt).toLocaleDateString()}
+                  {new Date(user.createdAt).toLocaleDateString()}
                 </td>
                 <td className="px-6 py-4 text-right">
                   <button

@@ -52,7 +52,8 @@ export default function AdminDashboard() {
                             Hi, {authUser.firstName}!
                         </h1>
                         <p className="text-base">
-                            Ready to manage RaketNow and check on today’s performance?            </p>
+                            Ready to manage RaketNow and check on today’s performance?
+                        </p>
                     </div>
                     <img
                         src={adminBanner}
