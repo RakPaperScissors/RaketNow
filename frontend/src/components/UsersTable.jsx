@@ -189,12 +189,12 @@ function UserTable() {
                 </td>
                 <td className="px-6 py-4 text-right">
                   <div className="flex justify-end gap-4">
-                    <button
+                    {/* <button
                       onClick={() => openModal(user)}
                       className="text-red-600 hover:text-red-800"
                     >
                       <Trash2 className="h-5 w-5" />
-                    </button>
+                    </button> */}
                     <button
                       onClick={() => viewProfile(user)}
                       className="text-green-600 hover:text-green-800"
@@ -244,7 +244,10 @@ function UserTable() {
                 Cancel
               </button>
               <button
-                onClick={() => handleDelete(deleteTarget.uid)}
+                onClick={async () => {
+                  await handleDelete(deleteTarget.uid || deleteTarget.id);
+                  closeModal();
+                }}
                 className="flex items-center gap-1 text-sm text-red-600 hover:text-red-800"
               >
                 <Trash2 className="h-4 w-4" />
@@ -255,28 +258,77 @@ function UserTable() {
         </div>
       )}
 
+      {/* Profile Modal */}
       {profileTarget && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-white/10">
+        <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-black/40">
           <div className="bg-white p-6 rounded-xl shadow-lg w-full max-w-md">
-            <h2 className="text-lg font-semibold mb-4 text-[#0c2c57]">
+            {/* Header */}
+            <h2 className="text-lg font-semibold mb-4 text-[#0c2c57] border-b pb-3">
               User Profile
             </h2>
-            <p><span className="font-semibold">Name:</span> {profileTarget.firstName} {profileTarget.lastName}</p>
-            {profileTarget.type === "Organization" && (
-              <p><span className="font-semibold">Organization Name:</span> {profileTarget.orgName}</p>
-            )}
-            <p><span className="font-semibold">Email:</span> {profileTarget.email}</p>
-            <p><span className="font-semibold">Role:</span> {profileTarget.type}</p>
-            <p><span className="font-semibold">Joined:</span> {new Date(profileTarget.createdAt).toLocaleDateString()}</p>
 
-            <div className="flex justify-end mt-4">
-              <button
-                onClick={closeProfileModal}
-                className="px-4 py-2 text-sm bg-gray-200 rounded-full hover:bg-gray-300"
-              >
-                Close
-              </button>
+            {/* Profile Info */}
+            <div className="space-y-3">
+              <p><span className="font-semibold text-gray-900">Name:</span>{" "} 
+                {profileTarget.firstName} {profileTarget.lastName}
+              </p>
             </div>
+            
+            {profileTarget.type === "Organization" && (
+              <p>
+                <span className="font-semibold text-gray-900">
+                  Organization Name:
+                </span> {" "}
+                {profileTarget.orgName}
+              </p>
+            )}
+
+
+            <p>
+              <span className="font-semibold text-gray-900">Email:</span>{" "} 
+              {profileTarget.email}
+            </p>
+            
+            {/* Roles Section */}
+            <div>
+              <span className="font-semibold text-gray-900">Roles:</span>
+                <div className="flex flex-wrap gap-2 mt-1">
+                  {profileTarget.roles?.map((role) => (
+                    <span
+                      key={role}
+                      className="px-2 py-1 text-xs font-medium rounded-full 
+                                bg-blue-100 text-blue-600"
+                    >
+                      {role.charAt(0).toUpperCase() + role.slice(1)}
+                    </span>
+                  ))}
+
+                  {/* Example "Was Client" badge if they switched */}
+                  {profileTarget.roles.includes("client") &&
+                    profileTarget.roles.includes("raketista") && (
+                      <span className="px-2 py-1 text-xs font-medium rounded-full 
+                                      bg-gray-200 text-gray-600">
+                        Was Client
+                      </span>
+                    )}
+                </div>
+            </div>
+
+            <p>
+              <span className="font-semibold text-gray-900">Joined:</span>{" "} 
+              {new Date(profileTarget.createdAt).toLocaleDateString()}
+            </p>
+
+             {/* Footer */}
+              <div className="flex justify-end mt-6">
+                <button
+                  onClick={closeProfileModal}
+                  className="px-5 py-2 text-sm font-medium bg-gray-100 
+                            rounded-full hover:bg-gray-200 transition"
+                >
+                  Close
+                </button>
+              </div>
           </div>
         </div>
       )}

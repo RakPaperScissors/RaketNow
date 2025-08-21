@@ -92,5 +92,12 @@ export function useDeleteUser() {
         }
     }, []);
 
+    useEffect(() => {
+        if (success) {
+            const timer = setTimeout(() => setSuccess(false), 2000);
+            return () => clearTimeout(timer);
+        }
+    }, [success]);
+
     return { handleDelete, loading, error, success };
 }
