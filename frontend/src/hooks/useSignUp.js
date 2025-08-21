@@ -25,7 +25,7 @@ export function useSignUp() {
         }
         try {
             await signUpApi(form);
-            setMessage("registration successful!");
+            setMessage("Registration successful!");
             window.location.href = "/login";
         } catch (error) {
             setMessage(error.message || "An error has occurred.");
