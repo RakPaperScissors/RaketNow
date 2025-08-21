@@ -163,6 +163,8 @@ function UserTable() {
                         ? "bg-blue-100 text-blue-600"
                         : user.type === "Organization"
                         ? "bg-purple-100 text-purple-600"
+                        : user.role === "admin"
+                        ? "bg-red-100 text-red-600"
                         : "bg-gray-100 text-gray-600"
                     }`}
                   >
@@ -176,6 +178,11 @@ function UserTable() {
                     ? "Org"
                     : user.type}
                   </span>
+                  {user.roles.includes("client") && user.roles.includes("raketista") && (
+                    <span className="px-2 py-0.5 text-[10px] rounded-full bg-gray-100 text-gray-500">
+                      Was Client
+                    </span>
+                  )}
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-600">
                   {new Date(user.createdAt).toLocaleDateString()}
