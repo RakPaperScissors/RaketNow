@@ -6,9 +6,11 @@ import {
   XCircle,
   AlertTriangle,
   ChevronDown,
+  Eye,
 } from "lucide-react";
 import { useUsers, useDeleteUser } from "../hooks/useAdmin";
 import LoadingSpinner from "./LoadingSpinner";
+import { useNavigate } from "react-router-dom";
 
 function UserTable() {
   const { users, loading: userLoading, error: userError } = useUsers();
@@ -18,11 +20,20 @@ function UserTable() {
   const [sortOption, setSortOption] = useState("newest");
   const [deleteTarget, setDeleteTarget] = useState(null); // user to delete
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [profileTarget, setProfileTarget] = useState(null);
 
   // const handleDelete = (id) => {
   //   // setUsers((prev) => prev.filter((u) => u.id !== id));
   //   closeModal();
   // };
+
+  const viewProfile = (user) => {
+    setProfileTarget(user);
+  };
+
+  const closeProfileModal = () => {
+    setProfileTarget(null);
+  }
 
   const openModal = (user) => {
     setDeleteTarget(user);
@@ -170,12 +181,20 @@ function UserTable() {
                   {new Date(user.createdAt).toLocaleDateString()}
                 </td>
                 <td className="px-6 py-4 text-right">
-                  {/* <button
-                    onClick={() => openModal(user)}
-                    className="text-red-600 hover:text-red-800"
-                  >
-                    <Trash2 className="h-5 w-5" />
-                  </button> */}
+                  <div className="flex justify-end gap-4">
+                    <button
+                      onClick={() => openModal(user)}
+                      className="text-red-600 hover:text-red-800"
+                    >
+                      <Trash2 className="h-5 w-5" />
+                    </button>
+                    <button
+                      onClick={() => viewProfile(user)}
+                      className="text-green-600 hover:text-green-800"
+                    >
+                      <Eye className="h-5 w-5"/>
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}
@@ -223,6 +242,32 @@ function UserTable() {
               >
                 <Trash2 className="h-4 w-4" />
                 {deleteLoading ? "Deleting..." : "Confirm Delete"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {profileTarget && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-white/10">
+          <div className="bg-white p-6 rounded-xl shadow-lg w-full max-w-md">
+            <h2 className="text-lg font-semibold mb-4 text-[#0c2c57]">
+              User Profile
+            </h2>
+            <p><span className="font-semibold">Name:</span> {profileTarget.firstName} {profileTarget.lastName}</p>
+            {profileTarget.type === "Organization" && (
+              <p><span className="font-semibold">Organization Name:</span> {profileTarget.orgName}</p>
+            )}
+            <p><span className="font-semibold">Email:</span> {profileTarget.email}</p>
+            <p><span className="font-semibold">Role:</span> {profileTarget.type}</p>
+            <p><span className="font-semibold">Joined:</span> {new Date(profileTarget.createdAt).toLocaleDateString()}</p>
+
+            <div className="flex justify-end mt-4">
+              <button
+                onClick={closeProfileModal}
+                className="px-4 py-2 text-sm bg-gray-200 rounded-full hover:bg-gray-300"
+              >
+                Close
               </button>
             </div>
           </div>
