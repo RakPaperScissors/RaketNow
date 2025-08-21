@@ -133,7 +133,12 @@ function UserTable() {
           <tbody className="divide-y divide-gray-100">
             {filteredUsers.map((user) => (
               <tr key={user.id} className="hover:bg-gray-50">
-                <td className="px-6 py-4 text-sm text-gray-900">{user.firstName} {user.lastName}</td>
+                <td className="px-6 py-4 text-sm text-gray-900">
+                  {user.type === "Organization" 
+                    ? user.orgName 
+                    : `${user.firstName || ""} ${user.lastName || ""}`
+                  }
+                </td>
                 <td className="px-6 py-4 text-sm text-gray-700">
                   {user.email}
                 </td>
@@ -150,14 +155,14 @@ function UserTable() {
                     }`}
                   >
                     {user.role === "admin"
-  ? "Admin"
-  : user.type === "client"
-  ? "Client"
-  : user.type === "raketista"
-  ? "Raketista"
-  : user.type === "organization"
-  ? "Org"
-  : user.type}
+                    ? "Admin"
+                    : user.type === "client"
+                    ? "Client"
+                    : user.type === "raketista"
+                    ? "Raketista"
+                    : user.type === "organization"
+                    ? "Org"
+                    : user.type}
                   </span>
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-600">
