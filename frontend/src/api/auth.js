@@ -20,19 +20,31 @@ export async function login(email, password) {
 // For Sign Up Functionality
 export async function signUp(formData) {
     const payload = { ...formData };
-    if (payload.role !== "organization") {
-        delete payload.orgName;
-    }
 
-    const response = await fetch (`${API_URL}/auth/register`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-    });
+    delete payload.confirmPassword;
 
-    const data = await response.json();
-    if (!response.ok) {
-        throw new Error(data.message || "Registration failed.");
+    try {
+        const response = await fetch (`${API_URL}/auth/register`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
+
+        const text = await response.text();
+
+        let data;
+        try {
+            data = JSON.parse(text);
+        } catch (err) {
+            throw new Error("Server returned non-JSON response");
+        }
+
+        if (!response.ok) {
+            throw new Error(data.message || "Registration failed.");
+        }
+
+        return data;
+    } catch (err) {
+        throw err;
     }
-    return data;
 }

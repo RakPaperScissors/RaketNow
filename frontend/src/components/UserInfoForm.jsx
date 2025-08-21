@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Eye, EyeOff } from "lucide-react";
 
-function UserInfoForm({ userType, formData, setFormData, onBack, onSubmit }) {
+function UserInfoForm({ userType, formData, setFormData, onBack, onSubmit, message }) {
   // for password and validation stuff
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -51,13 +51,25 @@ function UserInfoForm({ userType, formData, setFormData, onBack, onSubmit }) {
           Complete Your Details
         </h2>
 
+        {message && (
+          <p
+            className={`mb-4 text-center font-medium ${
+              message.toLowerCase().includes("success")
+                ? "text-green-600"
+                : "text-red-600"
+            }`}
+          >
+            {message}
+          </p>
+        )}
+
         <form onSubmit={(e) => e.preventDefault()}>
           {userType === "organization" && (
             <input
               type="text"
-              name="orgName"
+              name="organizationName"
               placeholder="Organization Name"
-              value={formData.orgName}
+              value={formData.organizationName}
               onChange={handleChange}
               className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
             />

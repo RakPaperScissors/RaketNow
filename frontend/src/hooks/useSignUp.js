@@ -5,10 +5,10 @@ export function useSignUp() {
     const [form, setForm] = useState({
         email: "",
         password: "",
-        confirmPassword: "",
-        name: "",
+        firstName: "",
+        lastName: "",
         role: "client",
-        orgName: "",
+        organizationName: "",
     });
 
     const [message, setMessage] = useState("");
@@ -25,7 +25,7 @@ export function useSignUp() {
         }
         try {
             await signUpApi(form);
-            setMessage("registration successful!");
+            setMessage("Registration successful!");
             window.location.href = "/login";
         } catch (error) {
             setMessage(error.message || "An error has occurred.");
