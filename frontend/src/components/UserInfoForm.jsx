@@ -55,9 +55,9 @@ function UserInfoForm({ userType, formData, setFormData, onBack, onSubmit }) {
           {userType === "organization" && (
             <input
               type="text"
-              name="orgName"
+              name="organizationName"
               placeholder="Organization Name"
-              value={formData.orgName}
+              value={formData.organizationName}
               onChange={handleChange}
               className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
             />

@@ -5,10 +5,10 @@ export function useSignUp() {
     const [form, setForm] = useState({
         email: "",
         password: "",
-        confirmPassword: "",
-        name: "",
+        firstName: "",
+        lastName: "",
         role: "client",
-        orgName: "",
+        organizationName: "",
     });
 
     const [message, setMessage] = useState("");
