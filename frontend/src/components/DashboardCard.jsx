@@ -10,7 +10,7 @@ const DashboardCard = ({
 }) => {
   return (
     <div
-      className={`rounded-2xl p-6 shadow-md hover:shadow-lg transition-all duration-300 bg-white`}
+      className={`rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all duration-300 bg-white`}
     >
       <div className="flex items-center gap-3 mb-4">
         {Icon && <Icon className="text-[#0C2C57]" />}
