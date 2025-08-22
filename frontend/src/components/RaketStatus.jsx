@@ -299,7 +299,7 @@ const RaketStatus = () => {
       </div>
 
       {/* Raket Cards */}
-      {currentUser?.role === "raketista" && (
+      {currentUser?.type === "Raketista" && (
         <div>
           {loading ? (
             <p className="text-gray-500">Loading assigned rakets...</p>
@@ -377,7 +377,7 @@ const RaketStatus = () => {
                           />
                         </div>
                       ) : (
-                        currentUser?.role === "client" && (
+                        currentUser?.type === "Users" && (
                           <StarRating
                             raketId={raket.raketId}
                             initialRating={0}
