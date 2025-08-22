@@ -8,6 +8,7 @@ import {
   LogOut,
   Package,
   Users,
+  AlignJustify,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import LoadingSpinner from "./LoadingSpinner";
@@ -19,6 +20,10 @@ import { useAuth } from "../context/AuthContext";
 function SideNav() {
   const { user, loading, logout } = useAuth();
   const [isLoggingOut, setIsLoggingOut] = React.useState(false);
+  const [collapsed, setCollapsed] = React.useState(() => {
+    const stored = localStorage.getItem("sidebarCollapsed");
+    return stored === "true";
+  });
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
@@ -27,53 +32,93 @@ function SideNav() {
     setIsLoggingOut(false);
   };
 
-  if (loading) return <LoadingSpinner fullScreen/>;
-  if (isLoggingOut) return <LoadingSpinner fullScreen/>
-  if (!user) return <p>You are not logged in.</p>
+  React.useEffect(() => {
+    localStorage.setItem("sidebarCollapsed", collapsed);
+  }, [collapsed]);
+
+  if (loading) return <LoadingSpinner fullScreen />;
+  if (isLoggingOut) return <LoadingSpinner fullScreen />;
+  if (!user) return <p>You are not logged in.</p>;
 
   const userType = user.type === "Users" ? "Client" : user.type;
   const canApplyAsRaketista = userType === "Client";
 
   return (
-    <aside className="h-screen w-64 bg-white border-r border-gray-200 flex flex-col justify-between py-6 px-4">
+    <aside
+      className={`h-screen ${
+        collapsed ? "w-20" : "w-64"
+      } bg-white border-r border-gray-200 flex flex-col justify-between py-6 px-4 transition-all duration-200`}
+    >
       {/* TOP SECTION */}
       <div>
-        {/* LOGO */}
-        <div className="flex items-center gap-3 mb-7 px-2">
-          <img
-            src={logo}
-            alt="RaketNow Logo"
-            className="w-100 h-13 object-contain"
-          />
-        </div>
+        {/* Collapse Button */}
+        <button
+          className="ml-3 mb-5 flex items-center justify-center w-5 h-6 rounded-md hover:bg-gray-100"
+          onClick={() => setCollapsed((prev) => !prev)}
+          aria-label="Toggle sidebar"
+        >
+          <AlignJustify className="w-6 h-6 text-[#0C2C57]" />
+        </button>
 
-        {/* links */}
+        {/* LOGO (hide when collapsed) */}
+        {!collapsed && (
+          <div className="flex items-center gap-3 mb-7 px-6">
+            <img
+              src={logo}
+              alt="RaketNow Logo"
+              className="object-contain w-40 h-auto"
+            />
+          </div>
+        )}
+
+        {/* Links */}
         <nav className="space-y-2">
-          <SideNavItem to="/home" icon={Home} label="Home" />
-          <SideNavItem to="/rakets" icon={Star} label="For You" />
-          <SideNavItem to="/my-rakets" icon={Package} label="Current Rakets" />
-          <SideNavItem to="/boost" icon={TrendingUp} label="Boost Post" />
+          <SideNavItem to="/home" icon={Home} label="Home" collapsed={collapsed} />
+          <SideNavItem to="/rakets" icon={Star} label="For You" collapsed={collapsed} />
+          <SideNavItem
+            to="/my-rakets"
+            icon={Package}
+            label="Current Rakets"
+            collapsed={collapsed}
+          />
+          <SideNavItem
+            to="/boost"
+            icon={TrendingUp}
+            label="Boost Post"
+            collapsed={collapsed}
+          />
         </nav>
       </div>
 
       {/* BOTTOM SECTION */}
       <div>
         <div className="space-y-2 mb-4">
-          {canApplyAsRaketista ? (
+          {canApplyAsRaketista && (
             <SideNavItem
               to="/become-raketista"
               icon={Users}
               label="Become a Raketista"
+              collapsed={collapsed}
             />
-          ) : ("")}
+          )}
 
-          {/* always visible */}
-          <SideNavItem to="/notifications" icon={Bell} label="Notifications" />
-          <SideNavItem to="/message" icon={MessageSquare} label="Messages" />
+          <SideNavItem
+            to="/notifications"
+            icon={Bell}
+            label="Notifications"
+            collapsed={collapsed}
+          />
+          <SideNavItem
+            to="/message"
+            icon={MessageSquare}
+            label="Messages"
+            collapsed={collapsed}
+          />
         </div>
+
         <div className="border-t border-gray-200 my-4" />
 
-        {/* Conditionally render the user info */}
+        {/* USER PROFILE */}
         {loading ? (
           <p>Loading user...</p>
         ) : user ? (
@@ -81,19 +126,27 @@ function SideNav() {
             <SideNavUser
               name={`${user.firstName} ${user.lastName}`}
               role={userType}
-              image={user?.profilePicture} // Fallback image
+              image={user?.profilePicture}
+              collapsed={collapsed}
             />
           </NavLink>
         ) : (
           <p>Not logged in.</p>
         )}
 
+        {/* Logout */}
         <div className="mt-4">
           {loading ? (
             <LoadingSpinner />
           ) : (
-            <div onClick={handleLogout} style={{ cursor: 'pointer' }}>
-              <SideNavItem to="#" icon={LogOut} label="Logout" noActiveBg />
+            <div onClick={handleLogout} style={{ cursor: "pointer" }}>
+              <SideNavItem
+                to="#"
+                icon={LogOut}
+                label="Logout"
+                noActiveBg
+                collapsed={collapsed}
+              />
             </div>
           )}
         </div>
