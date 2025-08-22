@@ -40,7 +40,7 @@ function MyApplications() {
     }
   };
 
-  if (currentUser?.role === "client") return null; // hides if client
+  if (currentUser?.type === "Users") return null; // hides if client
 
   return (
     <div className="p-6 bg-white shadow-md rounded-xl">

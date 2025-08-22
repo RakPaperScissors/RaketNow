@@ -55,11 +55,6 @@ function ProfileCard() {
     );
 
   const isRaketista = user.type === "Raketista";
-  console.log("User:", user.firstName, user.lastName);
-  console.log("Is user raketista?", isRaketista);
-  console.log("bio:", user.bio);
-  console.log("currentSkills:", currentSkills);
-  console.log("Profile picture:", user.profilePicture);
 
   // Filter out skills that are already in the user's list for the dropdown
   const availableSkills = allSkills.filter(

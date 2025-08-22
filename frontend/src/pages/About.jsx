@@ -3,34 +3,39 @@ import { ShieldCheck, MapPin, Star } from "lucide-react";
 
 const team = [
   {
-    name: "Joseph Buhayan",
+    name: "Joseph Francis Buhayan",
     position: "CEO",
-    facebook: "#",
+    facebook: "https://www.facebook.com/Jospeh.Francis.444",
     linkedin: "#",
+    profilePicture: "/default_profile.jpg",
   },
   {
-    name: "Xander Cagang",
+    name: "Xander Jay Cagang",
     position: "Backend Developer",
-    facebook: "#",
+    facebook: "https://www.facebook.com/xaxangderder",
     linkedin: "#",
+    profilePicture: "/default_profile.jpg",
   },
   {
-    name: "Krystel Perez",
+    name: "Krystel Mikylla Perez",
     position: "Backend Developer",
-    facebook: "#",
+    facebook: "https://www.facebook.com/krystel.perez000",
     linkedin: "#",
+    profilePicture: "/default_profile.jpg",
   },
   {
-    name: "Iya Lambayao",
+    name: "Liarrah Daniya Lambayao",
     position: "Frontend Developer",
-    facebook: "#",
+    facebook: "https://www.facebook.com/liarrahlambayao.16",
     linkedin: "#",
+    profilePicture: "/default_profile.jpg",
   },
   {
-    name: "Jhaye Gonzales",
+    name: "Jhaye Marie Gonzales",
     position: "Frontend Developer",
-    facebook: "#",
+    facebook: "https://www.facebook.com/gonzalesjhaye",
     linkedin: "#",
+    profilePicture: "/default_profile.jpg",
   },
 ];
 
@@ -45,9 +50,9 @@ function FeatureCard(props) {
   );
 }
 
-const TeamCard = ({ name, position, facebook, linkedin }) => (
+const TeamCard = ({  profilePicture, name, position, facebook, linkedin }) => (
   <div className="bg-white p-6 rounded-xl shadow text-center">
-    <div className="w-16 h-16 bg-gray-300 rounded-full mx-auto mb-4" />
+    <img src={profilePicture} alt={name} className="w-16 h-16 bg-gray-300 rounded-full mx-auto mb-4"/>
     <h3 className="text-lg font-semibold mb-1">{name}</h3>
     <p className="text-sm text-gray-600 mb-3">{position}</p>
     <div className="flex justify-center gap-4">

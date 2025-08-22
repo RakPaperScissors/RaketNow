@@ -53,7 +53,6 @@ const PostRaket = () => {
       };
 
       await submitRaket(raketData);
-      console.log("Raket posted successfully");
       setMessage("Raket posted successfully!");
 
       setForm({
@@ -72,7 +71,6 @@ const PostRaket = () => {
     } catch (err) {
       console.error("Error submittin raket:", err);
     }
-    console.log("Posting raket:", form);
   };
 
   return (

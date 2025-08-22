@@ -70,7 +70,7 @@ const MyRakets = () => {
         {/* TAB CONTENT */}
         <div className="flex-1 overflow-y-auto px-8 py-6 space-y-6">
           {activeTab === "userRakets" && <UserRakets />}
-          {activeTab === "raketStatus" && currentUser?.role === "raketista" && (
+          {activeTab === "raketStatus" && currentUser?.type === "Raketista" && (
             <RaketStatus />
           )}
           {activeTab === "myApplications" && <MyApplications />}

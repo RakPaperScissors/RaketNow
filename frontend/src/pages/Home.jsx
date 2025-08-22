@@ -24,7 +24,6 @@ const Home = () => {
     raket.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  console.log(rakets);
   return (
     <div className="flex">
       <div className="w-64 h-screen fixed top-0 left-0 z-50">

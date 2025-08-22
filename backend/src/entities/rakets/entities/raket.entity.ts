@@ -51,7 +51,7 @@ export class Raket {
     @OneToMany(() => RaketPictures, picture => picture.raket)
     pictures: RaketPictures[];
 
-    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    @Column({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
     dateCreated: Date;
 
     @Column({ type: 'timestamp', nullable: true })

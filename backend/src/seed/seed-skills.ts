@@ -92,9 +92,6 @@ async function seedSkills() {
     if (!exists) {
       const newSkill = skillRepo.create(skillData);
       await skillRepo.save(newSkill);
-      console.log(`Inserted skill: ${skillData.skillName}`);
-    } else {
-      console.log(`Skipped: ${skillData.skillName} already exists`);
     }
   }
 

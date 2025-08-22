@@ -12,9 +12,6 @@ export function useRaketistas() {
             setLoading(true)
             try{
                 const [raketistaList, skillsList] = await Promise.all([fetchRaketistas(), getAllSkills()]);
-                console.log("Raw raketista data:", raketistaList);
-                console.log("Raw skills data:", skillsList);
-
                 const raketistaMap = {};
 
                 // First, create base raketista entries
