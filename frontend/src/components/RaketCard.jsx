@@ -163,7 +163,7 @@ const RaketCard = ({
               <span className="text-[#FF7C2B] font-bold">₱{budget}</span>
             )}
 
-            {status === "open" && currentUser?.role === "raketista" &&
+            {status === "open" && currentUser?.type === "Raketista" &&
             currentUser?.uid !== user?.uid && (
               <button
                 onClick={applyToThisRaket}
