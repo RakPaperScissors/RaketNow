@@ -273,13 +273,21 @@ const UserRakets = () => {
 
   return (
     <div className="p-6 bg-white shadow-md rounded-xl">
+      {/* Header + Filters in one row */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4 gap-4">
         <h1 className="text-2xl font-bold text-[#0C2C57]">My Rakets</h1>
-      </div>
 
-      {/* Filters Section */}
-      <div className="mb-6">
-        <div className="flex items-center gap-4 flex-wrap mb-3">
+        {/* Filters Section (moved here) */}
+        <div className="flex items-center gap-3">
+          {statusFilter !== "All" && (
+            <button
+              onClick={() => setStatusFilter("All")}
+              className="text-sm text-red-500 hover:bg-gray-100 px-4 py-2 rounded-full"
+            >
+              Clear Filter
+            </button>
+          )}
+
           <div className="relative inline-block text-left">
             <button
               onClick={() => setShowDropdown(!showDropdown)}
@@ -290,7 +298,7 @@ const UserRakets = () => {
             </button>
 
             {showDropdown && (
-              <div className="absolute mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-10">
+              <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-10">
                 <ul className="py-1 text-sm text-gray-700">
                   {statuses.map((status) => (
                     <li key={status}>
@@ -310,15 +318,6 @@ const UserRakets = () => {
               </div>
             )}
           </div>
-
-          {statusFilter !== "All" && (
-            <button
-              onClick={() => setStatusFilter("All")}
-              className="text-sm text-red-500 hover:bg-gray-100 px-4 py-2 rounded-full"
-            >
-              Clear Filter
-            </button>
-          )}
         </div>
       </div>
 
