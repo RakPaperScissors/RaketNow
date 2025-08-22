@@ -28,7 +28,7 @@ const MyRakets = () => {
         {/* Scrollable Content */}
         <div className="flex-1 overflow-y-auto px-8 py-6 space-y-6">
           <UserRakets />
-          {currentUser?.role === "raketista" && <RaketStatus />}
+          {currentUser?.type === "Raketista" && <RaketStatus />}
           <MyApplications />
         </div>
       </div>

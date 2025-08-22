@@ -21,7 +21,6 @@ const ViewProfile = () => {
     if (error) return <p className="text-center text-red-500">{error}</p>
 
     if (!user) return <p className="text-center text-gray-500">User not found.</p>
-    console.log("User skills:", skills);
 
     const isRaketista = user.type === "Raketista";
 

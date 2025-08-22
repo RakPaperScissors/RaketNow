@@ -24,7 +24,6 @@ import UserRakets from "./pages/MyRakets";
 import BoostPost from "./pages/Boost";
 import AdminDashboard from "./pages/AdminDashboard";
 import MyApplications from "./pages/Applications";
-import Raket from "./pages/test_api_pages/Raket";
 import AdminUsersTable from "./pages/AdminUsersTable";
 import ProfileDisplayCard from "./components/ProfileDisplayCard";
 import ViewProfile from "./pages/ViewProfile";
@@ -133,7 +132,6 @@ function AppContent() {
           <Route path="/my-rakets" element={<AuthGate> <UserRakets /> </AuthGate>} />
           <Route path="/boost" element={<AuthGate> <BoostPost /> </AuthGate>} />
           <Route path="/raket/:raketId/applications" element={<AuthGate> <MyApplications /> </AuthGate>} />
-          <Route path="/rakets/:id" element={<AuthGate> <Raket /> </AuthGate>} />
           <Route path="/profile-display/:userId" element={<AuthGate> <ProfileDisplayCard /> </AuthGate>} /> 
           <Route path="/view-profile/:userId" element={<AuthGate> <ViewProfile /> </AuthGate>} />
 

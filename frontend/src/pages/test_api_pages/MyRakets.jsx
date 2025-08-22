@@ -317,7 +317,7 @@ const UserRakets = () => {
         })}
 
         {/* assigned to me (only raketistas can have this section) */}
-        {currentUser?.role === "raketista" && (
+        {currentUser?.type === "Raketista" && (
             <section style={{ marginTop: 48 }}>
             <h2>Rakets Assigned to Me</h2>
 

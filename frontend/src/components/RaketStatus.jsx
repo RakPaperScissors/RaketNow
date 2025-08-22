@@ -117,11 +117,6 @@ const RaketStatus = () => {
           setUpdatingId(raketId);
           await requestCompletion(raketId);
           await fetchRaketsData();
-          // const updatedData = await fetchRaketsData(); 
-          // const updatedRaket = updatedData.find(r => r.raketId == raketId);
-          // console.log("raketId arg:", raketId, "typeof:", typeof raketId);
-          // console.log("updatedData IDs:", updatedData.map(r => [r.raketId, typeof r.raketId]));
-          // console.log("Updated raket status (after refetch):", updatedRaket?.status);
         } catch (err) {
           console.error("Failed to mark as completed:", err);
           alert("Something went wrong. Try again.");
@@ -304,7 +299,7 @@ const RaketStatus = () => {
       </div>
 
       {/* Raket Cards */}
-      {currentUser?.role === "raketista" && (
+      {currentUser?.type === "Raketista" && (
         <div>
           {loading ? (
             <p className="text-gray-500">Loading assigned rakets...</p>
@@ -382,7 +377,7 @@ const RaketStatus = () => {
                           />
                         </div>
                       ) : (
-                        currentUser?.role === "client" && (
+                        currentUser?.type === "Users" && (
                           <StarRating
                             raketId={raket.raketId}
                             initialRating={0}

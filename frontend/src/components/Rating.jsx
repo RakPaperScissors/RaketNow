@@ -24,7 +24,6 @@ export default function StarRating({
 
     try {
       await submitRating(raketId, value);
-      console.log("Rating submitted:", value);
     } catch (error) {
       console.error("Error submitting rating:", error);
       setIsLocked(false);
