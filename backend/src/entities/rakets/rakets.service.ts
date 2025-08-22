@@ -492,13 +492,14 @@ async clientRejectsCompletionRequest(raketId: number, clientId: number) {
   }
 
   async getRaketsOfUser(userId: number) {
+    const user = await this.userRepo.findOne({ where: { uid: userId }});
+    if (!user) {
+      throw new NotFoundException("User not found.");
+    }
+
     const userRakets = await this.raketRepo.find({
       where: { user: { uid: userId }},
     });
-
-    if (!userRakets || userRakets.length === 0) {
-      throw new NotFoundException('No rakets found for this user');
-    }
     
     return userRakets;
   }
