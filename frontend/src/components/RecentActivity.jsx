@@ -72,7 +72,7 @@ export default function RecentActivity({ rakets = [] }) {
           ))
         ) : (
           <div className="text-center text-gray-500 text-sm py-6 italic">
-          No rakets completed yet. 🌱
+          No posted activities yet. 🌱
         </div>
         )}
       </div>
