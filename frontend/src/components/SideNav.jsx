@@ -42,7 +42,7 @@ function SideNav() {
           <img
             src={logo}
             alt="RaketNow Logo"
-            className="w-100 h-15 object-contain"
+            className="w-100 h-13 object-contain"
           />
         </div>
 
@@ -92,7 +92,7 @@ function SideNav() {
             <LoadingSpinner />
           ) : (
             <div onClick={handleLogout} style={{ cursor: 'pointer' }}>
-              <SideNavItem to="#" icon={LogOut} label="Logout" />
+              <SideNavItem to="#" icon={LogOut} label="Logout" noActiveBg />
             </div>
           )}
         </div>

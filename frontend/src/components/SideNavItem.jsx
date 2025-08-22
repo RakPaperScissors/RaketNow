@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 
-const SideNavItem = ({ icon: Icon, label, to, onClick }) => {
+const SideNavItem = ({ icon: Icon, label, to, onClick, noActiveBg }) => {
   const baseClasses =
     "flex items-center gap-3 px-2 py-2 rounded-md transition-colors hover:bg-[#0C2C57]/10";
 
@@ -20,7 +20,9 @@ const SideNavItem = ({ icon: Icon, label, to, onClick }) => {
       to={to}
       end
       className={({ isActive }) =>
-        `${baseClasses} ${isActive ? "bg-[#0C2C57]/10 font-semibold" : ""}`
+        noActiveBg
+          ? baseClasses // do not apply bg even if active
+          : `${baseClasses} ${isActive ? "bg-[#0C2C57]/10 font-semibold" : ""}`
       }
     >
       <Icon className="w-5 h-5 text-[#0C2C57]" />
