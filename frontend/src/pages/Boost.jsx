@@ -7,7 +7,7 @@ const MyRakets = () => {
   return (
     <div className="flex h-screen bg-[#f9fafb]">
       {/* Fixed Sidebar */}
-      <div className="fixed inset-y-0 left-0 w-64 z-20 bg-white border-r">
+      <div className="fixed inset-y-0 left-0 z-20">
         <SideNav />
       </div>
 

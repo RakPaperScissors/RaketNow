@@ -13,7 +13,7 @@ function ProfilePage() {
 
   return (
     <div className="flex min-h-screen bg-gray-50">
-      <div className="fixed top-0 left-0 h-screen w-64 bg-white shadow-md">
+      <div className="fixed inset-y-0 left-0 z-20">
         <SideNav />
       </div>
 
