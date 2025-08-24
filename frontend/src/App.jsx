@@ -101,7 +101,7 @@ function AppContent() {
   const currentPath = location.pathname;
 
   // will see header on these pages
-  const showHeader = ["/", "/about", "/faqs", "/login", "/signup"].includes(
+  const showHeader = ["/", "/about", "/faqs"].includes(
     currentPath
   );
 
