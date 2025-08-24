@@ -7,18 +7,22 @@ import MyApplications from "../components/MyApplications";
 import { useCurrentUser } from "../hooks/useCurrentUser";
 
 const MyRakets = () => {
+  const [collapsed, setCollapsed] = useState(() => {
+    const stored = localStorage.getItem("sidebarCollapsed");
+    return stored === "true";
+  });
   const currentUser = useCurrentUser();
   const [activeTab, setActiveTab] = useState("userRakets"); // default tab
 
   return (
     <div className="flex h-screen bg-[#f9fafb]">
       {/* SIDENAV */}
-      <div className="fixed inset-y-0 left-0 z-20">
-        <SideNav />
+      <div className={`${collapsed ? "w-20" : "w-64"} h-screen fixed top-0 left-0 z-50 transition-all duration-200`}>
+        <SideNav collapsed={collapsed} setCollapsed={setCollapsed} />
       </div>
 
       {/* MAIN CONTENT */}
-      <div className="ml-64 flex-1 flex flex-col h-screen overflow-hidden">
+      <div className={`${collapsed ? "ml-20" : "ml-64"} flex-1 relative min-h-screen  overflow-y-auto transition-all duration-200`}>
         {/* Search Bar */}
         <div className="sticky top-0 z-10 bg-white shadow-sm">
           <SearchBar />

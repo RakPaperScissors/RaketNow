@@ -11,9 +11,14 @@ import Help from "../components/Help";
 import LoadingSpinner from "../components/LoadingSpinner";
 
 const Home = () => {
+  const [collapsed, setCollapsed] = useState(() => {
+    const stored = localStorage.getItem("sidebarCollapsed");
+    return stored === "true";
+  });
   const { user, loading: authLoading } = useAuth();
   const { rakets, loading: raketLoading } = useRakets();
   const [searchTerm, setSearchTerm] = useState("");
+  
 
   if (authLoading) {
     return <LoadingSpinner fullScreen />;
@@ -26,11 +31,11 @@ const Home = () => {
 
   return (
     <div className="flex">
-      <div className="w-64 h-screen fixed top-0 left-0 z-50">
-        <SideNav />
+      <div className={`${collapsed ? "w-20" : "w-64"} h-screen fixed top-0 left-0 z-50 transition-all duration-200`}>
+        <SideNav collapsed={collapsed} setCollapsed={setCollapsed} />
       </div>
 
-      <div className="ml-64 flex-1 relative min-h-screen bg-[#ffffff] overflow-y-auto">
+      <div className={`${collapsed ? "ml-20" : "ml-64"} flex-1 relative min-h-screen bg-[#ffffff] overflow-y-auto transition-all duration-200`}>
         {/* Top Banner */}
         <WelcomeBanner firstName={user?.firstName} />
 
