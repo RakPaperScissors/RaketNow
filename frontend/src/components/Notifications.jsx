@@ -60,7 +60,7 @@ const UserNotifications = () => {
   };
 
   return (
-    <div className="p-6 bg-white shadow-md rounded-lg">
+    <div className="p-4">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
         <h1 className="text-2xl font-bold text-[#0C2C57]">Notifications</h1>
       </div>
