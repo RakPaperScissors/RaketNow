@@ -17,13 +17,13 @@ import SideNavUser from "./SideNavUser";
 import logo from "../assets/images/raketnow-blue-logo.png";
 import { useAuth } from "../context/AuthContext";
 
-function SideNav() {
+function SideNav({ collapsed, setCollapsed }) {
   const { user, loading, logout } = useAuth();
   const [isLoggingOut, setIsLoggingOut] = React.useState(false);
-  const [collapsed, setCollapsed] = React.useState(() => {
-    const stored = localStorage.getItem("sidebarCollapsed");
-    return stored === "true";
-  });
+
+  React.useEffect(() => {
+    localStorage.setItem("sidebarCollapsed", collapsed);
+  }, [collapsed]);
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
@@ -31,10 +31,6 @@ function SideNav() {
     window.location.href = "/login";
     setIsLoggingOut(false);
   };
-
-  React.useEffect(() => {
-    localStorage.setItem("sidebarCollapsed", collapsed);
-  }, [collapsed]);
 
   if (loading) return <LoadingSpinner fullScreen />;
   if (isLoggingOut) return <LoadingSpinner fullScreen />;
@@ -47,7 +43,7 @@ function SideNav() {
     <aside
       className={`h-screen ${
         collapsed ? "w-20" : "w-64"
-      } bg-white border-r border-gray-200 flex flex-col justify-between py-6 px-4 transition-all duration-200`}
+      } bg-white border-r border-gray-200 shadow-sm flex flex-col justify-between py-6 px-4 transition-all duration-200`}
     >
       {/* TOP SECTION */}
       <div>
