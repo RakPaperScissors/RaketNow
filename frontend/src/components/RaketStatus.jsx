@@ -248,8 +248,8 @@ const RaketStatus = () => {
     statusFilter === "All"
       ? assignedRakets
       : assignedRakets.filter(
-          (r) => mapStatusToLabel(r.status) === statusFilter
-        );
+        (r) => mapStatusToLabel(r.status) === statusFilter
+      );
 
   const handleFilterChange = (status) => {
     setStatusFilter(status);
@@ -297,11 +297,10 @@ const RaketStatus = () => {
                           setStatusFilter(status);
                           setShowDropdown(false);
                         }}
-                        className={`w-full text-left px-4 py-2 hover:bg-gray-100 ${
-                          statusFilter === status
+                        className={`w-full text-left px-4 py-2 hover:bg-gray-100 ${statusFilter === status
                             ? "bg-gray-100 font-semibold"
                             : ""
-                        }`}
+                          }`}
                       >
                         {status}
                       </button>
@@ -363,7 +362,7 @@ const RaketStatus = () => {
                       <div className="mt-3 flex justify-end items-center space-x-3">
                         <button
                           onClick={() => handleMarkCompleted(raket.raketId)}
-                          className="bg-[#0C2C57] text-white px-4 py-2 rounded-md hover:bg-[#123870] transition text-sm"
+                          className="bg-green-100 text-green-600 px-4 py-2 rounded-full font-medium hover:bg-green-200 transition text-xs"
                           disabled={updatingId === raket.raketId}
                         >
                           {updatingId === raket.raketId
@@ -372,7 +371,7 @@ const RaketStatus = () => {
                         </button>
                         <button
                           onClick={() => handleWithdraw(raket.raketId)}
-                          className="bg-[#ff7c2b] text-white px-4 py-2 rounded-md hover:bg-[#ff914d] transition text-sm"
+                          className="text-xs px-4 py-2 rounded-full font-medium bg-[#FECACA] text-[#7F1D1D] hover:bg-[#FCA5A5] disabled:opacity-50 disabled:cursor-not-allowed"
                           disabled={updatingId === raket.raketId}
                         >
                           Withdraw

@@ -475,15 +475,15 @@ const UserRakets = () => {
                       onClick={() =>
                         navigate(`/raket/${raket.raketId}/applications`)
                       }
-                      className="text-sm px-4 py-2 rounded-md bg-[#0c2c57] text-[#ffff] hover:bg-[#0F3970] transition"
-                    >
+                      className="text-xs px-4 py-2 rounded-full bg-[#CDE9FF] text-[#0C2C57] hover:bg-[#B3DDFF] transition"
+                      >
                       View Applications
                     </button>
                     <button
                       disabled={updatingId === raket.raketId}
                       onClick={() => handleCancelOpen(raket.raketId)}
-                      className="text-sm px-4 py-2 rounded-md font-medium bg-[#ff7c2b] text-[#ffff] hover:bg-[#FF914D] disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
+                      className="text-xs px-4 py-2 rounded-full font-medium bg-[#FECACA] text-[#7F1D1D] hover:bg-[#FCA5A5] disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
                       Withdraw
                     </button>
                   </div>
