@@ -1,9 +1,6 @@
 import React from "react";
 import { Star } from "lucide-react";
 import LoadingSpinner from "./LoadingSpinner";
-import Miguel from "../assets/images/raketnow-logo.png";
-import Ana from "../assets/images/raketnow-logo.png";
-import Maria from "../assets/images/raketnow-logo.png";
 import { useRaketistas } from "../hooks/useRaketistas";
 import ViewProfileLink from "./ViewProfileLink";
 
@@ -36,7 +33,7 @@ const TopRaketista = () => {
   if (message) return <p className="p-4 text-red-500">{message}</p>;
 
   return (
-    <section className="bg-white px-4 py-8 shadow-md rounded-lg">
+    <section className="bg-[#F9FAFB] px-6 py-8 border-b border-gray-200">
       <div className="flex justify-start items-center mb-6">
         <h2 className="text-2xl font-semibold text-[#0C2C57]">
           Top Raketistas
