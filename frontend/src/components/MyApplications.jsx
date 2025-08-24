@@ -86,7 +86,7 @@ function MyApplications() {
                     <button
                       disabled={actionLoading}
                       onClick={() => handleWithdraw(app.applicationId)}
-                      className="bg-[#ff7c2b] text-white text-sm px-4 py-2 rounded-md hover:bg-[#ff914d]"
+                      className="text-xs px-4 py-2 rounded-full font-medium bg-[#FECACA] text-[#7F1D1D] hover:bg-[#FCA5A5] disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       Withdraw
                     </button>
@@ -97,7 +97,7 @@ function MyApplications() {
                 <div className="text-sm text-gray-600">
                   <span className="font-medium">Application Status:</span>{" "}
                   <span
-                    className={`px-4 py-2 rounded-md text-sm ${
+                    className={`px-4 py-2 rounded-full text-xs ${
                       app.status === "ACCEPTED"
                         ? "bg-green-100 text-green-700"
                         : app.status === "REJECTED"
