@@ -136,7 +136,7 @@ function Message() {
     <div className="flex flex-1 flex-col md:flex-row gap-4 p-4 min-h-[calc(100vh-5rem)] bg-[#f9fafb]">
       {/* CONVERSATION LIST SIDEBAR */}
       <div
-        className={`w-full md:w-1/3 bg-white rounded-2xl shadow p-4 flex flex-col h-[calc(100vh-7rem)] ${
+        className={`w-full md:w-1/3 bg-white rounded-2xl shadow p-6 flex flex-col h-[calc(100vh-5rem)] ${
           showChatPanel ? "hidden md:flex" : "flex"
         }`}
       >
@@ -232,7 +232,7 @@ function Message() {
 
       {/* CHAT PANEL */}
       <div
-        className={`w-full md:w-2/3 bg-white rounded-2xl shadow flex flex-col h-[calc(100vh-7rem)] ${
+        className={`w-full md:w-2/3 bg-white rounded-2xl shadow flex flex-col h-[calc(100vh-5rem)] ${
           selectedConversation && showChatPanel
             ? "flex"
             : selectedConversation
