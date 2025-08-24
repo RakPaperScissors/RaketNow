@@ -53,11 +53,10 @@ function UserInfoForm({ userType, formData, setFormData, onBack, onSubmit, messa
 
         {message && (
           <p
-            className={`mb-4 text-center font-medium ${
-              message.toLowerCase().includes("success")
+            className={`mb-4 text-center font-medium ${message.toLowerCase().includes("success")
                 ? "text-green-600"
                 : "text-red-600"
-            }`}
+              }`}
           >
             {message}
           </p>
@@ -71,7 +70,7 @@ function UserInfoForm({ userType, formData, setFormData, onBack, onSubmit, messa
               placeholder="Organization Name"
               value={formData.organizationName}
               onChange={handleChange}
-              className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+              className="w-full p-3 mb-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-1 focus:ring-grey-300 transition"
             />
           )}
 
@@ -81,7 +80,7 @@ function UserInfoForm({ userType, formData, setFormData, onBack, onSubmit, messa
             placeholder="First Name"
             value={formData.firstName}
             onChange={handleChange}
-            className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+            className="w-full p-3 mb-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-1 focus:ring-grey-300 transition"
           />
 
           <input
@@ -90,7 +89,7 @@ function UserInfoForm({ userType, formData, setFormData, onBack, onSubmit, messa
             placeholder="Last Name"
             value={formData.lastName}
             onChange={handleChange}
-            className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+            className="w-full p-3 mb-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-1 focus:ring-grey-300 transition"
           />
 
           <input
@@ -99,7 +98,7 @@ function UserInfoForm({ userType, formData, setFormData, onBack, onSubmit, messa
             placeholder="Email"
             value={formData.email}
             onChange={handleChange}
-            className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+            className="w-full p-3 mb-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-1 focus:ring-grey-300 transition"
           />
 
           {/* PASSWORD STUFF */}
@@ -110,7 +109,7 @@ function UserInfoForm({ userType, formData, setFormData, onBack, onSubmit, messa
               placeholder="Password"
               value={formData.password}
               onChange={handleChange}
-              className="w-full p-3 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+              className="w-full p-3 pr-10 border border-gray-300 rounded-xl focus:outline-none focus:ring-1 focus:ring-grey-300 transition"
             />
             <button
               type="button"
@@ -143,7 +142,7 @@ function UserInfoForm({ userType, formData, setFormData, onBack, onSubmit, messa
               placeholder="Confirm Password"
               value={formData.confirmPassword}
               onChange={handleChange}
-              className="w-full p-3 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+              className="w-full p-3 pr-10 border border-gray-300 rounded-xl focus:outline-none focus:ring-1 focus:ring-grey-300 transition"
             />
             <button
               type="button"
@@ -159,14 +158,14 @@ function UserInfoForm({ userType, formData, setFormData, onBack, onSubmit, messa
             <button
               type="button"
               onClick={onBack}
-              className="text-gray-500 hover:text-blue-500 transition font-medium"
+              className="text-gray-500 hover:text-gray-700 transition-colors duration-200 font-medium"
             >
               ← Back
             </button>
             <button
               type="submit"
               onClick={handleSubmit}
-              className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-xl font-semibold transition"
+              className="bg-[#ff7c2b] hover:bg-[#ff7c2b]/90 text-white px-4 py-2 rounded-xl font-semibold transition"
             >
               Submit
             </button>

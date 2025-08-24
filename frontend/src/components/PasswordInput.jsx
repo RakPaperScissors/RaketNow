@@ -9,7 +9,7 @@ function PasswordInput({ value, onChange}) {
   return (
     <div className="relative">
       <input
-        className="p-2 rounded-xl border w-full pr-10"
+        className="p-2 w-full rounded-xl border border-gray-300 focus:outline-none focus:ring-1 transition w-full pr-10"
         type={showPassword ? "text" : "password"}
         name="password"
         placeholder="Password"
