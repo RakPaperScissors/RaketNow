@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { fetchNotifications } from "../api/notifications";
 import { useNavigate } from "react-router-dom";
+import System from "../assets/images/raketnow-logo.png";
 
 const UserNotifications = () => {
   const [notifications, setNotifications] = useState([]);
@@ -21,7 +22,7 @@ const UserNotifications = () => {
               month: "long",
               day: "numeric",
             }),
-            profilePic: "https://i.pravatar.cc/150?img=3",
+            profilePic: System,
             isRead: n.isRead,
             actionable: n.actionable,
           }))
