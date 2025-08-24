@@ -80,8 +80,8 @@ const RaketCard = ({
   };
 
   return (
-    <div className="relative bg-white rounded-xl shadow-md overflow-hidden w-full max-w-2xl mx-auto p-4 flex flex-col">
-      {/* Category Badge */}
+<div className="relative bg-white rounded-xl shadow-md overflow-hidden w-full max-w-7xl mx-auto p-4 flex flex-col min-h-[450px]">
+{/* Category Badge */}
       {category && (
         <span
           className={`absolute top-4 right-3 px-2 py-1 text-xs font-semibold rounded-full ${badgeStyle}`}
@@ -91,10 +91,10 @@ const RaketCard = ({
       )}
 
       {/* Title */}
-      <h2 className="font-semibold text-lg text-[#0C2C57] mb-2">{title}</h2>
+      <h2 className="font-semibold text-lg text-[#0C2C57] mb-2 mt-8">{title}</h2>
 
       {/* Description */}
-      <p className="text-sm text-gray-600 mb-3 whitespace-pre-wrap">
+      <p className="text-sm text-gray-600 mb-4 whitespace-pre-wrap">
         {description}
       </p>
 
@@ -111,7 +111,7 @@ const RaketCard = ({
               src={src}
               onClick={() => openModal(idx)}
               alt={`Preview ${idx}`}
-              className="w-full h-40 object-cover rounded-md cursor-pointer hover:opacity-90"
+              className="w-full h-80 object-cover rounded-md cursor-pointer hover:opacity-90"
             />
           ))}
         </div>
