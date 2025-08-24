@@ -6,6 +6,10 @@ import { getAllSkills } from "../api/profile";
 import { useNavigate } from "react-router-dom";
 
 function BecomeRaketista() {
+  const [collapsed, setCollapsed] = useState(() => {
+    const stored = localStorage.getItem("sidebarCollapsed");
+    return stored === "true";
+  });
   const { user } = useAuth();
   const [bio, setBio] = useState("");
   const { apply, loading: applying, error, success } = useApplyRaketista();
@@ -39,7 +43,7 @@ function BecomeRaketista() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if(!user?.uid) return;
+    if (!user?.uid) return;
 
     if (!bio.trim()) {
       setFormError("Please enter your bio.");
@@ -53,8 +57,8 @@ function BecomeRaketista() {
 
     const result = await apply(user.uid, bio, selectedSkills);
     if (!result) return;
-  
-    if (result) {  
+
+    if (result) {
       navigate("/profile", { replace: true });
       window.location.reload();
     }
@@ -62,9 +66,14 @@ function BecomeRaketista() {
 
   return (
     <div className="flex min-h-screen bg-gray-50">
-      <SideNav />
+      <div className={`${collapsed ? "w-20" : "w-64"} h-screen fixed top-0 left-0 z-50 transition-all duration-200`}>
+        <SideNav collapsed={collapsed} setCollapsed={setCollapsed} />
+      </div>
 
-      <main className="flex-1 p-8 flex justify-center">
+      <main
+        className={`${collapsed ? "ml-20" : "ml-64"} flex-1 relative min-h-screen overflow-y-auto transition-all duration-200 px-16 py-16 flex items-center justify-center`}
+      >
+
         <div className="w-full max-w-3xl">
           <h1 className="text-2xl font-bold text-[#0c2c57] mb-2">
             Ready to become a <span className="text-[#ff7c2b]">Raketista</span>?
@@ -137,7 +146,7 @@ function BecomeRaketista() {
                         ×
                       </button>
                     </span>
-                    );
+                  );
                 })}
               </div>
             </div>
@@ -154,13 +163,13 @@ function BecomeRaketista() {
             )}
 
             <div className="flex justify-end gap-4">
-              <button 
-                className="px-6 py-2 rounded-md border border-gray-300 text-[#0c2c57] hover:bg-gray-100" 
+              <button
+                className="px-6 py-2 rounded-md border border-gray-300 text-[#0c2c57] hover:bg-gray-100"
                 onClick={() => navigate(-1)}
               >
                 Cancel
               </button>
-              <button 
+              <button
                 className="px-6 py-2 rounded-md bg-[#ff7c2b] text-white hover:bg-[#e76c21]"
                 onClick={handleSubmit}
                 disabled={applying}
