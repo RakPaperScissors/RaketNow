@@ -49,7 +49,7 @@ const Home = () => {
         </div>
 
         {/* Main content */}
-        <div className="pt-28 px-8 space-y-6 relative">
+        <div className="bg-[#F9FAFB] pt-28 px-8 space-y-6 relative">
           <PostRaket />
           <Help />
           <DashboardCardList />
