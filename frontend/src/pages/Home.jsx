@@ -10,6 +10,7 @@ import PostRaket from "../components/PostRaket";
 import Help from "../components/Help";
 import LoadingSpinner from "../components/LoadingSpinner";
 
+
 const Home = () => {
   const [collapsed, setCollapsed] = useState(() => {
     const stored = localStorage.getItem("sidebarCollapsed");
@@ -18,16 +19,19 @@ const Home = () => {
   const { user, loading: authLoading } = useAuth();
   const { rakets, loading: raketLoading } = useRakets();
   const [searchTerm, setSearchTerm] = useState("");
-  
+ 
+
 
   if (authLoading) {
     return <LoadingSpinner fullScreen />;
   }
   if (!user) return <p>You are not logged in.</p>;
 
+
   const filteredRakets = rakets.filter((raket) =>
     raket.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
 
   return (
     <div className="flex">
@@ -35,9 +39,13 @@ const Home = () => {
         <SideNav collapsed={collapsed} setCollapsed={setCollapsed} />
       </div>
 
-      <div className={`${collapsed ? "ml-20" : "ml-64"} flex-1 relative min-h-screen bg-[#ffffff] overflow-y-auto transition-all duration-200`}>
+
+      <div className={`flex-1 relative min-h-screen bg-[#ffffff] overflow-y-auto transition-all duration-200 pb-20 md:pb-0 ${
+        collapsed ? "md:ml-20" : "md:ml-64"
+      } ml-20`}>
         {/* Top Banner */}
         <WelcomeBanner firstName={user?.firstName} />
+
 
         {/* Search */}
         <div className="absolute left-1/2 top-44 transform -translate-x-1/2 z-10 w-full px-4">
@@ -47,6 +55,7 @@ const Home = () => {
             setSearchTerm={setSearchTerm}
           />
         </div>
+
 
         {/* Main content */}
         <div className="bg-[#F9FAFB] pt-28 px-8 space-y-6 relative">
@@ -60,6 +69,7 @@ const Home = () => {
                 Search results for{" "}
                 <span className="text-[#ff7c2b]">"{searchTerm}"</span>
               </h2>
+
 
               {raketLoading ? (
                 <p>Loading search results...</p>
@@ -91,4 +101,5 @@ const Home = () => {
   );
 };
 
-export default Home;
+
+export default Home

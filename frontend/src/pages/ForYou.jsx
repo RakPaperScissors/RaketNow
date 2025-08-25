@@ -9,6 +9,8 @@ import { useAuth } from "../context/AuthContext";
 import LoadingSpinner from "../components/LoadingSpinner";
 
 
+
+
 const ForYou = () => {
   const [collapsed, setCollapsed] = useState(() => {
     const stored = localStorage.getItem("sidebarCollapsed");
@@ -16,9 +18,11 @@ const ForYou = () => {
   });
   const [searchTerm, setSearchTerm] = useState("");
   const { loading } = useAuth();
-  
+ 
+
 
   if (loading) return <LoadingSpinner fullScreen />;
+
 
   return (
     <div className="flex h-screen bg-[#f9fafb]">
@@ -27,17 +31,21 @@ const ForYou = () => {
         <SideNav collapsed={collapsed} setCollapsed={setCollapsed} />
       </div>
 
+
       {/* Main Content */}
-      <div className={`${collapsed ? "ml-20" : "ml-64"} flex-1 relative min-h-screen bg-[#ffffff] overflow-y-auto transition-all duration-200`}>
+      <div className={`flex-1 relative min-h-screen bg-[#ffffff] overflow-y-auto transition-all duration-200 pb-20 ${
+        collapsed ? "ml-20" : "ml-64"
+      }`}>
         {/* Top Section */}
         <div className="sticky top-0 z-10 bg-white ">
           <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
         </div>
 
+
         {/* Scrollable Content */}
         <div className="flex-1 overflow-y-auto">
           <PostRaket />
-          <Help /> 
+          <Help />
           <TopRaketista />
           <RaketFeed searchTerm={searchTerm} />
         </div>
@@ -45,5 +53,6 @@ const ForYou = () => {
     </div>
   );
 };
+
 
 export default ForYou;

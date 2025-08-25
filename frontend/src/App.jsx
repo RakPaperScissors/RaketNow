@@ -1,12 +1,16 @@
 import React, { Suspense } from "react";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 
+
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import LoadingSpinner from "./components/LoadingSpinner";
+import BottomNav from "./components/BottomNav";
+
 
 import { AuthProvider } from "./context/AuthContext";
 import { useAuth } from "./context/AuthContext";
+
 
 // Pages
 import About from "./pages/About";
@@ -30,19 +34,25 @@ import ViewProfile from "./pages/ViewProfile";
 import { View, WifiOff, LogOut } from "lucide-react";
 
 
+
+
 function AuthGate({ children }) {
   const { user, loading, error, loggingOut } = useAuth();
+
 
   if (loading || loggingOut) {
     return <LoadingSpinner fullScreen />;
   }
 
+
   if (!user && !error) {
       return <LoadingSpinner fullScreen/>
   }
 
+
   if (!user && error) {
     const isConnectionError = !!error;
+
 
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-gray-50 px-6 text-center">
@@ -58,11 +68,13 @@ function AuthGate({ children }) {
             {isConnectionError ? "Connection Lost" : "You are Logged Out"}
           </h1>
 
+
           <p className="text-gray-500 mb-6">
-            {isConnectionError 
+            {isConnectionError
               ? "We couldn't connect to the server. Please check your internet and try again."
               : "Your session has ended. Please log back in to continue."}
           </p>
+
 
           <div className="flex flex-col gap-3">
               <button
@@ -71,6 +83,7 @@ function AuthGate({ children }) {
               >
                 Go to Login
               </button>
+
 
               {isConnectionError && (
                 <button
@@ -83,6 +96,7 @@ function AuthGate({ children }) {
           </div>
         </div>
 
+
         <p className="mt-6 text-sm text-gray-400">
           Need help?{" "}
           <a href="/faqs" className="underline">
@@ -93,25 +107,61 @@ function AuthGate({ children }) {
     );
   }
 
+
   return children;
 }
+
 
 function AppContent() {
   const location = useLocation();
   const currentPath = location.pathname;
+
 
   // will see header on these pages
   const showHeader = ["/", "/about", "/faqs"].includes(
     currentPath
   );
 
+
   // will see footer on these pages
   const showFooter = ["/", "/about", "/faqs"].includes(currentPath);
+
+
+  // will see bottom nav on these pages (authenticated pages)
+  const showBottomNav = [
+    "/home",
+    "/rakets",
+    "/for-you",
+    "/profile",
+    "/message",
+    "/notifications",
+    "/become-raketista",
+    "/my-rakets",
+    "/boost",
+    "/raket/:raketId/applications",
+    "/profile-display/:userId",
+    "/view-profile/:userId"
+  ].some(path => {
+    if (path.includes(':')) {
+      // Handle dynamic routes
+      const pathParts = path.split('/');
+      const currentParts = currentPath.split('/');
+      if (pathParts.length === currentParts.length) {
+        return pathParts.every((part, index) =>
+          part.startsWith(':') || part === currentParts[index]
+        );
+      }
+      return false;
+    }
+    return currentPath === path;
+  });
+
 
   return (
     <>
       <Suspense fallback={<LoadingSpinner fullScreen />}>
         {showHeader && <Header />}
+
 
         <Routes>
           {/* public pages -- LANDING */}
@@ -120,6 +170,7 @@ function AppContent() {
           <Route path="/faqs" element={<Faqs />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+
 
           {/* authenticated pages -- AFTER LOG IN */}
           <Route path="/home" element={<AuthGate> <Home /> </AuthGate>}/>
@@ -132,19 +183,23 @@ function AppContent() {
           <Route path="/my-rakets" element={<AuthGate> <UserRakets /> </AuthGate>} />
           <Route path="/boost" element={<AuthGate> <BoostPost /> </AuthGate>} />
           <Route path="/raket/:raketId/applications" element={<AuthGate> <MyApplications /> </AuthGate>} />
-          <Route path="/profile-display/:userId" element={<AuthGate> <ProfileDisplayCard /> </AuthGate>} /> 
+          <Route path="/profile-display/:userId" element={<AuthGate> <ProfileDisplayCard /> </AuthGate>} />
           <Route path="/view-profile/:userId" element={<AuthGate> <ViewProfile /> </AuthGate>} />
+
 
           {/* admin page */}
           <Route path="/admin-dashboard" element={<AdminDashboard />} />
           <Route path="/admin-users-table" element={<AdminUsersTable />} />
         </Routes>
 
+
         {showFooter && <Footer />}
+        {showBottomNav && <BottomNav />}
       </Suspense>
     </>
   );
 }
+
 
 function App() {
   return (
@@ -155,5 +210,6 @@ function App() {
     </BrowserRouter>
   );
 }
+
 
 export default App;
