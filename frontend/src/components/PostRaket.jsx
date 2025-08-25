@@ -78,7 +78,7 @@ const PostRaket = () => {
       {/* Floating Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 bg-[#FF7C2B] hover:bg-[#e66e20] text-white p-4 rounded-full shadow-md transition-all duration-200 z-50"
+        className="fixed bottom-16 md:bottom-8 right-6 bg-[#FF7C2B] hover:bg-[#e66e20] text-white p-4 rounded-full shadow-md transition-all duration-200 z-50"
       >
         <Plus className="w-6 h-6" />
       </button>
