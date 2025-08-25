@@ -36,7 +36,9 @@ const ViewProfile = () => {
       <div className={`${collapsed ? "w-20" : "w-64"} h-screen fixed top-0 left-0 z-50 transition-all duration-200`}>
         <SideNav collapsed={collapsed} setCollapsed={setCollapsed} />
       </div>
-      <main className={`${collapsed ? "ml-20" : "ml-64"} flex-1 relative min-h-screen bg-[#F9FAFB] overflow-y-auto transition-all duration-200`}>
+      <main className={`flex-1 relative min-h-screen bg-[#F9FAFB] overflow-y-auto transition-all duration-200 ${
+        collapsed ? "md:ml-20" : "md:ml-64"
+      } ml-20`}>
         <div className="px-10 py-16">
           {/* Back Button */}
           <button

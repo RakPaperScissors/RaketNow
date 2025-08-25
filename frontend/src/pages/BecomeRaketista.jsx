@@ -71,7 +71,9 @@ function BecomeRaketista() {
       </div>
 
       <main
-        className={`${collapsed ? "ml-20" : "ml-64"} flex-1 relative min-h-screen overflow-y-auto transition-all duration-200 px-16 py-16 flex items-center justify-center`}
+        className={`flex-1 relative min-h-screen overflow-y-auto transition-all duration-200 px-16 py-16 flex items-center justify-center ${
+          collapsed ? "md:ml-20" : "md:ml-64"
+        } ml-20`}
       >
 
         <div className="w-full max-w-3xl">

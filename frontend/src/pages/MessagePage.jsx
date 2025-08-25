@@ -15,7 +15,9 @@ const MessagePage = () => {
       </div>
 
       {/* MAIN */}
-      <div className={`${collapsed ? "ml-20" : "ml-64"} flex-1 relative min-h-screen  overflow-y-auto transition-all duration-200`}>
+      <div className={`flex-1 relative min-h-screen  overflow-y-auto transition-all duration-200 ${
+        collapsed ? "md:ml-20" : "md:ml-64"
+      } ml-20`}>
         <div className="flex-1 overflow-y-auto p-6">
           <Message />
         </div>

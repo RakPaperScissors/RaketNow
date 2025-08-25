@@ -33,7 +33,7 @@ const ForYou = () => {
 
 
       {/* Main Content */}
-      <div className={`flex-1 relative min-h-screen bg-[#ffffff] overflow-y-auto transition-all duration-200 pb-20 ${
+      <div className={`flex-1 relative min-h-screen bg-[#ffffff] overflow-y-auto transition-all duration-200 pb-20 ml-20 md:${
         collapsed ? "ml-20" : "ml-64"
       }`}>
         {/* Top Section */}
