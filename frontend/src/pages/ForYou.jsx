@@ -33,11 +33,11 @@ const ForYou = () => {
 
 
       {/* Main Content */}
-      <div className={`flex-1 relative min-h-screen bg-[#ffffff] overflow-y-auto transition-all duration-200 pb-20 ml-20 md:${
+      <div className={`flex-1 relative min-h-screen  overflow-y-auto transition-all duration-200 pb-20 ml-0 md:${
         collapsed ? "ml-20" : "ml-64"
       }`}>
         {/* Top Section */}
-        <div className="sticky top-0 z-10 bg-white ">
+        <div className="sticky top-0 z-10 pl-12 md:pl-0 ">
           <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
         </div>
 

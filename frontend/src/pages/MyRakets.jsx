@@ -24,9 +24,9 @@ const MyRakets = () => {
       {/* MAIN CONTENT */}
       <div className={`flex-1 relative min-h-screen  overflow-y-auto transition-all duration-200 ${
         collapsed ? "md:ml-20" : "md:ml-64"
-      } ml-20`}>
+      } ml-0`}>
         {/* Search Bar */}
-        <div className="sticky top-0 z-10 bg-white">
+        <div className="sticky top-0 z-10 pl-12 md:pl-0">
           <SearchBar />
         </div>
 
