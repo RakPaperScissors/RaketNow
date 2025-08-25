@@ -40,7 +40,7 @@ const Home = () => {
       </div>
 
 
-      <div className={`flex-1 relative min-h-screen bg-[#ffffff] overflow-y-auto transition-all duration-200 pb-20 md:pb-0 ${
+      <div className={`flex-1 relative min-h-screen bg-[#F9FAFB] overflow-y-auto transition-all duration-200 pb-20 md:pb-0 ${
         collapsed ? "md:ml-20" : "md:ml-64"
       } ml-20`}>
         {/* Top Banner */}
