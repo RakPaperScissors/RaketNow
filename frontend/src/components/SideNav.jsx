@@ -21,6 +21,7 @@ import { useAuth } from "../context/AuthContext";
 function SideNav({ collapsed, setCollapsed }) {
   const { user, loading, logout } = useAuth();
   const [isLoggingOut, setIsLoggingOut] = React.useState(false);
+  const [mobileOpen, setMobileOpen] = React.useState(false);
 
 
   React.useEffect(() => {
@@ -47,26 +48,38 @@ function SideNav({ collapsed, setCollapsed }) {
 
   return (
     <>
-      {/* Mobile-only sidebar: logo, profile, boost, logout */}
-      <aside
-        className={`h-screen md:hidden ${
-          collapsed ? "w-20" : "w-64"
-        } bg-white border-r border-gray-200 shadow-sm flex flex-col justify-between pt-6 pb-24 px-4 transition-all duration-200 overflow-y-auto`}
+      {/* Mobile: Hamburger toggle button (single control) */}
+      <button
+        className="md:hidden fixed top-4 left-3 z-[60] flex items-center justify-center w-8 h-8 rounded-md "
+        onClick={() => setMobileOpen(prev => { const next = !prev; if (next) setCollapsed(false); return next; })}
+        aria-label="Toggle sidebar"
       >
-        <div>
-          {/* Collapse Button (mobile) */}
-          <button
-            className="ml-3 mb-5 flex items-center justify-center w-5 h-6 rounded-md hover:bg-gray-100"
-            onClick={() => setCollapsed((prev) => !prev)}
-            aria-label="Toggle sidebar"
-          >
-            <AlignJustify className="w-6 h-6 text-[#0C2C57]" />
-          </button>
+        <AlignJustify className="w-5 h-5 text-[#0C2C57]" />
+      </button>
 
 
+      {/* Mobile: Off-canvas sidebar */}
+      <div
+        className={`md:hidden fixed inset-0 z-50 ${mobileOpen ? "pointer-events-auto" : "pointer-events-none"}`}
+      >
+        {/* Backdrop */}
+        <div
+          className={`absolute inset-0 bg-black/30 transition-opacity ${mobileOpen ? "opacity-100" : "opacity-0"}`}
+          onClick={() => setMobileOpen(false)}
+        />
+
+
+        {/* Drawer */}
+        <aside
+          className={`absolute top-0 left-0 h-full ${collapsed ? "w-20" : "w-64"} bg-white border-r border-gray-200 shadow-lg py-6 px-4 transform transition-transform duration-200 ${
+            mobileOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
+          role="dialog"
+          aria-modal="true"
+        >
           {/* Logo */}
           {!collapsed && (
-            <div className="flex items-center gap-3 mb-7 px-6">
+            <div className="flex items-center gap-3 mt-10 mb-7 px-6">
               <img
                 src={logo}
                 alt="RaketNow Logo"
@@ -77,7 +90,7 @@ function SideNav({ collapsed, setCollapsed }) {
 
 
           {/* Profile on top (mobile) */}
-          <NavLink to="/profile">
+          <NavLink to="/profile" onClick={() => setMobileOpen(false)}>
             <SideNavUser
               name={`${user.firstName} ${user.lastName}`}
               role={userType}
@@ -97,15 +110,14 @@ function SideNav({ collapsed, setCollapsed }) {
               icon={TrendingUp}
               label="Boost Post"
               collapsed={collapsed}
+              onClick={() => setMobileOpen(false)}
             />
           </nav>
-        </div>
 
 
-        {/* Logout stays at bottom (mobile) */}
-        <div>
-          <div className="mt-4">
-            <div onClick={handleLogout} style={{ cursor: "pointer" }}>
+          {/* Logout at bottom (mobile) */}
+          <div className="mt-6">
+            <div onClick={async () => { setMobileOpen(false); await handleLogout(); }} style={{ cursor: "pointer" }}>
               <SideNavItem
                 to="#"
                 icon={LogOut}
@@ -115,10 +127,8 @@ function SideNav({ collapsed, setCollapsed }) {
               />
             </div>
           </div>
-          {/* Spacer to avoid overlap with BottomNav */}
-          <div className="h-6" />
-        </div>
-      </aside>
+        </aside>
+      </div>
 
 
       {/* Desktop sidebar (unchanged) */}
