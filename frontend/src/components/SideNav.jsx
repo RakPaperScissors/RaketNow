@@ -112,6 +112,13 @@ function SideNav({ collapsed, setCollapsed }) {
               collapsed={collapsed}
               onClick={() => setMobileOpen(false)}
             />
+            <SideNavItem
+              to="/faqs"
+              icon={Users}
+              label="Help / FAQs"
+              collapsed={collapsed}
+              onClick={() => setMobileOpen(false)}
+            />
           </nav>
 
 
@@ -175,6 +182,12 @@ function SideNav({ collapsed, setCollapsed }) {
               to="/boost"
               icon={TrendingUp}
               label="Boost Post"
+              collapsed={collapsed}
+            />
+            <SideNavItem
+              to="/faqs"
+              icon={Users}
+              label="Help / FAQs"
               collapsed={collapsed}
             />
           </nav>
