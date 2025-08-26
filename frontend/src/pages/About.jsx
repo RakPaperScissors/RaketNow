@@ -1,5 +1,6 @@
 import React from "react";
 import { ShieldCheck, MapPin, Star } from "lucide-react";
+import Header from "../components/Header";
 
 const team = [
   {
@@ -81,6 +82,7 @@ const TeamCard = ({  profilePicture, name, position, facebook, linkedin }) => (
 function About() {
   return (
     <div className=" text-gray-800">
+      <Header />
       <section className="bg-gradient-to-b from-white to-[#f4f7fc] py-20 text-center px-4">
         <h1 className="text-4xl font-extrabold mb-4 text-[#0C2C57]">
           About <span className="text-[#FF7C2B]">RaketNow</span>

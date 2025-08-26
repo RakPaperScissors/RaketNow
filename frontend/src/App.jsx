@@ -160,7 +160,7 @@ function AppContent() {
   return (
     <>
       <Suspense fallback={<LoadingSpinner fullScreen />}>
-        {showHeader && <Header />}
+        {/* {showHeader && <Header />} */}
 
 
         <Routes>
