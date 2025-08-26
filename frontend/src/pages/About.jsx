@@ -153,9 +153,11 @@ function About() {
             world-class work right in their backyard. Where our community’s
             skills are recognized and valued.
           </p>
+          <a href="/signup">
           <button className="bg-[#FF7C2B] px-6 py-2 rounded-full hover:bg-orange-600 transition">
             Join our Mission
           </button>
+          </a>
         </div>
       </section>
 
