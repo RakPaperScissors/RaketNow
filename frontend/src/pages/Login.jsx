@@ -77,11 +77,11 @@ function Login() {
 
         <GoogleLoginButton />
 
-        <div className="mt-5 text-xs border-b border-[#002D74] py-4 text-[#002D74] text-center">
+        {/* <div className="mt-5 text-xs py-4 text-[#002D74] text-center">
           <a href="#">Forgot your password?</a>
-        </div>
+        </div> */}
 
-        <div className="mt-3 text-xs flex justify-between items-center text-[#002D74]">
+        <div className="mt-3 text-xs flex justify-between items-center text-[#002D74] border-t border-[#002D74">
           <p>Don't have an account?</p>
           <button
             onClick={() => navigate("/signup")}
