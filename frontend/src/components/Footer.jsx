@@ -63,7 +63,7 @@ function Footer() {
                             className={`space-y-2 text-gray-300 ${open.support ? 'block' : 'hidden'
                                 } md:block`}
                         >
-                            <li><a href=""className="hover:text-white transition-colors duration-200">Help Center</a></li>
+                            <li><a href="/Faqs"className="hover:text-white transition-colors duration-200">Help Center</a></li>
                             <li><a href="/Faqs"className="hover:text-white transition-colors duration-200">FAQs</a></li>
                             <li><a href="#"className="hover:text-white transition-colors duration-200">Terms of Service</a></li>
                             <li><a href="#"className="hover:text-white transition-colors duration-200">Privacy Policy</a></li>
@@ -85,8 +85,8 @@ function Footer() {
                             className={`space-y-2 text-gray-300 ${open.company ? 'block' : 'hidden'
                                 } md:block`}
                         >
-                            <li><a href="#">About RaketNow</a></li>
-                            <li><a href="#">Contact Us</a></li>
+                            <li><a href="/about">About RaketNow</a></li>
+                            <li><a href="/about">Contact Us</a></li>
                         </ul>
                     </div>
                 </div>
