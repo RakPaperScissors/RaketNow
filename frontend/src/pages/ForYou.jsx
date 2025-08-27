@@ -37,7 +37,7 @@ const ForYou = () => {
         collapsed ? "ml-20" : "ml-64"
       }`}>
         {/* Top Section */}
-        <div className="sticky top-0 z-10 pl-12 md:pl-0 ">
+        <div className="pl-12 md:pl-0 ">
           <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
         </div>
 
