@@ -19,7 +19,7 @@ const Home = () => {
   const { user, loading: authLoading } = useAuth();
   const { rakets, loading: raketLoading } = useRakets();
   const [searchTerm, setSearchTerm] = useState("");
- 
+
 
 
   if (authLoading) {
@@ -40,9 +40,8 @@ const Home = () => {
       </div>
 
 
-      <div className={`flex-1 relative min-h-screen bg-[#F9FAFB] overflow-y-auto transition-all duration-200 pb-20 md:pb-0 ${
-        collapsed ? "md:ml-20" : "md:ml-64"
-      } ml-0`}>
+      <div className={`flex-1 relative min-h-screen bg-[#F9FAFB] overflow-y-auto transition-all duration-200 pb-20 md:pb-0 ${collapsed ? "md:ml-20" : "md:ml-64"
+        } ml-0`}>
         {/* Top Banner (elevated) */}
         <div className="relative z-10">
           <WelcomeBanner firstName={user?.firstName} searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
@@ -50,7 +49,9 @@ const Home = () => {
 
         {/* Main content (slightly overlapped under banner) */}
         <div className="bg-[#F9FAFB] -mt-2 md:-mt-4 pt-10 md:pt-16 lg:pt-20 px-8 space-y-6 relative">
-          <PostRaket />
+          <div className="mt-6">
+            <PostRaket />
+          </div>
           <Help />
           <DashboardCardList />
           {/* Show filtered rakets */}
