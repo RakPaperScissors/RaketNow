@@ -81,7 +81,7 @@ function Login() {
           <a href="#">Forgot your password?</a>
         </div> */}
 
-        <div className="mt-6 text-xs flex justify-between items-center text-[#002D74] border-t border-[#002D74]">
+        <div className="mt-6 text-xs flex justify-between items-center text-[#002D74] border-t border-[#002D74] pt-2">
           <p>Don't have an account?</p>
           <button
             onClick={() => navigate("/signup")}
