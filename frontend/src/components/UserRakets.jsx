@@ -274,11 +274,11 @@ const UserRakets = () => {
   return (
     <div className="p-6 bg-white shadow-md rounded-xl">
       {/* Header + Filters in one row */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4 gap-4">
+      <div className="flex flex-row items-center justify-between md:flex-row md:items-center md:justify-between mb-4 gap-4">
         <h1 className="text-2xl font-bold text-[#0C2C57]">My Rakets</h1>
 
-        {/* Filters Section (moved here) */}
-        <div className="flex items-center gap-3">
+        {/* Filters Section */}
+        <div className="flex items-center gap-3 ml-auto md:ml-0">
           {statusFilter !== "All" && (
             <button
               onClick={() => setStatusFilter("All")}
@@ -304,11 +304,10 @@ const UserRakets = () => {
                     <li key={status}>
                       <button
                         onClick={() => handleFilterChange(status)}
-                        className={`w-full text-left px-4 py-2 hover:bg-gray-100 ${
-                          statusFilter === status
+                        className={`w-full text-left px-4 py-2 hover:bg-gray-100 ${statusFilter === status
                             ? "bg-gray-100 font-semibold"
                             : ""
-                        }`}
+                          }`}
                       >
                         {status}
                       </button>
@@ -346,20 +345,20 @@ const UserRakets = () => {
               <div className="border-b border-gray-200 mb-3" />
 
               {/* Description */}
-              <p className="text-gray-700 text-sm mb-3">{raket.description}</p>
-              <div className="text-sm text-gray-500 mb-2">
-                {(() => {
-                  const { formattedDate, formattedTime } = formatDateTime(
-                    raket.dateCreated
-                  );
-                  return (
-                    <div className="text-sm text-gray-500 mb-2">
-                      <div>Date Posted: {formattedDate}</div>
-                      <div>Time Posted: {formattedTime}</div>
-                    </div>
-                  );
-                })()}
-              </div>
+              <p className="text-gray-700 text-sm font-medium mb-4">
+                {raket.description}
+              </p>
+
+              {/* Meta info */}
+              {(() => {
+                const { formattedDate, formattedTime } = formatDateTime(raket.dateCreated);
+                return (
+                  <div className="text-xs text-gray-500 space-y-2 mb-4">
+                    <div>Date Posted: {formattedDate}</div>
+                    <div>Time Posted: {formattedTime}</div>
+                  </div>
+                );
+              })()}
 
               {/* Budget + Status */}
               <div className="flex justify-between items-center mt-2">
@@ -476,14 +475,14 @@ const UserRakets = () => {
                         navigate(`/raket/${raket.raketId}/applications`)
                       }
                       className="text-xs px-4 py-2 rounded-full bg-[#CDE9FF] text-[#0C2C57] hover:bg-[#B3DDFF] transition"
-                      >
+                    >
                       View Applications
                     </button>
                     <button
                       disabled={updatingId === raket.raketId}
                       onClick={() => handleCancelOpen(raket.raketId)}
                       className="text-xs px-4 py-2 rounded-full font-medium bg-[#FECACA] text-[#7F1D1D] hover:bg-[#FCA5A5] disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
+                    >
                       Withdraw
                     </button>
                   </div>

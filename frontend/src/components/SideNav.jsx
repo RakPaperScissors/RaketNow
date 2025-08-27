@@ -18,7 +18,7 @@ import logo from "../assets/images/raketnow-blue-logo.png";
 import { useAuth } from "../context/AuthContext";
 
 
-function SideNav({ collapsed, setCollapsed }) {
+function SideNav({ collapsed, setCollapsed, hideHamburger = false }) {
   const { user, loading, logout } = useAuth();
   const [isLoggingOut, setIsLoggingOut] = React.useState(false);
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -48,14 +48,16 @@ function SideNav({ collapsed, setCollapsed }) {
 
   return (
     <>
-      {/* Mobile: Hamburger toggle button (single control) */}
-      <button
-        className="md:hidden fixed top-4 left-3 z-[60] flex items-center justify-center w-8 h-8 rounded-md "
-        onClick={() => setMobileOpen(prev => { const next = !prev; if (next) setCollapsed(false); return next; })}
-        aria-label="Toggle sidebar"
-      >
-        <AlignJustify className="w-5 h-5 text-[#0C2C57]" />
-      </button>
+      {/* Mobile: Hamburger toggle button (hidden when requested) */}
+      {!hideHamburger && (
+        <button
+          className="md:hidden fixed top-4 left-3 z-[60] flex items-center justify-center w-8 h-8 rounded-md "
+          onClick={() => setMobileOpen(prev => { const next = !prev; if (next) setCollapsed(false); return next; })}
+          aria-label="Toggle sidebar"
+        >
+          <AlignJustify className="w-5 h-5 text-[#0C2C57]" />
+        </button>
+      )}
 
 
       {/* Mobile: Off-canvas sidebar */}
