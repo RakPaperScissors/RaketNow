@@ -32,7 +32,7 @@ function SideNav({ collapsed, setCollapsed, hideHamburger = false }) {
   const handleLogout = async () => {
     setIsLoggingOut(true);
     await logout();
-    window.location.href = "/login";
+    window.location.href = "/";
     setIsLoggingOut(false);
   };
 
