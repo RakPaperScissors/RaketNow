@@ -1,6 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowLeft } from 'lucide-react';
+import LoadingSpinner from '../components/LoadingSpinner';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import SideNav from '../components/SideNav';
+import Footer from '../components/Footer';
 
 const faqsData = [
   {
@@ -105,49 +109,76 @@ Home Repairs (Plumbing, Carpentry, Electrician), Tech Support (Computer Repair, 
 
 const Faqs = () => {
   const navigate = useNavigate();
+  const { user, loading } = useAuth();
+
+  const [collapsed, setCollapsed] = useState(() => {
+      const stored = localStorage.getItem("sidebarCollapsed");
+      return stored === "true";
+    });
+
+  if (loading) {
+    return <LoadingSpinner fullScreen/>;
+  }
+
+
 
   return (
-    <section className="px-6 py-16 bg-[#FFFFFF]">
-      <div className="max-w-5xl mx-auto">
-
-        {/* Back Button */}
-        <button
-          onClick={() => navigate(-1)}
-          className="flex items-center text-[#FF7C2B] mb-6 hover:text-orange-600 transition"
-        >
-          <ArrowLeft className="w-5 h-5 mr-1" />
-          Back
-        </button>
-
-        {/* Heading */}
-        <div className="text-center mb-12">
-          <p className="text-sm font-semibold text-[#FF7C2B] mb-2">FAQs</p>
-          <h1 className="text-3xl sm:text-4xl font-bold text-[#0C2C57] mb-2">
-            Frequently Asked Questions
-          </h1>
-          <p className="text-gray-500 max-w-2xl mx-auto">
-            Browse through the most commonly asked questions by clients and Raketistas.
-          </p>
-        </div>
-
-        {/* Questions */}
-        {faqsData.map((section, idx) => (
-          <div key={idx} className="mb-10">
-            <h2 className="text-xl sm:text-2xl font-semibold text-[#0C2C57] mb-4">
-              {section.category}
-            </h2>
-            <div className="space-y-6">
-              {section.questions.map((faq, qIdx) => (
-                <div key={qIdx} className="bg-[#F9FAFB] p-5 rounded-xl border border-gray-200">
-                  <h3 className="font-semibold text-[#0C2C57] mb-1">{faq.q}</h3>
-                  <p className="text-gray-600 whitespace-pre-line">{faq.a}</p>
-                </div>
-              ))}
-            </div>
+    <div className="flex flex-col min-h-screen bg-[#FFFFFF]">
+      <div className="flex flex-1">
+        {user && (
+          <div className={`${collapsed ? "w-20" : "w-64"} h-screen sticky top-0 left-0 z-50 transition-all duration-200`}>
+            <SideNav collapsed={collapsed} setCollapsed={setCollapsed}/>
           </div>
-        ))}
+        )}
+
+        <section className="flex-grow px-6 py-16 bg-[#FFFFFF] transition-all">
+          <div className="max-w-5xl mx-auto">
+
+            {/* Back Button */}
+            {!user && (
+              <button
+              onClick={() => navigate(-1)}
+              className="flex items-center text-[#FF7C2B] mb-6 hover:text-orange-600 transition"
+            >
+              <ArrowLeft className="w-5 h-5 mr-1" />
+              Back
+            </button>
+            )}
+            
+
+            {/* Heading */}
+            <div className="text-center mb-12">
+              <p className="text-sm font-semibold text-[#FF7C2B] mb-2">FAQs</p>
+              <h1 className="text-3xl sm:text-4xl font-bold text-[#0C2C57] mb-2">
+                Frequently Asked Questions
+              </h1>
+              <p className="text-gray-500 max-w-2xl mx-auto">
+                Browse through the most commonly asked questions by clients and Raketistas.
+              </p>
+            </div>
+
+            {/* Questions */}
+            {faqsData.map((section, idx) => (
+              <div key={idx} className="mb-10">
+                <h2 className="text-xl sm:text-2xl font-semibold text-[#0C2C57] mb-4">
+                  {section.category}
+                </h2>
+                <div className="space-y-6">
+                  {section.questions.map((faq, qIdx) => (
+                    <div key={qIdx} className="bg-[#F9FAFB] p-5 rounded-xl border border-gray-200">
+                      <h3 className="font-semibold text-[#0C2C57] mb-1">{faq.q}</h3>
+                      <p className="text-gray-600 whitespace-pre-line">{faq.a}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
       </div>
-    </section>
+
+      {!user && <Footer />}
+    </div>
   );
 };
 

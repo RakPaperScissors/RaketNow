@@ -124,7 +124,7 @@ function AppContent() {
 
 
   // will see footer on these pages
-  const showFooter = ["/", "/about", "/faqs"].includes(currentPath);
+  const showFooter = ["/", "/about"].includes(currentPath);
 
 
   // will see bottom nav on these pages (authenticated pages)
