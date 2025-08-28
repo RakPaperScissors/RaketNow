@@ -115,8 +115,8 @@ const UserNotifications = () => {
                 >
                   {notif.name}
                 </p>
-                <p className="text-sm text-gray-700 mt-1">{notif.message}</p>
-                <p className="text-xs text-gray-500 mt-1">{notif.timestamp}</p>
+                <p className="text-xs sm:text-sm text-gray-700 mt-1">{notif.message}</p>
+                <p className="text-xs sm:text-sm text-gray-500 mt-1">{notif.timestamp}</p>
               </div>
 
               {/* Badge */}
