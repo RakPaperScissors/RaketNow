@@ -12,6 +12,7 @@ import { useState } from "react";
 
 function Header({ onCategoriesClick }) {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
