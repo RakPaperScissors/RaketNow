@@ -16,16 +16,13 @@ const MyRakets = () => {
       </div>
 
       {/* Main Content */}
-      <div className={`flex-1 relative min-h-screen  overflow-y-auto transition-all duration-200 ${
+      <div className={`flex-1 relative min-h-screen  overflow-y-auto transition-all duration-200 pb-20 md:pb-0 ${
         collapsed ? "md:ml-20" : "md:ml-64"
       }`}>
-        {/* Top Section */}
-        <div className="sticky top-0 z-10 bg-white">
-          <SearchBar />
-        </div>
+    
 
         {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto px-8 py-6 space-y-6">
+        <div className="flex-1 overflow-y-auto px-8 py-6 space-y-6 mt-8">
           <UserNotifications />
         </div>
       </div>
