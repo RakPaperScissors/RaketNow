@@ -200,7 +200,7 @@ function Message() {
                   <div
                     key={conv.id}
                     onClick={() => handleSelectConversation(conv)}
-                    className={`flex items-center gap-3 px-4 py-3 cursor-pointer transition-all mb-2 rounded-md ${
+                    className={`flex items-center gap-3 px-4 py-3 z-50 cursor-pointer transition-all mb-2 rounded-md ${
                       selectedConversation?.id === conv.id
                         ? "bg-[#FFF6F2] border-l-4 border-[#FF7C2B]"
                         : "hover:bg-gray-100"
