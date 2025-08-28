@@ -47,7 +47,7 @@ const MyRakets = () => {
           <div className="flex space-x-6 bg-white shadow-md rounded-xl px-3 py-2">
             {/* My Rakets */}
             <button
-              className={`px-4 py-2 font-medium transition sm:text-sm md:text-base ${activeTab === "userRakets"
+              className={`px-2 py-1 font-medium transition sm:text-sm md:text-base ${activeTab === "userRakets"
                   ? "text-[#0C2C57] border-b-2 border-[#FF7C2B]"
                   : "text-gray-500 hover:text-[#0C2C57]"
                 }`}
@@ -60,7 +60,7 @@ const MyRakets = () => {
           {/* Raket Status (only if raketista) */}
           {currentUser?.role === "raketista" && (
             <button
-              className={`px-4 py-2 font-medium transition sm:text-sm md:text-base ${activeTab === "raketStatus"
+              className={`px-2 py-1 font-medium transition sm:text-sm md:text-base ${activeTab === "raketStatus"
                 ? "text-[#0C2C57] border-b-2 border-[#FF7C2B]"
                 : "text-gray-500 hover:text-[#0C2C57]"
                 }`}
@@ -72,7 +72,7 @@ const MyRakets = () => {
 
           {/* My Applications */}
           <button
-            className={`px-4 py-2 font-medium transition  sm:text-sm md:text-base ${activeTab === "myApplications"
+            className={`px-2 py-1 font-medium transition  sm:text-sm md:text-base ${activeTab === "myApplications"
               ? "text-[#0C2C57] border-b-2 border-[#FF7C2B]"
               : "text-gray-500 hover:text-[#0C2C57]"
               }`}
@@ -84,7 +84,7 @@ const MyRakets = () => {
       </div>
 
       {/* TAB CONTENT */}
-      <div className="flex-1 overflow-y-auto px-8 py-6 space-y-6">
+      <div className="flex-1 overflow-y-auto px-2 sm:px-8 py-6 space-y-6">
         {activeTab === "userRakets" && <UserRakets />}
         {activeTab === "raketStatus" && currentUser?.type === "Raketista" && (
           <RaketStatus />
