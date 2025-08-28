@@ -348,7 +348,7 @@ function Message() {
                     
                     {/* MESSAGE BUBBLE */}
                     <div
-                      className={`p-3 rounded-2xl text-sm shadow flex-1 ${
+                      className={`p-3 rounded-2xl text-sm shadow flex-1 break-words whitespace-pre-wrap ${
                         isMyMessage
                           ? "bg-[#FF7C2B] text-white"
                           : "bg-white text-gray-900"
@@ -357,12 +357,12 @@ function Message() {
                       {/* SENDER NAME */}
                       {!isMyMessage && (
                         <ViewProfileLink userId={msg.sender.id}>
-                        <p className="font-medium text-xs mb-1 text-gray-600 cursor-pointer">
-                          {msg.sender.firstName || msg.sender.name}
-                        </p>
+                          <p className="font-medium text-xs mb-1 text-gray-600 cursor-pointer">
+                            {msg.sender.firstName || msg.sender.name}
+                          </p>
                         </ViewProfileLink>
                       )}
-                      <p>{msg.text}</p>
+                      <p className="break-all whitespace-pre-wrap">{msg.text}</p>
                       {msg.images && msg.images.length > 0 && (
                         <div className="mt-2 grid grid-cols-2 gap-2">
                           {msg.images.map((imgUrl, idx) => (
