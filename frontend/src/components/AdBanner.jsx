@@ -10,12 +10,16 @@ function AdBanner() {
         Find the work or talent you need
       </p>
       <div className="flex justify-center gap-4">
-        <button className="bg-white text-[#FF7C2B] font-semibold px-6 py-2 rounded-md hover:bg-[#fab489] hover:text-[#0C2C57] transition">
-          Get Started as Client
-        </button>
-        <button className="bg-[#0c2340] text-white font-semibold px-6 py-2 rounded-md hover:bg-[#576e8b] hover:text-[#FF7C2B] transition">
-          Join as Freelancer
-        </button>
+        <a href="/signup">
+          <button className="bg-white text-[#FF7C2B] font-semibold px-6 py-2 rounded-md hover:bg-[#fab489] hover:text-[#0C2C57] transition">
+            Get Started as Client
+          </button>
+        </a>
+        <a href="/signup">
+          <button className="bg-[#0c2340] text-white font-semibold px-6 py-2 rounded-md hover:bg-[#576e8b] hover:text-[#FF7C2B] transition">
+            Join as Freelancer
+          </button>
+        </a>
       </div>
     </div>
   );
