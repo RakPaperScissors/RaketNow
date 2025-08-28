@@ -114,35 +114,11 @@ function Header({ onCategoriesClick }) {
             </li>
             <li>
               <button
-                onClick={() => setDropdownOpen(!isDropdownOpen)}
-                className="flex items-center gap-1 hover:text-orange-500"
+                onClick={() => {handleCategoriesClick(); setMobileMenuOpen(false);}}
+                className="flex gap-1 hover:text-orange-500"
               >
-                Categories{" "}
-                {isDropdownOpen ? (
-                  <ChevronUp size={16} />
-                ) : (
-                  <ChevronDown size={16} />
-                )}
+                Categories
               </button>
-
-              <div
-                className={`transition-all duration-300 ease-in-out transform origin-top w-full ${
-                  isDropdownOpen
-                    ? "scale-y-100 opacity-100 h-auto"
-                    : "scale-y-0 opacity-0 h-0 overflow-hidden"
-                } bg-white border rounded-md shadow-sm mt-2`}
-              >
-                <ul>
-                  {categories.map((category) => (
-                    <li
-                      key={category}
-                      className="px-4 py-2 hover:bg-gray-100 text-sm text-center"
-                    >
-                      {category}
-                    </li>
-                  ))}
-                </ul>
-              </div>
             </li>
             <li>
               <NavLink
