@@ -94,8 +94,14 @@ export function useMessages() {
 
         // Listen for read receipts
         socketRef.current.on('messagesRead', ({ conversationId, readerId }) => {
-            if (conversationId === selectedConversation?.id) {
-                // in the future
+            if (conversationId === selectedConversation?.id && readerId !== user.uid) {
+                setMessages(prevMessages => 
+                    prevMessages.map(msg => 
+                        (msg.sender.id === user.uid && !msg.readAt) 
+                        ? { ...msg, readAt: new Date().toISOString()}
+                        : msg   
+                    )
+                );
             }
         });
 
