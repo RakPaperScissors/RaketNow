@@ -19,8 +19,8 @@ function ProfilePage() {
 
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
-      <div className={`${collapsed ? "w-20" : "w-64"} h-screen fixed top-0 left-0 z-50 transition-all duration-200 hidden md:block`}>
+    <div className="flex h-screen bg-[#f9fafb]">
+      <div className={`${collapsed ? "w-20" : ""} h-screen fixed top-0 left-0 z-50 transition-all duration-200`}>
         <SideNav collapsed={collapsed} setCollapsed={setCollapsed} />
       </div>
 
@@ -28,7 +28,7 @@ function ProfilePage() {
       {/* diri ang contents */}
       <div className={`flex-1 relative min-h-screen overflow-y-auto transition-all duration-200 pb-20 md:pb-0 ${
         collapsed ? "md:ml-20" : "md:ml-64"
-      } ml-0`}>
+      }`}>
         <div className = "px-10 py-16">
         <h1 className="text-2xl font-bold text-[#0c2c57] mb-6 px-8">My Profile</h1>
         <ProfileCard />

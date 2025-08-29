@@ -35,7 +35,7 @@ const Home = () => {
 
   return (
     <div className="flex">
-      <div className={`${collapsed ? "w-20" : "w-64"} h-screen fixed top-0 left-0 z-50 transition-all duration-200`}>
+      <div className={`${collapsed ? "w-20" : ""} h-screen fixed top-0 left-0 z-50 transition-all duration-200`}>
         <SideNav collapsed={collapsed} setCollapsed={setCollapsed} />
       </div>
 
