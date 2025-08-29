@@ -107,20 +107,22 @@ function SideNav({ collapsed, setCollapsed, hideHamburger = false }) {
 
           {/* Boost below profile (mobile) */}
           <nav className="space-y-2">
-            <SideNavItem
+            <NavLink
               to="/boost"
-              icon={TrendingUp}
-              label="Boost Post"
-              collapsed={collapsed}
+              className="flex items-center gap-3 px-3 py-2 rounded-md transition-colors hover:bg-[#0C2C57]/10"
               onClick={() => setMobileOpen(false)}
-            />
-            <SideNavItem
+            >
+              <TrendingUp className="w-5 h-5 text-[#0C2C57]" />
+              {!collapsed && <span className="text-sm text-[#0C2C58] truncate">Boost Post</span>}
+            </NavLink>
+            <NavLink
               to="/faqs"
-              icon={Users}
-              label="Help / FAQs"
-              collapsed={collapsed}
+              className="flex items-center gap-3 px-3 py-2 rounded-md transition-colors hover:bg-[#0C2C57]/10"
               onClick={() => setMobileOpen(false)}
-            />
+            >
+              <Users className="w-5 h-5 text-[#0C2C57]"/>
+              {!collapsed && <span className="text-sm text-[#0C2C57] tructate">Help / FAQs</span>}
+            </NavLink>
           </nav>
 
 
