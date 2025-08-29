@@ -65,27 +65,26 @@ function BecomeRaketista() {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
-      <div className={`${collapsed ? "w-20" : "w-64"} h-screen fixed top-0 left-0 z-50 transition-all duration-200`}>
+    <div className="flex flex-col min-h-screen bg-gray-50">
+      <div className="flex flex-1">
+      <div className={`${collapsed ? "w-20" : "w-64"}h-screen sticky top-0 left-0 z-50 transition-all duration-200`}>
         <SideNav collapsed={collapsed} setCollapsed={setCollapsed} />
       </div>
 
       <main
-        className={`flex-1 relative min-h-screen overflow-y-auto transition-all duration-200 px-16 py-16 flex items-center justify-center ${
-          collapsed ? "md:ml-20" : "md:ml-64"
-        } ml-20`}
+        className={`flex-1 relative min-h-screen overflow-y-auto transition-all duration-200 px-6 py-12 sm:px-8 md:px-16 md:py-16 flex justify-center`}
       >
 
         <div className="w-full max-w-3xl">
-          <h1 className="text-2xl font-bold text-[#0c2c57] mb-2">
+          <h1 className="text-2xl sm:text-2xl font-bold text-[#0c2c57] mb-2">
             Ready to become a <span className="text-[#ff7c2b]">Raketista</span>?
           </h1>
-          <p className="text-gray-600 mb-8">
+          <p className="text-gray-600 mb-6 sm:mb-8 text-sm sm:text-base">
             A Raketista badge will be added to your profile as well as a
             showcase of your personal bio and skills.
           </p>
 
-          <div className="bg-white shadow-sm rounded-xl p-8">
+          <div className="bg-white shadow-sm rounded-xl p-4 sm:p-8">
             {/* BIO */}
             <div className="mb-6">
               <label
@@ -99,7 +98,7 @@ function BecomeRaketista() {
                 rows="4"
                 maxLength={150}
                 placeholder="Max 150 Characters."
-                className="w-full border border-gray-300 rounded-md p-4 focus:outline-none focus:ring-2 focus:ring-[#ff7c2b]"
+                className="w-full border border-gray-300 rounded-md p-3 sm:p-4 focus:outline-none focus:ring-2 focus:ring-[#ff7c2b] text-sm sm:text-base"
                 value={bio}
                 onChange={(e) => setBio(e.target.value)}
               ></textarea>
@@ -115,7 +114,7 @@ function BecomeRaketista() {
               </label>
               <select
                 id="skills"
-                className="w-full border border-gray-300 rounded-md px-4 py-3 focuse:outline-none focus:ring-[#ff7c2b]"
+                className="w-full border border-gray-300 rounded-md px-3 py-2 sm:px-4 sm:py-3 focuse:outline-none focus:ring-[#ff7c2b] text-sm sm:text-base"
                 // value=""
                 onChange={(e) => {
                   const skillId = parseInt(e.target.value, 10);
@@ -138,7 +137,7 @@ function BecomeRaketista() {
                   return (
                     <span
                       key={id}
-                      className="bg-[#0c2c57]/10 text-[#0c2c57] px-3 py-1 rounded-full text-sm flex items-center gap-2"
+                      className="bg-[#0c2c57]/10 text-[#0c2c57] px-3 py-1 rounded-full text-xs sm:text-sm flex items-center gap-2"
                     >
                       {skill?.skillName || "Unknown Skill"}
                       <button
@@ -164,15 +163,15 @@ function BecomeRaketista() {
               <p className="text-red-500 text-sm mb-2">{formError}</p>
             )}
 
-            <div className="flex justify-end gap-4">
+            <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 sm:gap-4">
               <button
-                className="px-6 py-2 rounded-md border border-gray-300 text-[#0c2c57] hover:bg-gray-100"
+                className="px-6 py-2 rounded-md border border-gray-300 text-[#0c2c57] hover:bg-gray-100 text-sm sm:text-base"
                 onClick={() => navigate(-1)}
               >
                 Cancel
               </button>
               <button
-                className="px-6 py-2 rounded-md bg-[#ff7c2b] text-white hover:bg-[#e76c21]"
+                className="px-6 py-2 rounded-md bg-[#ff7c2b] text-white hover:bg-[#e76c21] text-sm sm:text-base"
                 onClick={handleSubmit}
                 disabled={applying}
               >
@@ -182,6 +181,7 @@ function BecomeRaketista() {
           </div>
         </div>
       </main>
+      </div>
     </div>
   );
 }
