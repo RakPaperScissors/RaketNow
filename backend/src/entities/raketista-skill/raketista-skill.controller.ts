@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, UnauthorizedException } from '@nestjs/common';
 import { RaketistaSkillService } from './raketista-skill.service';
 import { CreateRaketistaSkillDto } from './dto/create-raketista-skill.dto';
 import { UpdateRaketistaSkillDto } from './dto/update-raketista-skill.dto';
@@ -14,6 +14,15 @@ export class RaketistaSkillController {
   @Post()
   create(@Body() createRaketistaSkillDto: CreateRaketistaSkillDto, @CurrentUser() user: Users) {
     return this.raketistaSkillService.create(createRaketistaSkillDto, user.uid);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('user')
+  async getCurrentUserSkills(@Req() req) {
+    const userId = req.user?.uid;
+    if (!userId) throw new UnauthorizedException();
+
+    return this.raketistaSkillService.findByUser(userId);
   }
 
   @Get()

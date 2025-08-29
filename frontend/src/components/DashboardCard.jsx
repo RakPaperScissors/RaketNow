@@ -8,6 +8,8 @@ const DashboardCard = ({
   ctaLink = "#",
   isPromo = false,
 }) => {
+  const hasItems = items.length > 0 && items[0].raketId !== "none";
+
   return (
     <div
       className={`rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all duration-300 bg-white min-h-[100px] flex flex-col`}
@@ -19,7 +21,7 @@ const DashboardCard = ({
       </div>
 
       {/* Items */}
-      {items.length > 0 && (
+      {hasItems ? (
         <ul className="list-disc list-inside text-sm text-gray-700 space-y-1 mb-4 flex-1">
           {items.map((raket) => (
             <li key={raket.raketId} className="truncate">
@@ -27,6 +29,8 @@ const DashboardCard = ({
             </li>
           ))}
         </ul>
+      ) : (
+        <p className="text-sm text-gray-500 mb-4 flex-1">No Active Rakets</p>
       )}
 
       {/* CTA */}

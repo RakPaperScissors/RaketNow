@@ -110,6 +110,37 @@ export class RaketsService {
     }));
   }
 
+  // fetch only open rakets
+  async findOpenRakets() {
+    const rakets = await this.raketRepo.find({
+      where: { status: RaketStatus.OPEN },
+      relations: ['user', 'pictures'],
+      order: { dateCreated: 'DESC' },
+    });
+
+    return rakets.map(r => ({
+      raketId: r.raketId,
+      title: r.title,
+      description: r.description,
+      status: r.status,
+      budget: r.budget,
+      dateCreated: r.dateCreated,
+      category: r.category,
+      user: r.user ? {
+        uid: r.user.uid,
+        email: r.user.email,
+        firstName: r.user.firstName,
+        lastName: r.user.lastName,
+        lastActive: r.user.lastActive,
+      } : null,
+      pictures: r.pictures.map(p => ({
+        id: p.id,
+        imageUrl: p.imageUrl,
+        displayOrder: p.displayOrder,
+      })),
+    }));
+  }
+
   async findOne(raketId: number) {
     const raket = await this.raketRepo.findOne({
       where: { raketId },

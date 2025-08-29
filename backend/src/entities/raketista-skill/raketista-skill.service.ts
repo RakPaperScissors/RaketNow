@@ -43,6 +43,25 @@ export class RaketistaSkillService {
     return this.rsRepo.save(raketistaSkill);
   }
 
+  async findByUser(userId: number) {
+    const raketista = await this.raketistaRepo.findOneBy({ uid: userId });
+    if (!raketista) {
+      throw new NotFoundException('Raketista profile not found for the current user.');
+    }
+
+    const skills = await this.rsRepo.find({
+      where: { raketista: { uid: userId } },
+      relations: ['skill'],
+    });
+
+    return skills.map(rs => ({
+      skillId: rs.skill.skill_Id,
+      name: rs.skill.skillName,
+      category: rs.skill.category,
+    }));
+  }
+
+
   findAll() {
     return this.rsRepo.find({
       relations: ['raketista', 'skill'],
