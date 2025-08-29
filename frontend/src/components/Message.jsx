@@ -5,12 +5,16 @@ import { useUser } from "../hooks/useUsers";
 import JobInfoBanner from "../components/JobInfoBanner";
 import ViewProfileLink from "./ViewProfileLink";
 import LoadingSpinner from "./LoadingSpinner";
+import BottomNav from "./BottomNav";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const DEFAULT_AVATAR = "/default_profile.jpg";
 const USER_PROFILE_PIC_BASE_URL =
   "http://localhost:9000/raketnow/"; //recheck sa future
 
 function Message() {
+  const location = useLocation();
+  const navigate = useNavigate();
   const { user: currentUser, loading: userLoading } = useUser();
   const {
     conversations,
@@ -103,6 +107,12 @@ function Message() {
       return () => container.removeEventListener("scroll", handleScroll);
     }
   }, [handleScroll]);
+
+  // useEffect(() => {
+  //   if (location.pathname === "/message") {
+  //     setSelectedConversation(null);
+  //   }
+  // }, [location]);
 
   // --- Loading and Error States ---
   if (userLoading) {
@@ -246,7 +256,7 @@ function Message() {
             <div className="p-4 border-b border-gray-100 flex items-center gap-3">
               <button
                 className="md:hidden text-gray-500"
-                onClick={() => setShowChatPanel(false)}
+                onClick={() => {setShowChatPanel(false); navigate(0);}}
               >
                 <ArrowLeft size={20} />
               </button>
@@ -427,6 +437,8 @@ function Message() {
           </div>
         )}
       </div>
+
+      {!selectedConversation && <BottomNav />}
     </div>
   );
 }

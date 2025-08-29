@@ -133,7 +133,7 @@ function AppContent() {
     "/rakets",
     "/for-you",
     "/profile",
-    "/message",
+    // "/message",
     "/notifications",
     "/become-raketista",
     "/my-rakets",
