@@ -138,6 +138,7 @@ function AppContent() {
     "/become-raketista",
     "/my-rakets",
     "/boost",
+    "/faqs",
     "/raket/:raketId/applications",
     "/profile-display/:userId",
     "/view-profile/:userId"
