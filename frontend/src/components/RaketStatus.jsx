@@ -265,7 +265,7 @@ const RaketStatus = () => {
   return (
     <div className="p-6 bg-white shadow-md rounded-xl">
       {/* Title + Filters inline */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4 gap-4">
+      <div className="flex items-center justify-between mb-4">
         <h1 className="text-2xl font-bold text-[#0C2C57]">Assigned Rakets</h1>
 
         {/* Filters Section (moved here) */}
@@ -298,8 +298,8 @@ const RaketStatus = () => {
                           setShowDropdown(false);
                         }}
                         className={`w-full text-left px-4 py-2 hover:bg-gray-100 ${statusFilter === status
-                            ? "bg-gray-100 font-semibold"
-                            : ""
+                          ? "bg-gray-100 font-semibold"
+                          : ""
                           }`}
                       >
                         {status}
@@ -346,14 +346,14 @@ const RaketStatus = () => {
                       </p>
                     </div>
 
-                    <p className="text-sm text-gray-600 mb-2">
-                      Client: {raket.clientName || "Unknown"}
+                    <p className="text-xs text-gray-500 space-y-2 mb-4">
+                    Client: {raket.clientName || "Unknown"}
                     </p>
 
                     <div className="border-b border-gray-200 mb-3" />
 
                     {/* Job Description */}
-                    <p className="text-gray-700 text-sm mb-4">
+                    <p className="text-gray-700 text-sm font-medium mb-4">
                       {raket.description || ""}
                     </p>
 
