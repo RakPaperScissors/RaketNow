@@ -80,7 +80,11 @@ const RaketCard = ({
   };
 
   return (
-<div className="relative bg-white rounded-xl shadow-md overflow-hidden w-full max-w-7xl mx-auto p-4 flex flex-col min-h-[450px]">
+  <div
+    className={`relative bg-white rounded-xl shadow-md overflow-hidden w-full max-w-7xl mx-auto p-4 flex flex-col ${
+      displayedImages.length > 0 ? "min-h-[450px]" : ""
+    }`}
+  >
 {/* Category Badge */}
       {category && (
         <span
@@ -116,6 +120,7 @@ const RaketCard = ({
           ))}
         </div>
       )}
+
 
       {/* Modal */}
       <Modal
