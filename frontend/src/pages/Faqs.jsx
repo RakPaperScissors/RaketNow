@@ -126,13 +126,13 @@ const Faqs = () => {
     <div className="flex flex-col min-h-screen bg-[#FFFFFF]">
       <div className="flex flex-1">
         {user && (
-          <div className={`${collapsed ? "w-20" : "w-64"} h-screen sticky top-0 left-0 z-50 transition-all duration-200`}>
+          <div className={`h-screen sticky top-0 left-0 z-50 transition-all duration-200`}>
             <SideNav collapsed={collapsed} setCollapsed={setCollapsed}/>
           </div>
         )}
 
         <section className="flex-grow px-6 py-16 bg-[#FFFFFF] transition-all">
-          <div className="max-w-5xl mx-auto">
+          <div className="max-w-5xl lg:max-w-5xl mx-auto">
 
             {/* Back Button */}
             {!user && (

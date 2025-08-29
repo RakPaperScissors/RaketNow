@@ -133,11 +133,12 @@ function AppContent() {
     "/rakets",
     "/for-you",
     "/profile",
-    "/message",
+    // "/message",
     "/notifications",
     "/become-raketista",
     "/my-rakets",
     "/boost",
+    "/faqs",
     "/raket/:raketId/applications",
     "/profile-display/:userId",
     "/view-profile/:userId"

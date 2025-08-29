@@ -23,15 +23,11 @@ const MyRakets = () => {
       <div
         className={`flex-1 relative min-h-screen overflow-y-auto transition-all duration-200 ${
           collapsed ? "md:ml-20" : "md:ml-64"
-        } ml-20`}
+        }`}
       >
-        {/* Top Section */}
-        <div className="sticky top-0 z-10 bg-white">
-          <SearchBar />
-        </div>
 
         {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto px-8 py-6 space-y-6">
+        <div className="flex-1 overflow-y-auto px-8 py-14 space-y-6">
           <BoostPost />
         </div>
       </div>
