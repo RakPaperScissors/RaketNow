@@ -11,6 +11,7 @@ const MyRakets = () => {
     const stored = localStorage.getItem("sidebarCollapsed");
     return stored === "true";
   });
+  const [searchTerm, setSearchTerm] = useState("");
   const currentUser = useCurrentUser();
   const [activeTab, setActiveTab] = useState("userRakets"); // default tab
   const contentRef = useRef(null);
@@ -38,7 +39,7 @@ const MyRakets = () => {
         {/* Search Bar (hidden when scrolled) */}
         {!isScrolled && (
           <div className=" pl-12 md:pl-0">
-            <SearchBar />
+            <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm}/>
           </div>
         )}
 
@@ -85,11 +86,11 @@ const MyRakets = () => {
 
       {/* TAB CONTENT */}
       <div className="flex-1 overflow-y-auto px-2 sm:px-8 py-6 space-y-6">
-        {activeTab === "userRakets" && <UserRakets />}
+        {activeTab === "userRakets" && <UserRakets searchTerm={searchTerm} />}
         {activeTab === "raketStatus" && currentUser?.type === "Raketista" && (
-          <RaketStatus />
+          <RaketStatus searchTerm={searchTerm}/>
         )}
-        {activeTab === "myApplications" && <MyApplications />}
+        {activeTab === "myApplications" && <MyApplications searchTerm={searchTerm} />}
       </div>
     </div>
     </div >

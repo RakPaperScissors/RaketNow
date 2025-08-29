@@ -44,7 +44,7 @@ const ViewProfile = () => {
         className={`flex-1 relative min-h-screen bg-[#F9FAFB] overflow-y-auto transition-all duration-200 ${collapsed ? "md:ml-20" : "md:ml-64"
           }`}
       >
-        <div className="px-4 sm:px-6 py-6 sm:py-10 mt-6 sm:mt-10">
+        <div className="px-4 sm:px-6 py-6 sm:py-10 mt-6 md:mt-0">
           {/* Back Button + Profile Title */}
           <div className="flex items-center gap-2 mt-4 sm:mt-6 mb-6 sm:mb-10">
             <button

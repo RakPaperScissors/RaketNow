@@ -64,7 +64,7 @@ const formatDateTime = (timestamp) => {
   return { formattedDate, formattedTime };
 };
 
-const UserRakets = () => {
+const UserRakets = ({ searchTerm }) => {
   const [statusFilter, setStatusFilter] = useState("All");
   const [showDropdown, setShowDropdown] = useState(false);
   const currentUser = useCurrentUser();
@@ -259,10 +259,13 @@ const UserRakets = () => {
   //     .replace(/\b\w/g, (c) => c.toUpperCase());
 
   // for filtering
-  const filteredRakets =
-    statusFilter === "All"
-      ? rakets
-      : rakets.filter((r) => mapStatusToLabel(r.status) === statusFilter);
+  const filteredRakets = rakets.filter((r) =>
+    (statusFilter === "All" || mapStatusToLabel(r.status) === statusFilter) &&
+    (
+      r.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      r.description.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+  );
 
   const handleFilterChange = (status) => {
     setStatusFilter(status);

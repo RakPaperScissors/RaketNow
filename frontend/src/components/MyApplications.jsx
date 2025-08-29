@@ -12,7 +12,7 @@ const formatPeso = new Intl.NumberFormat("en-PH", {
   currency: "PHP",
 });
 
-function MyApplications() {
+function MyApplications({ searchTerm }) {
   const currentUser = useCurrentUser();
   const {
     apps: myApplications,
@@ -40,6 +40,13 @@ function MyApplications() {
     }
   };
 
+  const filteredApplications = myApplications?.filter(app =>
+    !searchTerm ||
+    (app.raket?.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+     app.raket?.user?.firstName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+     app.raket?.user?.lastName?.toLowerCase().includes(searchTerm.toLowerCase()))
+  );
+
   if (currentUser?.type === "Users") return null; // hides if client
 
   return (
@@ -54,9 +61,9 @@ function MyApplications() {
         <div>Loading...</div>
       ) : error ? (
         <div className="text-red-500">{error}</div>
-      ) : myApplications && myApplications.length > 0 ? (
+      ) : filteredApplications && filteredApplications.length > 0 ? (
         <div className="space-y-6">
-          {myApplications.map((app) => (
+          {filteredApplications.map((app) => (
             <div
               key={app.applicationId}
               className="bg-white p-5 rounded-lg shadow hover:shadow-lg transition"
