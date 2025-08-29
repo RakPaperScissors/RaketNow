@@ -73,7 +73,7 @@ const formatDateTime = (timestamp) => {
   return { formattedDate, formattedTime };
 };
 
-const RaketStatus = () => {
+const RaketStatus = ({ searchTerm }) => {
   // const [rakets, setRakets] = useState([]);
   const [statusFilter, setStatusFilter] = useState("All");
   const [showDropdown, setShowDropdown] = useState(false);
@@ -244,12 +244,15 @@ const RaketStatus = () => {
   const formatStatus = (status) =>
     status.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 
-  const filteredRakets =
-    statusFilter === "All"
-      ? assignedRakets
-      : assignedRakets.filter(
-        (r) => mapStatusToLabel(r.status) === statusFilter
-      );
+  const filteredRakets = assignedRakets.filter((r) => {
+    const statusMatch =
+      statusFilter === "All" || mapStatusToLabel(r.status) === statusFilter;
+    const searchMatch =
+      !searchTerm ||
+      r.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      r.description.toLowerCase().includes(searchTerm.toLowerCase());
+    return statusMatch && searchMatch;
+  })
 
   const handleFilterChange = (status) => {
     setStatusFilter(status);
@@ -321,7 +324,7 @@ const RaketStatus = () => {
           ) : error ? (
             <p className="text-red-500">{error}</p>
           ) : assignedRakets.length === 0 ? (
-            <p className="text-gray-500">
+            <p className="text-gray-500 text-center">
               No rakets have been assigned to you yet.
             </p>
           ) : (
