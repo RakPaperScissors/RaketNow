@@ -28,7 +28,7 @@ export class RaketApplicationService {
   async create(dto: CreateRaketApplicationDto, user: Users) {
     const raketista = await this.usersRepository.findOne({ where: { uid: user.uid } });
 
-    if (!raketista || raketista.role !== 'raketista') {
+    if (!raketista || raketista.type !== 'Raketista') {
       throw new BadRequestException('Only raketistas can apply to rakets.');
     }
 
