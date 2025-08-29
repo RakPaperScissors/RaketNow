@@ -72,14 +72,14 @@ function MyApplications() {
 
                 {/* Client */}
                 <div className="text-sm text-gray-600">
-                  <span className="font-medium">Client:</span>{" "}
+                  <span className="font-bold">Client:</span>{" "}
                   {app.raket?.user?.firstName} {app.raket?.user?.lastName || ""}
                 </div>
 
                 {/* Budget + Withdraw (if pending) */}
                 <div className="flex items-center justify-between text-sm text-gray-600">
                   <span>
-                    <span className="font-medium">Budget:</span> PHP{" "}
+                    <span className="font-bold">Budget:</span> PHP{" "}
                     {app.raket?.budget || 0}
                   </span>
                   {app.status?.toUpperCase() === "PENDING" && (
@@ -95,7 +95,7 @@ function MyApplications() {
 
                 {/* Status */}
                 <div className="text-sm text-gray-600">
-                  <span className="font-medium">Application Status:</span>{" "}
+                  <span className="font-bold">Application Status:</span>{" "}
                   <span
                     className={`px-4 py-2 rounded-full text-xs ${
                       app.status === "ACCEPTED"
