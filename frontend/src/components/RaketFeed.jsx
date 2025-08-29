@@ -158,7 +158,7 @@ const RaketFeed = ({ searchTerm }) => {
             images={
               raket.pictures?.length > 0
                 ? raket.pictures.map(p => p.imageUrl)
-                : ["/default_profile.jpg"]
+                : ["/default_raket.png"]
             }
             title={raket.title || "Untitled Raket"}
             description={raket.description || "No description provided."}
