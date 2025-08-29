@@ -244,7 +244,8 @@ function ProfileCard() {
           className={`divide-y divide-gray-200 ${myRakets.length > 5 ? "max-h-80 overflow-y-auto pr-2" : ""
             }`}
         >
-          {myRakets.map((raket, index) => (
+          {myRakets.length > 0 ? (
+            myRakets.map((raket, index) => (
             <div key={index} className="flex items-center space-x-3 py-3">
               <div className="flex-shrink-0 w-10 h-10 bg-[#ff7c2b] rounded-full flex items-center justify-center shadow-sm">
                 <Briefcase className="text-white w-5 h-5" />
@@ -257,7 +258,13 @@ function ProfileCard() {
                 </p>
               </div>
             </div>
-          ))}
+          ))
+          ) : (
+            <div className="text-center text-gray-500 text-sm py-6 italic">
+              No posted activities yet. 🌱
+            </div>
+          )}
+          
         </div>
       </div>
 
