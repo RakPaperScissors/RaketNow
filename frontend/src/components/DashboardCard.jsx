@@ -10,7 +10,7 @@ const DashboardCard = ({
 }) => {
   return (
     <div
-      className={`rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all duration-300 bg-white min-h-[220px] flex flex-col`}
+      className={`rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all duration-300 bg-white min-h-[100px] flex flex-col`}
     >
       {/* Header */}
       <div className="flex items-center gap-3 mb-4">
@@ -20,10 +20,10 @@ const DashboardCard = ({
 
       {/* Items */}
       {items.length > 0 && (
-        <ul className="text-sm text-gray-700 space-y-1 mb-4 flex-1">
-          {items.map((item, index) => (
-            <li key={index} className="list-disc list-inside">
-              {item}
+        <ul className="list-disc list-inside text-sm text-gray-700 space-y-1 mb-4 flex-1">
+          {items.map((raket) => (
+            <li key={raket.raketId} className="truncate">
+              {raket.title}
             </li>
           ))}
         </ul>

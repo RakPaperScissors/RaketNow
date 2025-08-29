@@ -1,22 +1,33 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import DashboardCard from "./DashboardCard";
 import { Briefcase, Lightbulb } from "lucide-react";
-import { useMyRakets } from "../hooks/useMyRakets";
+import { fetchMyRakets } from "../api/rakets";
 
 const DashboardCardList = () => {
-  const { myRakets, loading } = useMyRakets();
+  const [myRakets, setMyRakets] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const activeRakets = loading
-    ? ["Loading..."]
-    : myRakets
-        .filter(r => r.status === "active")
-        .sort(
-          (a, b) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        )
-        .slice(0, 3)
-        .map(r => r.title);
+  useEffect(() => {
+    const loadRakets = async () => {
+      try {
+        const myRaketsData = await fetchMyRakets();
+        setMyRakets(myRaketsData || []);
+      } catch (err) {
+        console.error("Error loading rakets:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
+    loadRakets();
+  }, []);
+
+  const activeRakets = myRakets
+    .filter(r => r.status === "in_progress" || r.status === "open")
+    .sort((a, b) => new Date(b.dateCreated) - new Date(a.dateCreated))
+    .slice(0, 3)
+    .map(r => ({ raketId: r.raketId, title: r.title }));
+    
   return (
     <div className="flex flex-wrap gap-6">
       {/* My Active Rakets */}
@@ -26,10 +37,10 @@ const DashboardCardList = () => {
           title="My Active Rakets"
           items={
             loading
-              ? ["Loading..."]
+              ? []
               : activeRakets.length > 0
               ? activeRakets
-              : ["No Active Rakets"]
+              : [{ raketId: "none", title: "No Active Rakets" }]
           }
           ctaText="View All →"
           ctaLink="/my-rakets"
@@ -42,9 +53,9 @@ const DashboardCardList = () => {
           icon={Lightbulb}
           title="Suggested Rakets"
           items={[
-            "UX Designer for Mobile App",
-            "Virtual Assistant - Data Entry",
-            "Logo Design Contest",
+            { raketId: "1", title: "UX Designer for Mobile App" },
+            { raketId: "2", title: "Virtual Assistant - Data Entry" },
+            { raketId: "3", title: "Logo Design Contest" },
           ]}
           ctaText="Explore Matches →"
           ctaLink="/rakets"
