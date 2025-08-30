@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import TOSModal from "./TOSModal";
 import ErrorModal from "./ErrorModal";
+import EmailVerificationModal from "./EmailVerificationModal";
 
 function UserInfoForm({
   userType,
@@ -25,6 +26,9 @@ function UserInfoForm({
 
   // error modal
   const [errorMessage, setErrorMessage] = useState("");
+
+  // email verification modal
+  const [showVerification, setShowVerification] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -56,7 +60,8 @@ function UserInfoForm({
 
     if (passwordValid.length && passwordValid.number && passwordValid.special) {
       if (password === confirmPassword) {
-        onSubmit();
+        // ✅ Instead of directly submitting, show verification modal
+        setShowVerification(true);
       } else {
         setErrorMessage("Passwords do not match.");
       }
@@ -65,6 +70,16 @@ function UserInfoForm({
         "Password must:\n- Be at least 4 characters\n- Include at least one number\n- Include at least one special character"
       );
     }
+  };
+
+  // callback for verification
+  const handleVerifyCode = (code) => {
+    // TODO: connect to backend API to check code
+    console.log("User entered code:", code);
+
+    // if valid:
+    setShowVerification(false);
+    // onSubmit(); // call the original submit (uncomment when backend is ready)
   };
 
   return (
@@ -224,6 +239,14 @@ function UserInfoForm({
         <ErrorModal
           message={errorMessage}
           onClose={() => setErrorMessage("")}
+        />
+      )}
+      {showVerification && (
+        <EmailVerificationModal
+          email={formData.email}
+          onVerify={handleVerifyCode}
+          onClose={() => setShowVerification(false)}
+          onResend={() => console.log("Resend code to:", formData.email)}
         />
       )}
     </section>
