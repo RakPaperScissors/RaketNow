@@ -14,11 +14,11 @@ import { useNavigate } from "react-router-dom";
 
 function UserTable() {
   const { users, loading: userLoading, error: userError } = useUsers();
-  const { handleDelete, loading: deleteLoading, error: errorLoading, success } = useDeleteUser();
+  // const { handleDelete, loading: deleteLoading, error: errorLoading, success } = useDeleteUser();
 
   const [searchQuery, setSearchQuery] = useState("");
   const [sortOption, setSortOption] = useState("newest");
-  const [deleteTarget, setDeleteTarget] = useState(null); // user to delete
+  // const [deleteTarget, setDeleteTarget] = useState(null); // user to delete
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [profileTarget, setProfileTarget] = useState(null);
 
