@@ -8,7 +8,7 @@ import {
   ChevronDown,
   Eye,
 } from "lucide-react";
-import { useUsers, useDeleteUser } from "../hooks/useAdmin";
+import { useUsers } from "../hooks/useAdmin";
 import LoadingSpinner from "./LoadingSpinner";
 import { useNavigate } from "react-router-dom";
 

@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, useCallback } from "react";
-import { fetchUsers, trackVisit, fetchVisits as fetchVisitsApi, deleteUser } from "../api/admin";
+import { fetchUsers, trackVisit, fetchVisits as fetchVisitsApi } from "../api/admin";
 
 export function useUsers() {
     const [users, setUsers] = useState([]);
