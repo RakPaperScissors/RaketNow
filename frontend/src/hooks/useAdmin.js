@@ -91,3 +91,27 @@ export function useRakets() {
 
     return { rakets, loading, error };
 }
+
+export function useRaketistas() {
+    const [raketistas, setRaketistas] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const loadRaketistas = async () => {
+            try {
+                const allUsers = await fetchUsers();
+                const filtered = allUsers.filter(user => user.type === "Raketista");
+                setRaketistas(filtered);
+            } catch (err) {
+                setError(err?.message || "Failed to fetch raketistas.");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        loadRaketistas();
+    }, []);
+
+    return { raketistas, loading, error };
+}

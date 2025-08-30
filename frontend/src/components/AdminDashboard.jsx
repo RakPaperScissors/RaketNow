@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import adminBanner from "../assets/images/admin-banner.png";
 import { useAuth } from "../context/AuthContext";
-import { useUsers, useVisits, useRakets } from "../hooks/useAdmin";
+import { useUsers, useVisits, useRakets, useRaketistas } from "../hooks/useAdmin";
 import LoadingSpinner from "./LoadingSpinner";
 
 
@@ -17,6 +17,7 @@ export default function AdminDashboard() {
     const { users, loading, error } = useUsers();
     const { visits, loading: visitsLoading, error: visitsError } = useVisits();
     const { rakets, loading: raketsLoading, error: raketsError } = useRakets();
+    const { raketistas, loading: raketistasLoading, error: raketistasError } = useRaketistas();
 
     if (loading || authLoading || visitsLoading) return <LoadingSpinner />;
     if (error || authError || visitsError) {
@@ -25,8 +26,8 @@ export default function AdminDashboard() {
 
     const dashboardStats = [
         {
-            title: "Online Users",
-            value: "N/A",
+            title: "Total Raketistas",
+            value: raketistas?.length ?? 0,
             icon: <UserCheck className="w-6 h-6 text-green-600" />,
             color: "bg-green-100",
         },
