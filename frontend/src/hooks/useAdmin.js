@@ -70,34 +70,3 @@ export const useVisits = () => {
 
     return { visits, loading, error };
 }
-
-export function useDeleteUser() {
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
-    const [success, setSuccess] = useState(false);
-
-    const handleDelete = useCallback(async (userId) => {
-        setLoading(true);
-        setError(null);
-        setSuccess(false);
-
-        try {
-            const result = await deleteUser(userId);
-            setSuccess(true);
-            return result;
-        } catch (err) {
-            setError(err.message || "Failed to delete user.");
-        } finally {
-            setLoading(false);
-        }
-    }, []);
-
-    useEffect(() => {
-        if (success) {
-            const timer = setTimeout(() => setSuccess(false), 2000);
-            return () => clearTimeout(timer);
-        }
-    }, [success]);
-
-    return { handleDelete, loading, error, success };
-}

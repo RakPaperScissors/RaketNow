@@ -216,7 +216,7 @@ function UserTable() {
         </table>
       </div>
 
-      {/* Confirmation Modal */}
+      {/* Confirmation Modal
       {isModalOpen && deleteTarget && (
         <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-white/10">
           <div className="bg-white p-6 rounded-xl shadow-lg w-full max-w-md">
@@ -256,7 +256,7 @@ function UserTable() {
             </div>
           </div>
         </div>
-      )}
+      )} */}
 
       {/* Profile Modal */}
       {profileTarget && (
