@@ -138,14 +138,16 @@ function SideNav({ collapsed, setCollapsed, hideHamburger = false }) {
               <Users className="w-5 h-5 text-[#0C2C57]"/>
               {!collapsed && <span className="text-sm text-[#0C2C57] tructate">Help / FAQs</span>}
             </NavLink>
-            <NavLink 
+            {canApplyAsRaketista && (
+              <NavLink 
               to="/become-raketista"
               className="flex items-center gap-3 px-3 py-2 rounded-md transition-colors hover:bg-[#0C2C57]/10"
               onClick={() => setMobileOpen(false)}
-            >
-              <Users className="w-5 h-5 text-[#0C2C57]" />
-              {!collapsed && <span className="text-sm text-[#0C2C57] tructate">Become a Raketista</span>}
-            </NavLink>
+              >
+                <Users className="w-5 h-5 text-[#0C2C57]" />
+                {!collapsed && <span className="text-sm text-[#0C2C57] tructate">Become a Raketista</span>}
+              </NavLink>
+            )}
           </nav>
 
 
