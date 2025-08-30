@@ -16,12 +16,15 @@ import refreshJwtConfig from './refresh-jwt.config';
 import { SkillsModule } from 'src/entities/skills/skills.module';
 import { RaketistaSkillModule } from 'src/entities/raketista-skill/raketista-skill.module';
 import { Organization } from 'src/entities/organization/entities/organization.entity';
+import { EmailModule } from 'src/entities/email/email.module';
+import { Email } from 'src/entities/email/entities/email.entity';
+import { EmailService } from 'src/entities/email/email.service';
 
 
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Users, Organization]),
+    TypeOrmModule.forFeature([Users, Organization, Email]),
     UserModule,
     PassportModule,
     JwtModule.register({
@@ -32,8 +35,9 @@ import { Organization } from 'src/entities/organization/entities/organization.en
     ConfigModule.forFeature(refreshJwtConfig),
     SkillsModule,
     RaketistaSkillModule,
+    EmailModule
   ],
-  providers: [AuthService, JwtStrategy, GoogleStrategy, UserService],
+  providers: [AuthService, JwtStrategy, GoogleStrategy, UserService, EmailService],
   controllers: [AuthController],
   exports: [AuthService],
 })
