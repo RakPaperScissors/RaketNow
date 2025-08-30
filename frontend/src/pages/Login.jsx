@@ -17,8 +17,13 @@ function Login() {
 
   const handleSubmit = (e) => {
     handleLogin(e, async () => {
-      await login();
-      window.location.href = "/home";
+      const user = await login();
+
+      if (user?.role === "admin") {
+        window.location.href = "/admin-dashboard";
+      } else {
+        window.location.href = "/home";
+      }
     });
   };
 

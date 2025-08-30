@@ -10,6 +10,7 @@ import BottomNav from "./components/BottomNav";
 
 import { AuthProvider } from "./context/AuthContext";
 import { useAuth } from "./context/AuthContext";
+import { useTrackVisit } from "./hooks/useAdmin";
 
 
 // Pages
@@ -111,6 +112,23 @@ function AuthGate({ children }) {
   return children;
 }
 
+function AdminGate({ children }) {
+  const { user, loading } = useAuth();
+
+  if (loading) return <LoadingSpinner fullScreen />;
+
+  if (!user) {
+    window.location.href = "/login";
+    return null;
+  }
+
+  if (user.role !== "admin") {
+    window.location.href = "/home";
+    return null;
+  }
+  
+  return children;
+}
 
 function AppContent() {
   const location = useLocation();
@@ -189,8 +207,8 @@ function AppContent() {
 
 
           {/* admin page */}
-          <Route path="/admin-dashboard" element={<AdminDashboard />} />
-          <Route path="/admin-users-table" element={<AdminUsersTable />} />
+          <Route path="/admin-dashboard" element={<AdminGate> <AdminDashboard /> </AdminGate>} />
+          <Route path="/admin-users-table" element={<AdminGate> <AdminUsersTable /> </AdminGate>} />
         </Routes>
 
 
@@ -203,6 +221,7 @@ function AppContent() {
 
 
 function App() {
+  useTrackVisit();
   return (
     <BrowserRouter>
       <AuthProvider>
