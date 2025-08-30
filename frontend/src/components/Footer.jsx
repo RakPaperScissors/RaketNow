@@ -85,8 +85,8 @@ function Footer() {
                             className={`space-y-2 text-gray-300 ${open.company ? 'block' : 'hidden'
                                 } md:block`}
                         >
-                            <li><a href="/about">About RaketNow</a></li>
-                            <li><a href="/about">Contact Us</a></li>
+                            <li><a href="/about" className="hover:text-white transition-colors duration-200">About RaketNow</a></li>
+                            <li><a href="/about" className="hover:text-white transition-colors duration-200">Contact Us</a></li>
                         </ul>
                     </div>
                 </div>
