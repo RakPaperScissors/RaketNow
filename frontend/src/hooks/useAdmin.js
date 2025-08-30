@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import { fetchUsers, trackVisit, fetchVisits as fetchVisitsApi, deleteUser } from "../api/admin";
+import { fetchRakets } from "../api/rakets";
 
 export function useUsers() {
     const [users, setUsers] = useState([]);
@@ -100,4 +101,24 @@ export function useDeleteUser() {
     }, [success]);
 
     return { handleDelete, loading, error, success };
+}
+
+export function useRakets() {
+    const [rakets, setRakets] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        fetchRakets()
+            .then((data) => {
+                setRakets(data);
+                setLoading(false);
+            })
+            .catch((err) => {
+                setError(err?.message || "Failed to fetch rakets.");
+                setLoading(false);
+            });
+    }, []);
+
+    return { rakets, loading, error };
 }

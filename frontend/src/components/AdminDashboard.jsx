@@ -4,10 +4,11 @@ import {
     Users,
     AlertOctagon,
     Eye,
+    Briefcase,
 } from "lucide-react";
 import adminBanner from "../assets/images/admin-banner.png";
 import { useAuth } from "../context/AuthContext";
-import { useUsers, useVisits } from "../hooks/useAdmin";
+import { useUsers, useVisits, useRakets } from "../hooks/useAdmin";
 import LoadingSpinner from "./LoadingSpinner";
 
 
@@ -15,6 +16,7 @@ export default function AdminDashboard() {
     const { user: authUser, loading: authLoading, error: authError } = useAuth();
     const { users, loading, error } = useUsers();
     const { visits, loading: visitsLoading, error: visitsError } = useVisits();
+    const { rakets, loading: raketsLoading, error: raketsError } = useRakets();
 
     if (loading || authLoading || visitsLoading) return <LoadingSpinner />;
     if (error || authError || visitsError) {
@@ -35,9 +37,9 @@ export default function AdminDashboard() {
             color: "bg-purple-100",
         },
         {
-            title: "Error Rate",
-            value: "N/A",
-            icon: <AlertOctagon className="w-6 h-6 text-red-600" />,
+            title: "Total Rakets",
+            value: rakets?.length ?? 0,
+            icon: <Briefcase className="w-6 h-6 text-red-600" />,
             color: "bg-red-100",
         },
     ];
