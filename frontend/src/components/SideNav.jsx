@@ -107,14 +107,12 @@ function SideNav({ collapsed, setCollapsed, hideHamburger = false }) {
 
 
           {/* Profile on top (mobile) */}
-          <NavLink to="/profile" onClick={() => setMobileOpen(false)}>
-            <SideNavUser
-              name={`${user.firstName} ${user.lastName}`}
-              role={userType}
-              image={user?.profilePicture}
-              collapsed={collapsed}
-            />
-          </NavLink>
+          <SideNavUser
+            name={`${user.firstName} ${user.lastName}`}
+            role={userType}
+            image={user?.profilePicture}
+            collapsed={collapsed}
+          />
 
 
           <div className="border-t border-gray-200 my-4" />
@@ -260,14 +258,12 @@ function SideNav({ collapsed, setCollapsed, hideHamburger = false }) {
           {loading ? (
             <p>Loading user...</p>
           ) : user ? (
-            <NavLink to="/profile">
-              <SideNavUser
-                name={`${user.firstName} ${user.lastName}`}
-                role={userType}
-                image={user?.profilePicture}
-                collapsed={collapsed}
-              />
-            </NavLink>
+            <SideNavUser
+              name={`${user.firstName} ${user.lastName}`}
+              role={userType}
+              image={user?.profilePicture}
+              collapsed={collapsed}
+            />
           ) : (
             <p>Not logged in.</p>
           )}
