@@ -103,6 +103,16 @@ export async function fetchApplicationsForRaket(raketId) {
   return response.json();
 }
 
+//fetch open rakets
+export async function fetchOpenRakets() {
+  const res = await fetch(`${API_URL}/rakets/open`, {
+    method: "GET",
+    credentials: "include",
+  });
+  if (!res.ok) throw new Error("Failed to fetch open rakets");
+  return res.json();
+}
+
 // applying to a raket
 export async function applyToRaket({ raketId, raketistaId }) {
   const response = await fetch(`${API_URL}/raket-application`, {

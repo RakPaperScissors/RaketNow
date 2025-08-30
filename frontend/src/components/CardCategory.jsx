@@ -3,7 +3,6 @@ import React from "react";
 const CategoryCard = ({ icon: Icon, label, link }) => {
   return (
     <a
-      href={link}
       className="group relative flex flex-col items-center justify-center p-4 w-36 h-32 rounded-xl shadow-md 
       cursor-pointer transition-all duration-300 bg-white overflow-hidden"
     >

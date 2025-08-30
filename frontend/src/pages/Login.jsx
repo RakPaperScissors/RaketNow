@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { ArrowLeft, Home } from "lucide-react"; 
 import EmailInput from "../components/EmailInput";
 import PasswordInput from "../components/PasswordInput";
 import LoginButton from "../components/LoginButton";
@@ -27,8 +28,16 @@ function Login() {
   };
 
   return (
-    <section className="bg-gray-50 min-h-screen flex items-center justify-center">
-      <div className="bg-gray-100 rounded-2xl shadow-lg w-full max-w-md p-8">
+    <section className="bg-[#F9FAFB] min-h-screen flex items-center justify-center">
+      <div className="bg-white rounded-2xl shadow-lg w-full max-w-md p-8 relative">
+        {/* Return to Previous Page Button (top-left corner) */}
+        <button
+          onClick={() => navigate(-1)}
+          className="absolute top-4 left-4 p-2 rounded-full hover:bg-gray-100 transition-colors duration-300"
+        >
+          <ArrowLeft size={20} className="text-[#0C2C57]" />
+        </button>
+
         <div className="flex justify-center mb-1">
           <img
             src={logo}
@@ -73,17 +82,27 @@ function Login() {
 
         <GoogleLoginButton />
 
-        <div className="mt-5 text-xs border-b border-[#002D74] py-4 text-[#002D74] text-center">
+        {/* <div className="mt-5 text-xs py-4 text-[#002D74] text-center">
           <a href="#">Forgot your password?</a>
-        </div>
+        </div> */}
 
-        <div className="mt-3 text-xs flex justify-between items-center text-[#002D74]">
+        <div className="mt-6 text-xs flex justify-between items-center text-[#002D74] border-t border-[#002D74] pt-2">
           <p>Don't have an account?</p>
           <button
             onClick={() => navigate("/signup")}
-            className="py-2 px-4 bg-white border rounded-xl hover:scale-105 duration-300"
+            className="py-2 px-4 bg-white border border-gray-200 rounded-xl hover:bg-gray-100 transition-colors duration-300"
           >
             Register
+          </button>
+        </div>
+
+        {/* Return to Landing Page Button with Home Icon */}
+        <div className="mt-6 flex justify-center">
+          <button
+            onClick={() => navigate("/")}
+            className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700 transition-colors duration-300"
+          >
+            <Home size={18} /> Return to Home
           </button>
         </div>
       </div>

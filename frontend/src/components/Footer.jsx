@@ -37,16 +37,16 @@ function Footer() {
                                 } md:block`}
                         >
                             
-                            <li><a href="#"className="hover:text-white transition-colors duration-200" >Home Repairs & Maintenance</a></li>
-                            <li><a href="#"className="hover:text-white transition-colors duration-200">Tech & Electronics Support</a></li>
-                            <li><a href="#"className="hover:text-white transition-colors duration-200">Personal & Home Care</a></li>
-                            <li><a href="#"className="hover:text-white transition-colors duration-200">Events & Entertainment</a></li>
-                            <li><a href="#"className="hover:text-white transition-colors duration-200">Food & Beverage</a></li>
-                            <li><a href="#"className="hover:text-white transition-colors duration-200">Education & Tutoring</a></li>
-                            <li><a href="#"className="hover:text-white transition-colors duration-200">Graphic & Digital Design</a></li>
-                            <li><a href="#"className="hover:text-white transition-colors duration-200">Business & Professional Services</a></li>
-                            <li><a href="#"className="hover:text-white transition-colors duration-200">Automotive Services</a></li>
-                            <li><a href="#"className="hover:text-white transition-colors duration-200">Moving & Delivery Services</a></li>
+                            <li className="hover:text-white transition-colors duration-200 cursor-pointer">Home Repairs & Maintenance</li>
+                            <li className="hover:text-white transition-colors duration-200 cursor-pointer">Tech & Electronics Support</li>
+                            <li className="hover:text-white transition-colors duration-200 cursor-pointer">Personal & Home Care</li>
+                            <li className="hover:text-white transition-colors duration-200 cursor-pointer">Events & Entertainment</li>
+                            <li className="hover:text-white transition-colors duration-200 cursor-pointer">Food & Beverage</li>
+                            <li className="hover:text-white transition-colors duration-200 cursor-pointer">Education & Tutoring</li>
+                            <li className="hover:text-white transition-colors duration-200 cursor-pointer">Graphic & Digital Design</li>
+                            <li className="hover:text-white transition-colors duration-200 cursor-pointer">Business & Professional Services</li>
+                            <li className="hover:text-white transition-colors duration-200 cursor-pointer">Automotive Services</li>
+                            <li className="hover:text-white transition-colors duration-200 cursor-pointer">Moving & Delivery Services</li>
                         </ul>
                     </div>
 
@@ -63,7 +63,7 @@ function Footer() {
                             className={`space-y-2 text-gray-300 ${open.support ? 'block' : 'hidden'
                                 } md:block`}
                         >
-                            <li><a href=""className="hover:text-white transition-colors duration-200">Help Center</a></li>
+                            <li><a href="/Faqs"className="hover:text-white transition-colors duration-200">Help Center</a></li>
                             <li><a href="/Faqs"className="hover:text-white transition-colors duration-200">FAQs</a></li>
                             <li><a href="#"className="hover:text-white transition-colors duration-200">Terms of Service</a></li>
                             <li><a href="#"className="hover:text-white transition-colors duration-200">Privacy Policy</a></li>
@@ -85,8 +85,8 @@ function Footer() {
                             className={`space-y-2 text-gray-300 ${open.company ? 'block' : 'hidden'
                                 } md:block`}
                         >
-                            <li><a href="#">About RaketNow</a></li>
-                            <li><a href="#">Contact Us</a></li>
+                            <li><a href="/about" className="hover:text-white transition-colors duration-200">About RaketNow</a></li>
+                            <li><a href="/about" className="hover:text-white transition-colors duration-200">Contact Us</a></li>
                         </ul>
                     </div>
                 </div>

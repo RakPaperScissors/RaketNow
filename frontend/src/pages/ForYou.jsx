@@ -9,30 +9,43 @@ import { useAuth } from "../context/AuthContext";
 import LoadingSpinner from "../components/LoadingSpinner";
 
 
+
+
 const ForYou = () => {
+  const [collapsed, setCollapsed] = useState(() => {
+    const stored = localStorage.getItem("sidebarCollapsed");
+    return stored === "true";
+  });
   const [searchTerm, setSearchTerm] = useState("");
   const { loading } = useAuth();
+ 
+
 
   if (loading) return <LoadingSpinner fullScreen />;
+
 
   return (
     <div className="flex h-screen bg-[#f9fafb]">
       {/* Fixed Sidebar */}
-      <div className="fixed inset-y-0 left-0 w-64 z-20 bg-white border-r">
-        <SideNav />
+      <div className={`${collapsed ? "w-20" : ""} h-screen fixed top-0 left-0 z-50 transition-all duration-200`}>
+        <SideNav collapsed={collapsed} setCollapsed={setCollapsed} />
       </div>
 
+
       {/* Main Content */}
-      <div className="ml-64 flex-1 flex flex-col h-screen overflow-hidden">
+      <div className={`flex-1 relative min-h-screen  overflow-y-auto transition-all duration-200 pb-20 ml-0 md:${
+        collapsed ? "ml-20" : "ml-64"
+      }`}>
         {/* Top Section */}
-        <div className="sticky top-0 z-10 bg-white ">
+        <div className="pl-12 md:pl-0 ">
           <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
         </div>
 
+
         {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto px-8 py-6 space-y-6">
+        <div className="flex-1 overflow-y-auto">
           <PostRaket />
-          <Help /> 
+          <Help />
           <TopRaketista />
           <RaketFeed searchTerm={searchTerm} />
         </div>
@@ -40,5 +53,6 @@ const ForYou = () => {
     </div>
   );
 };
+
 
 export default ForYou;

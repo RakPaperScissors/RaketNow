@@ -40,7 +40,6 @@ export class RaketApplicationController {
     @Req() req: Request,
   ) {
     const user = req.user as { uid: number; role: string; email: string };
-    console.log('GET /raket-application/raket/:raketId/applications called with raketId:', raketId);
     return this.raketApplicationService.findApplicationsByRaketId(raketId);
   }
 

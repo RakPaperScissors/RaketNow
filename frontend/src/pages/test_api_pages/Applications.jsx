@@ -177,7 +177,7 @@ function Applications() {
         )}
       </section>
       {/* raket a pplications the user (raketista) submitted */}
-      {currentUser?.role !== "client" && (
+      {currentUser?.type !== "Users" && (
         <section style={{ marginTop: 32 }}>
           <h2>My Submitted Applications</h2>
 

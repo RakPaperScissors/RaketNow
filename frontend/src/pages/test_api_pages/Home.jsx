@@ -15,7 +15,7 @@ function Home() {
     const isNew = new Date() - new Date(user.createdAt) < 24 * 60 * 60 * 1000;
     
     const filteredFeed = feed.filter((item) => 
-        user.role === "raketista"
+        user.type === "Raketista"
             ? item.title?.toLowerCase().includes(search.toLowerCase())
             : (item.name?.toLowerCase().includes(search.toLowerCase()) ||
             item.email?.toLowerCase().includes(search.toLowerCase()))
@@ -32,7 +32,7 @@ function Home() {
             </h1>
 
             <h2>
-                {user.role === "raketista" ? "Available Rakets" : "Raketistas"}
+                {user.type === "Raketista" ? "Available Rakets" : "Raketistas"}
             </h2>
 
             {["client", "organization", "raketista"].includes(user.role) && (

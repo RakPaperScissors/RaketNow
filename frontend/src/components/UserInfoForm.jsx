@@ -1,7 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { Eye, EyeOff } from "lucide-react";
+import TOSModal from "./TOSModal";
+import ErrorModal from "./ErrorModal";
+import EmailVerificationModal from "./EmailVerificationModal";
 
-function UserInfoForm({ userType, formData, setFormData, onBack, onSubmit, message }) {
+function UserInfoForm({
+  userType,
+  formData,
+  setFormData,
+  onBack,
+  onSubmit,
+  message,
+}) {
   // for password and validation stuff
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -10,6 +20,15 @@ function UserInfoForm({ userType, formData, setFormData, onBack, onSubmit, messa
     number: false,
     special: false,
   });
+
+  const [acceptedTOS, setAcceptedTOS] = useState(false);
+  const [showTOS, setShowTOS] = useState(false);
+
+  // error modal
+  const [errorMessage, setErrorMessage] = useState("");
+
+  // email verification modal
+  const [showVerification, setShowVerification] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -28,20 +47,39 @@ function UserInfoForm({ userType, formData, setFormData, onBack, onSubmit, messa
     });
   }, [formData.password]);
 
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
     const { password, confirmPassword } = formData;
+
+    if (!acceptedTOS) {
+      setErrorMessage(
+        "Please read and agree to our Terms & Conditions before signing up."
+      );
+      return;
+    }
 
     if (passwordValid.length && passwordValid.number && passwordValid.special) {
       if (password === confirmPassword) {
-        onSubmit();
+        // ✅ Instead of directly submitting, show verification modal
+        setShowVerification(true);
       } else {
-        alert("Passwords do not match.");
+        setErrorMessage("Passwords do not match.");
       }
     } else {
-      alert(
+      setErrorMessage(
         "Password must:\n- Be at least 4 characters\n- Include at least one number\n- Include at least one special character"
       );
     }
+  };
+
+  // callback for verification
+  const handleVerifyCode = (code) => {
+    // TODO: connect to backend API to check code
+    console.log("User entered code:", code);
+
+    // if valid:
+    setShowVerification(false);
+    // onSubmit(); // call the original submit (uncomment when backend is ready)
   };
 
   return (
@@ -63,7 +101,7 @@ function UserInfoForm({ userType, formData, setFormData, onBack, onSubmit, messa
           </p>
         )}
 
-        <form onSubmit={(e) => e.preventDefault()}>
+        <form onSubmit={handleSubmit}>
           {userType === "organization" && (
             <input
               type="text"
@@ -71,7 +109,7 @@ function UserInfoForm({ userType, formData, setFormData, onBack, onSubmit, messa
               placeholder="Organization Name"
               value={formData.organizationName}
               onChange={handleChange}
-              className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+              className="w-full p-3 mb-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-1 focus:ring-grey-300 transition"
             />
           )}
 
@@ -81,7 +119,7 @@ function UserInfoForm({ userType, formData, setFormData, onBack, onSubmit, messa
             placeholder="First Name"
             value={formData.firstName}
             onChange={handleChange}
-            className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+            className="w-full p-3 mb-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-1 focus:ring-grey-300 transition"
           />
 
           <input
@@ -90,7 +128,7 @@ function UserInfoForm({ userType, formData, setFormData, onBack, onSubmit, messa
             placeholder="Last Name"
             value={formData.lastName}
             onChange={handleChange}
-            className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+            className="w-full p-3 mb-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-1 focus:ring-grey-300 transition"
           />
 
           <input
@@ -99,10 +137,10 @@ function UserInfoForm({ userType, formData, setFormData, onBack, onSubmit, messa
             placeholder="Email"
             value={formData.email}
             onChange={handleChange}
-            className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+            className="w-full p-3 mb-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-1 focus:ring-grey-300 transition"
           />
 
-          {/* PASSWORD STUFF */}
+          {/* PASSWORD */}
           <div className="relative mb-2">
             <input
               type={showPassword ? "text" : "password"}
@@ -110,7 +148,7 @@ function UserInfoForm({ userType, formData, setFormData, onBack, onSubmit, messa
               placeholder="Password"
               value={formData.password}
               onChange={handleChange}
-              className="w-full p-3 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+              className="w-full p-3 pr-10 border border-gray-300 rounded-xl focus:outline-none focus:ring-1 focus:ring-grey-300 transition"
             />
             <button
               type="button"
@@ -122,7 +160,7 @@ function UserInfoForm({ userType, formData, setFormData, onBack, onSubmit, messa
             </button>
           </div>
 
-          {/* REQSSS */}
+          {/* REQUIREMENTS */}
           <ul className="text-sm text-gray-600 mb-4 pl-5 list-disc">
             <li className={passwordValid.length ? "text-green-600" : ""}>
               At least 4 characters
@@ -135,7 +173,7 @@ function UserInfoForm({ userType, formData, setFormData, onBack, onSubmit, messa
             </li>
           </ul>
 
-          {/* CONFIRM */}
+          {/* CONFIRM PASSWORD */}
           <div className="relative mb-4">
             <input
               type={showConfirmPassword ? "text" : "password"}
@@ -143,7 +181,7 @@ function UserInfoForm({ userType, formData, setFormData, onBack, onSubmit, messa
               placeholder="Confirm Password"
               value={formData.confirmPassword}
               onChange={handleChange}
-              className="w-full p-3 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+              className="w-full p-3 pr-10 border border-gray-300 rounded-xl focus:outline-none focus:ring-1 focus:ring-grey-300 transition"
             />
             <button
               type="button"
@@ -155,24 +193,62 @@ function UserInfoForm({ userType, formData, setFormData, onBack, onSubmit, messa
             </button>
           </div>
 
-          <div className="flex justify-between items-center mt-6">
+          {/* TERMS & CONDITIONS */}
+          <div className="flex items-center mb-6 text-sm">
+            <input
+              type="checkbox"
+              id="tos"
+              checked={acceptedTOS}
+              onChange={(e) => setAcceptedTOS(e.target.checked)}
+              className="mr-2 w-4 h-4 text-[#ff7c2b] focus:ring-[#ff7c2b] border-gray-300 rounded"
+            />
+            <label htmlFor="tos" className="text-gray-600">
+              I agree to the{" "}
+              <button
+                type="button"
+                className="text-[#ff7c2b] underline"
+                onClick={() => setShowTOS(true)}
+              >
+                Terms & Conditions
+              </button>
+            </label>
+          </div>
+
+          {/* BUTTONS */}
+          <div className="flex justify-between items-center">
             <button
               type="button"
               onClick={onBack}
-              className="text-gray-500 hover:text-blue-500 transition font-medium"
+              className="text-gray-500 hover:text-gray-700 transition-colors duration-200 font-medium"
             >
               ← Back
             </button>
             <button
               type="submit"
-              onClick={handleSubmit}
-              className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-xl font-semibold transition"
+              className="bg-[#ff7c2b] hover:bg-[#ff7c2b]/90 text-white px-4 py-2 rounded-xl font-semibold transition"
             >
               Submit
             </button>
           </div>
         </form>
       </div>
+
+      {/* MODALS */}
+      {showTOS && <TOSModal onClose={() => setShowTOS(false)} />}
+      {errorMessage && (
+        <ErrorModal
+          message={errorMessage}
+          onClose={() => setErrorMessage("")}
+        />
+      )}
+      {showVerification && (
+        <EmailVerificationModal
+          email={formData.email}
+          onVerify={handleVerifyCode}
+          onClose={() => setShowVerification(false)}
+          onResend={() => console.log("Resend code to:", formData.email)}
+        />
+      )}
     </section>
   );
 }

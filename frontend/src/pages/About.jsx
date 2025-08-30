@@ -1,36 +1,42 @@
 import React from "react";
 import { ShieldCheck, MapPin, Star } from "lucide-react";
+import Header from "../components/Header";
 
 const team = [
   {
-    name: "Joseph Buhayan",
+    name: "Joseph Francis Buhayan",
     position: "CEO",
-    facebook: "#",
-    linkedin: "#",
+    facebook: "https://www.facebook.com/Jospeh.Francis.444",
+    linkedin: "https://www.linkedin.com/in/jospeh-buhayan?originalSubdomain=ph&fbclid=IwY2xjawMVVTZleHRuA2FlbQIxMABicmlkETFieUM0MEUwNGNpNU1aREZsAR7BpatPIHOcFRiKhc68AqL0jspfZ6GaToeQZDK5zqebJKL1R8RrCKUmbieTwA_aem_2K8FTLBwPEkjq4kCM-k2hw",
+    profilePicture: "/buhayan_profile.jpg",
   },
   {
-    name: "Xander Cagang",
+    name: "Xander Jay Cagang",
     position: "Backend Developer",
-    facebook: "#",
-    linkedin: "#",
+    facebook: "https://www.facebook.com/xaxangderder",
+    linkedin: "https://www.linkedin.com/in/xander-jay-cagang-9122b1380/",
+    profilePicture: "/cagang_profile.jpg",
   },
   {
-    name: "Krystel Perez",
+    name: "Krystel Mikylla Perez",
     position: "Backend Developer",
-    facebook: "#",
-    linkedin: "#",
+    facebook: "https://www.facebook.com/krystel.perez000",
+    linkedin: "https://www.linkedin.com/in/krystel-mikylla-perez-04b274352?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+    profilePicture: "/perez_profile.jpg",
   },
   {
-    name: "Iya Lambayao",
+    name: "Liarrah Daniya Lambayao",
     position: "Frontend Developer",
-    facebook: "#",
-    linkedin: "#",
+    facebook: "https://www.facebook.com/liarrahlambayao.16",
+    linkedin: "https://www.linkedin.com/in/liarrah-lambayao-325981356?originalSubdomain=ph&fbclid=IwY2xjawMVVZBleHRuA2FlbQIxMABicmlkETFieUM0MEUwNGNpNU1aREZsAR4fsEqlF9eVC4OrcUTMtNMr_8h4TL5CAAMy21aPs3q_A0-_9PKchqU_3FQgTg_aem_rn_4w7TV8kbKVj_PssBLzQ",
+    profilePicture: "/lambayao_profile.jpg",
   },
   {
-    name: "Jhaye Gonzales",
+    name: "Jhaye Marie Gonzales",
     position: "Frontend Developer",
-    facebook: "#",
-    linkedin: "#",
+    facebook: "https://www.facebook.com/gonzalesjhaye",
+    linkedin: "https://www.linkedin.com/in/jhayegonzales?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app&fbclid=IwY2xjawMVVPpleHRuA2FlbQIxMABicmlkETFieUM0MEUwNGNpNU1aREZsAR4cdxC2yLNzWp571yXacg5tTzltoycPXA5Bxbl_d7CWEd1CbYCqxNP9lsKB1g_aem_e8BuXkL2NIdFXvHeba8EKA",
+    profilePicture: "/gonzales_profile.jpg",
   },
 ];
 
@@ -45,9 +51,9 @@ function FeatureCard(props) {
   );
 }
 
-const TeamCard = ({ name, position, facebook, linkedin }) => (
+const TeamCard = ({  profilePicture, name, position, facebook, linkedin }) => (
   <div className="bg-white p-6 rounded-xl shadow text-center">
-    <div className="w-16 h-16 bg-gray-300 rounded-full mx-auto mb-4" />
+    <img src={profilePicture} alt={name} className="w-16 h-16 bg-gray-300 rounded-full mx-auto mb-4"/>
     <h3 className="text-lg font-semibold mb-1">{name}</h3>
     <p className="text-sm text-gray-600 mb-3">{position}</p>
     <div className="flex justify-center gap-4">
@@ -76,6 +82,7 @@ const TeamCard = ({ name, position, facebook, linkedin }) => (
 function About() {
   return (
     <div className=" text-gray-800">
+      <Header />
       <section className="bg-gradient-to-b from-white to-[#f4f7fc] py-20 text-center px-4">
         <h1 className="text-4xl font-extrabold mb-4 text-[#0C2C57]">
           About <span className="text-[#FF7C2B]">RaketNow</span>
@@ -146,9 +153,11 @@ function About() {
             world-class work right in their backyard. Where our community’s
             skills are recognized and valued.
           </p>
+          <a href="/signup">
           <button className="bg-[#FF7C2B] px-6 py-2 rounded-full hover:bg-orange-600 transition">
             Join our Mission
           </button>
+          </a>
         </div>
       </section>
 

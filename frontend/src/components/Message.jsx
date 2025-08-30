@@ -1,16 +1,20 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { SendHorizontal, Image as ImageIcon, ArrowLeft, View, Plus } from "lucide-react";
 import { useMessages } from "../hooks/useMessages";
 import { useUser } from "../hooks/useUsers";
 import JobInfoBanner from "../components/JobInfoBanner";
 import ViewProfileLink from "./ViewProfileLink";
 import LoadingSpinner from "./LoadingSpinner";
+import BottomNav from "./BottomNav";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const DEFAULT_AVATAR = "/default_profile.jpg";
 const USER_PROFILE_PIC_BASE_URL =
   "http://localhost:9000/raketnow/"; //recheck sa future
 
 function Message() {
+  const location = useLocation();
+  const navigate = useNavigate();
   const { user: currentUser, loading: userLoading } = useUser();
   const {
     conversations,
@@ -54,6 +58,7 @@ function Message() {
 
   const handleSelectConversation = (conv) => {
     selectConversation(conv);
+    handleSearch(''); 
     if (window.innerWidth < 768) {
       setShowChatPanel(true);
     }
@@ -104,6 +109,12 @@ function Message() {
     }
   }, [handleScroll]);
 
+  // useEffect(() => {
+  //   if (location.pathname === "/message") {
+  //     setSelectedConversation(null);
+  //   }
+  // }, [location]);
+
   // --- Loading and Error States ---
   if (userLoading) {
     return (
@@ -131,12 +142,26 @@ function Message() {
       </div>
     );
   }
+  const findLastSeenMessageId = () => {
+    if (!currentUser || !messages || messages.length === 0) return null;
+    for (let i = messages.length - 1; i >= 0; i--) {
+      const msg = messages[i];
+      if (msg.sender.id === currentUser.uid && msg.readAt) {
+        return msg.id; // Return the ID of this specific message
+      }
+    }
+    return null;
+  };
+
+  const lastSeenMessageId = findLastSeenMessageId();
+
+  const otherParticipant = getOtherParticipant(selectedConversation);
 
   return (
     <div className="flex flex-1 flex-col md:flex-row gap-4 p-4 min-h-[calc(100vh-5rem)] bg-[#f9fafb]">
       {/* CONVERSATION LIST SIDEBAR */}
       <div
-        className={`w-full md:w-1/3 bg-white rounded-2xl shadow p-4 flex flex-col h-[calc(100vh-7rem)] ${
+        className={`w-full md:w-1/3 bg-white rounded-2xl shadow p-6 flex flex-col h-[calc(100vh-5rem)] ${
           showChatPanel ? "hidden md:flex" : "flex"
         }`}
       >
@@ -200,7 +225,7 @@ function Message() {
                   <div
                     key={conv.id}
                     onClick={() => handleSelectConversation(conv)}
-                    className={`flex items-center gap-3 px-4 py-3 cursor-pointer transition-all mb-2 rounded-md ${
+                    className={`flex items-center gap-3 px-4 py-3 z-50 cursor-pointer transition-all mb-2 rounded-md ${
                       selectedConversation?.id === conv.id
                         ? "bg-[#FFF6F2] border-l-4 border-[#FF7C2B]"
                         : "hover:bg-gray-100"
@@ -232,7 +257,7 @@ function Message() {
 
       {/* CHAT PANEL */}
       <div
-        className={`w-full md:w-2/3 bg-white rounded-2xl shadow flex flex-col h-[calc(100vh-7rem)] ${
+        className={`w-full md:w-2/3 bg-white rounded-2xl shadow flex flex-col h-[calc(100vh-5rem)] ${
           selectedConversation && showChatPanel
             ? "flex"
             : selectedConversation
@@ -246,7 +271,7 @@ function Message() {
             <div className="p-4 border-b border-gray-100 flex items-center gap-3">
               <button
                 className="md:hidden text-gray-500"
-                onClick={() => setShowChatPanel(false)}
+                onClick={() => {setShowChatPanel(false); navigate(0);}}
               >
                 <ArrowLeft size={20} />
               </button>
@@ -327,15 +352,13 @@ function Message() {
                   : DEFAULT_AVATAR;
 
                 return (
-                  <div
-                    key={msg.id}
-                    className={`flex items-start gap-3 mb-4 ${
-                      isMyMessage
-                        ? "flex-row-reverse ml-auto"
-                        : "flex-row mr-auto"
-                    }`}
-                    style={{ maxWidth: "75%" }}
-                  >
+                    <React.Fragment key={msg.id}>
+                    <div
+                      className={`flex items-start gap-3 mb-1 ${ // Reduced bottom margin
+                        isMyMessage ? "flex-row-reverse ml-auto" : "flex-row mr-auto"
+                      }`}
+                      style={{ maxWidth: "75%" }}
+                    >
                     {/* PROFILE PIC */}
                     <ViewProfileLink userId={msg.sender.id}>
                       <img
@@ -348,7 +371,7 @@ function Message() {
                     
                     {/* MESSAGE BUBBLE */}
                     <div
-                      className={`p-3 rounded-2xl text-sm shadow flex-1 ${
+                      className={`p-3 rounded-2xl text-sm shadow flex-1 break-words whitespace-pre-wrap ${
                         isMyMessage
                           ? "bg-[#FF7C2B] text-white"
                           : "bg-white text-gray-900"
@@ -357,12 +380,12 @@ function Message() {
                       {/* SENDER NAME */}
                       {!isMyMessage && (
                         <ViewProfileLink userId={msg.sender.id}>
-                        <p className="font-medium text-xs mb-1 text-gray-600 cursor-pointer">
-                          {msg.sender.firstName || msg.sender.name}
-                        </p>
+                          <p className="font-medium text-xs mb-1 text-gray-600 cursor-pointer">
+                            {msg.sender.firstName || msg.sender.name}
+                          </p>
                         </ViewProfileLink>
                       )}
-                      <p>{msg.text}</p>
+                      <p className="break-all whitespace-pre-wrap">{msg.text}</p>
                       {msg.images && msg.images.length > 0 && (
                         <div className="mt-2 grid grid-cols-2 gap-2">
                           {msg.images.map((imgUrl, idx) => (
@@ -389,6 +412,36 @@ function Message() {
                       </span>
                     </div>
                   </div>
+                  {isMyMessage && msg.id === lastSeenMessageId && (
+                      <div className="text-xs text-gray-500 text-right w-full pr-12 mb-4"> 
+                      Seen at{" "}
+                        {(() => {
+                          const readAtDate = new Date(msg.readAt);
+                          const today = new Date();
+                          const yesterday = new Date(today);
+                          yesterday.setDate(today.getDate() - 1);
+                        if (
+                          readAtDate.getDate() === yesterday.getDate() &&
+                          readAtDate.getMonth() === yesterday.getMonth() &&
+                          readAtDate.getFullYear() === yesterday.getFullYear()
+                        ) {
+                          return `Yesterday at ${readAtDate.toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          })}`;
+                        } else {
+                          return `${readAtDate.toLocaleDateString([], {
+                          year: "numeric",
+                          month: "short",
+                          day: "numeric",
+                        })} at ${readAtDate.toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}`;
+                        }})()}
+                      </div>
+                    )}
+                  </React.Fragment>
                 );
               })}
               <div ref={messagesEndRef} />
@@ -399,12 +452,12 @@ function Message() {
               onSubmit={handleSendMessage}
               className="border-t border-gray-200 px-4 py-3 flex items-center gap-2"
             >
-              <button
+              {/* <button
                 type="button"
                 className="text-gray-500 hover:text-gray-700"
               >
                 <ImageIcon size={20} />
-              </button>
+              </button> */}
               <input
                 type="text"
                 placeholder="Type your message..."
@@ -427,6 +480,8 @@ function Message() {
           </div>
         )}
       </div>
+
+      {!selectedConversation && <BottomNav />}
     </div>
   );
 }

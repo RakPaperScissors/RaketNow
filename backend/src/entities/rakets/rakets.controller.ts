@@ -59,6 +59,11 @@ export class RaketsController {
     return this.raketsService.findMyRakets(req.user.uid);
   }
 
+  @Get('open')
+  async getOpenRakets() {
+    return this.raketsService.findOpenRakets();
+  }
+
   @UseGuards(JwtAuthGuard)
   @Get('/assigned-to-me')
   getRaketsAssignedToUser(@Req() req: RequestWithUser) {

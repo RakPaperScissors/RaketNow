@@ -1,18 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import SideNav from "../components/SideNav";
 import Message from "../components/Message";
 
 const MessagePage = () => {
+  const [collapsed, setCollapsed] = useState(() => {
+    const stored = localStorage.getItem("sidebarCollapsed");
+    return stored === "true";
+  });
   return (
     <div className="flex h-screen bg-[#f9fafb]">
       {/* SIDENAV */}
-      <div className="fixed inset-y-0 left-0 w-64 z-20 bg-white border-r">
-        <SideNav />
+      <div className={`${collapsed ? "w-20" : ""} h-screen fixed top-0 left-0 z-50 transition-all duration-200`}>
+        <SideNav collapsed={collapsed} setCollapsed={setCollapsed} />
       </div>
 
       {/* MAIN */}
-      <div className="ml-64 flex-1 flex flex-col h-screen overflow-hidden">
-        {/* diri tong main page oo sige */}
+      <div className={`flex-1 relative min-h-screen  overflow-y-auto transition-all duration-200 ${
+        collapsed ? "md:ml-20" : "md:ml-64"
+      }`}>
         <div className="flex-1 overflow-y-auto p-6">
           <Message />
         </div>
