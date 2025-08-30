@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { fetchNotifications } from "../api/notifications";
+import { fetchNotifications, markNotificationAsRead } from "../api/notifications";
 import { useNavigate } from "react-router-dom";
 import System from "../assets/images/raketnow-logo.png";
 
@@ -12,43 +12,53 @@ const UserNotifications = () => {
     const getNotifications = async () => {
       try {
         const data = await fetchNotifications();
-        setNotifications(
-          data.map((n) => ({
-            id: n.id,
-            name: "System",
-            message: n.message,
-            timestamp: new Date(n.createdAt).toLocaleDateString("en-PH", {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            }),
-            profilePic: System,
-            isRead: n.isRead,
-            actionable: n.actionable,
-          }))
-        );
+        const mapped = data.map((n) => ({
+          id: n.id,
+          name: "System",
+          message: n.message,
+          timestamp: new Date(n.createdAt).toLocaleDateString("en-PH", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          }),
+          profilePic: System,
+          isRead: n.isRead,
+          actionable: n.actionable,
+        }));
+        setNotifications(mapped);
+        // Auto-mark non-actionable notifications as read
+        mapped.forEach(async (notif) => {
+          if (!notif.isRead && !notif.actionable) {
+            try {
+              await markNotificationAsRead(notif.id);
+              setNotifications((prev) =>
+                prev.map((n) =>
+                  n.id === notif.id ? { ...n, isRead: true } : n
+                )
+              );
+            } catch (error) {
+              console.error("Failed to auto-mark notification as read:", error);
+            }
+          }
+        });
       } catch (err) {
         console.error("Failed to fetch notifications", err);
       }
     };
+
     getNotifications();
   }, []);
 
   const filtered = notifications.filter((notif) => {
-    if (activeTab === "Unread") return notif.isRead === false;
-    if (activeTab === "Read") return notif.isRead === true;
+    if (activeTab === "Unread") return !notif.isRead;
+    if (activeTab === "Read") return notif.isRead;
     return true;
   });
 
   const handleNotificationClick = async (notif) => {
-    if (!notif.isRead) {
+    if (!notif.isRead && notif.actionable) {
       try {
-        await fetch(`http://localhost:3000/notification/${notif.id}/read`, {
-          method: "PATCH",
-          credentials: "include",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ isRead: true }),
-        });
+        await markNotificationAsRead(notif.id);
         setNotifications((prev) =>
           prev.map((n) => (n.id === notif.id ? { ...n, isRead: true } : n))
         );
@@ -94,9 +104,7 @@ const UserNotifications = () => {
               key={notif.id}
               onClick={() => handleNotificationClick(notif)}
               className={`p-4 rounded-lg shadow flex space-x-4 items-start transition ${
-                !notif.isRead
-                  ? "bg-[#F4F7FE] border border-blue-200"
-                  : "bg-white"
+                !notif.isRead ? "bg-[#F4F7FE] border border-blue-200" : "bg-white"
               }`}
             >
               {/* Profile Picture */}
@@ -108,11 +116,7 @@ const UserNotifications = () => {
 
               {/* Content */}
               <div className="flex-1">
-                <p
-                  className={`text-sm font-semibold ${
-                    !notif.isRead ? "text-[#0C2C57]" : "text-gray-800"
-                  }`}
-                >
+                <p className={`text-sm font-semibold ${!notif.isRead ? "text-[#0C2C57]" : "text-gray-800"}`}>
                   {notif.name}
                 </p>
                 <p className="text-xs sm:text-sm text-gray-700 mt-1">{notif.message}</p>

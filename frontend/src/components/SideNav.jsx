@@ -10,6 +10,7 @@ import {
   Users,
   AlignJustify,
 } from "lucide-react";
+import { fetchNotifications } from "../api/notifications";
 import { NavLink } from "react-router-dom";
 import LoadingSpinner from "./LoadingSpinner";
 import SideNavItem from "./SideNavItem";
@@ -22,7 +23,21 @@ function SideNav({ collapsed, setCollapsed, hideHamburger = false }) {
   const { user, loading, logout } = useAuth();
   const [isLoggingOut, setIsLoggingOut] = React.useState(false);
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [unreadCount, setUnreadCount] = React.useState(0);
 
+  React.useEffect(() => {
+    const getUnreadNotifications = async () => {
+      try {
+        const notifications = await fetchNotifications();
+        const unread = notifications.filter(n => !n.isRead).length;
+        setUnreadCount(unread);
+      } catch (err) {
+        console.error('Failed to fetch notifications', err);
+      }
+    };
+
+    getUnreadNotifications();
+  }, []);
 
   React.useEffect(() => {
     localStorage.setItem("sidebarCollapsed", collapsed);
@@ -223,6 +238,7 @@ function SideNav({ collapsed, setCollapsed, hideHamburger = false }) {
             <SideNavItem
               to="/notifications"
               icon={Bell}
+              badge={unreadCount > 0}
               label="Notifications"
               collapsed={collapsed}
             />

@@ -8,6 +8,17 @@ export async function fetchNotifications() {
   return response.json();
 }
 
+export async function markNotificationAsRead(id) {
+  const response = await fetch(`${API_URL}/notification/${id}/read`, {
+    method: 'PATCH',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ isRead: true }),
+  });
+  if (!response.ok) throw new Error('Failed to mark notification as read');
+  return response.json();
+}
+
 export async function acceptApplication(id) {
   const response = await fetch(`${API_URL}/raket-application/${id}/accept`, {
     method: 'PATCH',
