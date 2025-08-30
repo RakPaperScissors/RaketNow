@@ -48,4 +48,12 @@ export class CreateUserDto {
     @IsString()
     @IsOptional()
     organizationName?: string
+
+    @IsString()
+    @IsOptional()
+    verificationCode?:string
+
+    @IsOptional()
+    @IsDate()
+    verificationCodeExpiresAt?:Date
 }

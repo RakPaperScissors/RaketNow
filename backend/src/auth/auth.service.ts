@@ -17,6 +17,7 @@ import { CreateUserDto } from "src/entities/user/dto/create-user.dto";
 import { UserService } from "src/entities/user/user.service";
 import refreshJwtConfig from "./refresh-jwt.config";
 import { ConfigType } from "@nestjs/config";
+import { EmailService } from "src/entities/email/email.service";
 
 export interface AuthJwtPayload {
   sub: number;
@@ -36,7 +37,8 @@ export class AuthService {
     private jwtService: JwtService,
     private userService: UserService,
     @Inject(refreshJwtConfig.KEY)
-    private refreshTokenConfig: ConfigType<typeof refreshJwtConfig>
+    private refreshTokenConfig: ConfigType<typeof refreshJwtConfig>,
+    private readonly emailService: EmailService,
   ) {}
 
   // 1. AUTH FUNCTION - Register for new users
@@ -47,6 +49,10 @@ export class AuthService {
       throw new BadRequestException('User with this email already exists.');
     }
     
+    const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiresAt = new Date();
+    expiresAt.setMinutes(expiresAt.getMinutes() + 15); // Code expires in 15 minutes
+
     let userToCreate;
     if (createUserDto.password) {
       const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
@@ -54,11 +60,17 @@ export class AuthService {
         ...createUserDto,
         password: hashedPassword,
         authProvider: 'local',
+        isEmailVerified: false, // User is not verified yet
+        verificationCode: verificationCode,
+        verificationCodeExpiresAt: expiresAt,
       };
     } else {
       userToCreate = {
         ...createUserDto,
         password: null, // No password for OAuth users
+        isEmailVerified: true,
+        verificationCode: null,
+        verificationCodeExpiresAt: null,
       };
     }
 
@@ -84,7 +96,15 @@ export class AuthService {
 
     Object.assign(userEntity, userToCreate);
     
-    return this.usersRepo.save(userEntity);
+    const savedUser = await this.usersRepo.save(userEntity);
+
+    // 6. Send verification email ONLY if it was a local registration
+    if (createUserDto.password && savedUser.verificationCode) {
+      await this.emailService.sendVerificationEmail(savedUser, savedUser.verificationCode);
+    }
+    
+    // 7. Return the created user object, which is what `validateAndLinkGoogleUser` expects.
+    return savedUser;
   }
 
   // 2. AUTH FUNCTION - Login for existing users
@@ -95,6 +115,11 @@ export class AuthService {
       // Throw an unauthorized exception if user is not found
       throw new UnauthorizedException("Invalid credentials");
     }
+    //Checks if the email is verified first
+    if (!user.isEmailVerified) {
+      throw new UnauthorizedException('Please verify your email before logging in.');
+    }
+
     // Compares the inputted password with the hashed password of the user
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
@@ -215,6 +240,33 @@ export class AuthService {
     const payload = { email: user.email, sub: user.uid, role: user.role };
     return {
       accessToken: this.jwtService.sign(payload)
+    };
+  }
+
+  async verifyEmail(email: string, code: string) {
+    const user = await this.usersRepo.findOne({ where: { email } });
+    if (!user) {
+      throw new NotFoundException('User not found.');
+    }
+    if (user.isEmailVerified) {
+      throw new BadRequestException('Email is already verified.');
+    }
+    const isCodeValid = user.verificationCode === code;
+    const isCodeExpired = new Date() > user.verificationCodeExpiresAt;
+    if (!isCodeValid || isCodeExpired) {
+      throw new BadRequestException('Invalid or expired verification code.');
+    }
+
+    user.isEmailVerified = true;
+    user.verificationCode = "";
+    user.verificationCodeExpiresAt = new Date(0);
+    await this.usersRepo.save(user);
+
+    // Log the user in by returning a JWT token
+    const payload = { email: user.email, sub: user.uid, role: user.role };
+    return {
+      message: 'Email verified successfully!',
+      access_token: this.jwtService.sign(payload),
     };
   }
 }

@@ -73,4 +73,9 @@ export class AuthController {
         res.clearCookie('access_token', { path: '/' });
         return { message: 'Logged out successfully' };
     }
+
+    @Post('verify-email')
+    async verifyEmail(@Body() body: { email: string; code: string }) {
+        return this.authService.verifyEmail(body.email, body.code);
+    }
 }
