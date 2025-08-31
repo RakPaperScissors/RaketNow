@@ -29,16 +29,18 @@ const UserNotifications = () => {
         // Auto-mark non-actionable notifications as read
         mapped.forEach(async (notif) => {
           if (!notif.isRead && !notif.actionable) {
-            try {
-              await markNotificationAsRead(notif.id);
-              setNotifications((prev) =>
-                prev.map((n) =>
-                  n.id === notif.id ? { ...n, isRead: true } : n
-                )
-              );
-            } catch (error) {
-              console.error("Failed to auto-mark notification as read:", error);
-            }
+             setTimeout(async () => {
+              try {
+                await markNotificationAsRead(notif.id);
+                setNotifications((prev) =>
+                  prev.map((n) =>
+                    n.id === notif.id ? { ...n, isRead: true } : n
+                  )
+                );
+              } catch (error) {
+                console.error("Failed to auto-mark notification as read:", error);
+              }
+            }, 180000);
           }
         });
       } catch (err) {
