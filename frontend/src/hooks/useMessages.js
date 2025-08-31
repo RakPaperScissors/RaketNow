@@ -4,7 +4,9 @@ import { getConversations, createConversation, getMessages, sendMessage } from '
 import { useUser } from './useUsers';
 import { searchUsers } from '../api/users';
 
-const SOCKET_SERVER_URL = `${process.env.SOCKET_SERVER_URL}`; // replace with socket server url
+const SOCKET_SERVER_URL = import.meta.env.VITE_SOCKET_SERVER_URL;
+const PICTURE_URL = import.meta.env.VITE_PICTURE_URL;
+ // replace with socket server url
 
 export function useMessages() {
     const { user } = useUser();
@@ -189,7 +191,7 @@ export function useMessages() {
                 lastName: user.lastName,
                 profilePicture: user.profilePicture,
                 profilePictureUrl: user.profilePicture
-                    ? `${process.env.PICTURE_URL}/user-profile-pictures/${user.profilePicture}` // PICTURE URL RECHECK LATER
+                    ? `${PICTURE_URL}/user-profile-pictures/${user.profilePicture}` // PICTURE URL RECHECK LATER
                     : null, // Default avatar will be handled by frontend
             },
             createdAt: new Date().toISOString(),

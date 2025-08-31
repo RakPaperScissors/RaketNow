@@ -5,6 +5,7 @@ import { getPublicUserProfile } from "../api/users";
 import { useParams } from 'react-router-dom';
 
 const DEFAULT_AVATAR = "/default_profile.jpg";
+const PICTURE_URL = import.meta.env.VITE_PICTURE_URL;
 
 const formatDate = (dateString) => {
   if (!dateString) return '';
@@ -51,7 +52,7 @@ function ProfileDisplayCard() {
 
   const isRaketista = profileUser.type === "Raketista"; 
 
-  const fullProfilePictureUrl = `${process.env.PICTURE_URL}/raketnow/${profileUser.profilePicture}` || `${process.env.PICTURE_URL}/raketnow/default_profile.jpg`;
+  const fullProfilePictureUrl = `${PICTURE_URL}/raketnow/${profileUser.profilePicture}` || `${PICTURE_URL}/raketnow/default_profile.jpg`;
   return (
     <div className="bg-white shadow-md rounded-xl p-6 max-w-xl mx-auto my-10 border">
       {/* HEADER SECTION */}

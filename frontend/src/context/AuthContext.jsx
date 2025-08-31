@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect } from "react";
 import { getProfile } from "../api/profile";
 
 const AuthContext = createContext();
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
@@ -39,7 +40,7 @@ export const AuthProvider = ({ children }) => {
     const logout = async () => {
         setLoggingOut(true);
         try {
-            await fetch(`${process.env.VITE_API_URL}/auth/logout`, {
+            await fetch(`${API_URL}/auth/logout`, {
                 method: "POST",
                 credentials: "include",
             });

@@ -1,6 +1,8 @@
 import { format } from "date-fns";
 import { useProfile } from "../../hooks/useProfile";
 
+const PICTURE_URL = import.meta.env.VITE_PICTURE_URL;
+
 function Profile() {
     const {
         user,
@@ -55,12 +57,12 @@ function Profile() {
                     src={
                         selectedImageFile
                             ? URL.createObjectURL(selectedImageFile)
-                            : user?.profilePicture || `${process.env.PICTURE_URL}/raketnow/user-profile-pictures/default_profile.jpg`
+                            : user?.profilePicture || `${PICTURE_URL}/raketnow/user-profile-pictures/default_profile.jpg`
                     }
                     alt="Profile"
                     className="w-24 h-24 rounded-full object-cover border-2 border-indigo-300 shadow-md mb-4"
                     onError={(e) => {
-                        e.target.src = `${process.env.PICTURE_URL}/raketnow/user-profile-pictures/default_profile.jpg`;
+                        e.target.src = `${PICTURE_URL}/raketnow/user-profile-pictures/default_profile.jpg`;
                     }}
                 />
                 {/* Profile picture input visible only when editing */}
