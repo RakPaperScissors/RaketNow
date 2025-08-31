@@ -28,20 +28,15 @@ export class UserService {
     @InjectRepository(Rating)
     private readonly ratingRepo: Repository<Rating>, 
   ){}
-
-  // --- Basic CRUD operations for USER entity ---
-  // 1. Create User
   async createUser(CreateUserDto: CreateUserDto){ 
     const user = this.users.create(CreateUserDto);
     return await this.users.save(user)
   }
 
-  // 2. Get all users
   async findAll() {
     return await this.users.find();
   }
 
-  // 3. Get user by uid
   async findOne(uid: number) {
     const user = await this.users.findOne({where: {uid}}); 
     if (!user) {
@@ -51,73 +46,51 @@ export class UserService {
     return {
       ...rest,
       profilePicture: user.profilePicture
-        ? `http://localhost:9000/raketnow/${user.profilePicture}`
-        : "http://localhost:9000/raketnow/user-profile-pictures/default_profile.jpg",
+        ? `${process.env.PICTURE_URL}/raketnow/${user.profilePicture}`
+        : `${process.env.PICTURE_URL}/raketnow/user-profile-pictures/default_profile.jpg`,
     };
   }
 
-  // 4. Update user by uid
 async patch(uid: number, updateUserDto: UpdateUserDto): Promise<any> {
-    // Determine the correct repository based on the user's role or type
-    // First, find the user to know their exact type/role
     const user = await this.users.findOne({ where: { uid } });
     if (!user) {
       throw new NotFoundException(`User with ID ${uid} not found.`);
     }
 
     let targetRepo: Repository<any>;
-    // IMPORTANT: Your user.entity has a 'type' column for @TableInheritance.
-    // Use this 'type' column, not 'role', to select the correct child repository.
-    // Ensure 'type' is mapped correctly in your Users entity.
     switch (user.type) {
-      case 'Raketista': // This should match the @ChildEntity name for Raketista
+      case 'Raketista':
         targetRepo = this.raketistaRepo;
         break;
-      case 'Organization': // This should match the @ChildEntity name for Organization
+      case 'Organization':
         targetRepo = this.organizationRepository;
         break;
       default:
-        targetRepo = this.users; // Default to base User repo for Client/Admin
+        targetRepo = this.users;
     }
 
-    // Now, fetch the specific entity instance using the correct repository
-    // (We use `findOneBy` if you have `uid` mapped as PK in child entities too)
-    // Or if `uid` is only in base, then use `findOne` on the base entity and apply updates.
-    const entityToUpdate = await targetRepo.findOne({ where: { uid } }); // Using findOne because `uid` is PK for all children
-
-    if (!entityToUpdate) { // Should not happen if `user` was found above
+    const entityToUpdate = await targetRepo.findOne({ where: { uid } });
+    if (!entityToUpdate) {
       throw new NotFoundException(`Specific user type entity for ID ${uid} not found.`);
     }
-
-    // Apply updates using Object.assign or direct property assignment
     Object.assign(entityToUpdate, updateUserDto);
-
-    // Save using the correct repository
     const updatedEntity = await targetRepo.save(entityToUpdate);
-
-    // Return a clean response
     return {
       statusCode: 200,
       message: 'User updated successfully.',
-      data: updatedEntity, // Return the updated entity
+      data: updatedEntity,
     };
   }
 
-  // 5. Delete user by uid
   async remove(uid: number) {
-    // Find user by uid
     const findUser = await this.findOne(uid);
     if (!findUser){
-      // Throw not found exception if user is not found
       throw new NotFoundException('User not found');
     } else {
-      // Delete user if found
       return await this.users.delete(uid);
     }
   }
 
-  // --- Search and Filter functions ---
-  // 1. Search by name
   async searchByName(name: string): Promise<any[]> {
     const users = await this.users.find({
       where: [
@@ -137,11 +110,10 @@ async patch(uid: number, updateUserDto: UpdateUserDto): Promise<any> {
     }));
   }
 
-  // 2. Search by email
   async searchByEmail(email: string): Promise<any> {
       const user = await this.users.findOne({
         where: { email },
-        select: ['uid', 'firstName', 'lastName', 'email', 'profilePicture', 'role', 'type'], // Explicitly select public fields
+        select: ['uid', 'firstName', 'lastName', 'email', 'profilePicture', 'role', 'type'],
       });
       if (!user) return null;
       return {
@@ -155,21 +127,13 @@ async patch(uid: number, updateUserDto: UpdateUserDto): Promise<any> {
       };
   }
 
-  // 3. Filter by role
   async filterByRole(role: userRole) {
-    // Gets all users with specified role
     return await this.users.find({ 
       where: { role },
       relations: ['raketistaSkills', 'raketistaSkills.skill']
     });
   }
 
-  // 4. Filter by skills
-  // IN PROGRESS
-
-
-  // --- User profile and role management ---
-  // 1. Update profile picture
   async updateProfilePicture(userId: number, newKey: string): Promise<Users> {
     const user = await this.users.findOneBy({ uid: userId });
     if (!user) throw new NotFoundException();
@@ -178,26 +142,20 @@ async patch(uid: number, updateUserDto: UpdateUserDto): Promise<any> {
     return await this.users.save(user);
   }
 
-  // 2. Get profile picture
   async getProfilePicture(userId: number): Promise<string | null> {
     const user = await this.users.findOneBy({ uid: userId });
     return user?.profilePicture ?? null;
   }
 
-  // 3. Set or Change role (admin only)
   async changeRole(uid:number, role: userRole) {
-    // Find user by uid
     const findUser = await this.findOne(uid);
     if(!findUser) {
-      // Throw not found exception if user is not found
       throw new NotFoundException('User not found');
     }
-    // Updates the role if user is found and save
     findUser.role = role;
     return await this.users.save(findUser);
   }
 
-  // 3. Add additional role
   async addRole(uid: number, newRole: userRole) {
     const user = await this.users.findOne({ where: { uid: uid} });
     if (!user) {
@@ -211,24 +169,17 @@ async patch(uid: number, updateUserDto: UpdateUserDto): Promise<any> {
     return user;
   }
 
-  // 4. Apply to be a raketista from client
   async applyForRaketistaRole(uid: number) {
-    // Find the user (as base class)
     const user = await this.users.findOne({ where: { uid } });
     if (!user) {
       throw new NotFoundException(`User with ID ${uid} not found.`);
     }
-
-    // Check if user already has raketista in 'roles'
     if (user.roles && user.roles.includes(userRole.RAKETISTA)) {
       throw new BadRequestException('User is already a raketista.');
     }
-    // Ensure clients can only apply
     if (user.role !== userRole.CLIENT) {
       throw new BadRequestException('Only users with a primary role of "client" can apply to be a raketista.');
     }
-
-    // Add raketista to roles
     const updatedRoles = user.roles.includes(userRole.RAKETISTA)
       ? user.roles
       : [...user.roles, userRole.RAKETISTA];
@@ -245,7 +196,6 @@ async patch(uid: number, updateUserDto: UpdateUserDto): Promise<any> {
     return updated;
   }
 
-  // For getting profile details
   async getPublicProfileById(uid: number): Promise<any> {
     const user = await this.raketistaRepo.findOne({
       where: { uid: uid },
@@ -332,7 +282,6 @@ async patch(uid: number, updateUserDto: UpdateUserDto): Promise<any> {
         const averageRating = totalReviews
           ? Number((ratings.reduce((sum, r) => sum + r.rating, 0) / totalReviews).toFixed(2))
           : 0;
-
         return {
           ...raketista,
           averageRating,
@@ -341,6 +290,4 @@ async patch(uid: number, updateUserDto: UpdateUserDto): Promise<any> {
       })
     );
   }
-
-
 }

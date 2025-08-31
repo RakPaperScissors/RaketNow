@@ -11,13 +11,11 @@ import { Response } from 'express';
 export class AuthController {
     constructor(private authService: AuthService) {}
 
-    // POSTs new user
     @Post('register')
     async register(@Body() createUserDto: CreateUserDto) {
         return this.authService.register(createUserDto);
     }
 
-    // POSTs existing user
     @Post('login')
     async login(@Body() body: { email: string; password: string }, @Res({ passthrough: true }) res: Response) {
         const tokenResponse = await this.authService.login(body.email, body.password);
@@ -28,18 +26,16 @@ export class AuthController {
             sameSite: 'lax',
         });
 
-        return { message: 'Login successful' }; // Return a simple success message
+        return { message: 'Login successful' };
     }
 
-    // GETs profile of logged in user using token
     @Get('me')
-    @UseGuards(JwtAuthGuard) // Requires JWT authentication
+    @UseGuards(JwtAuthGuard)
     getProfile(@Request() req) {
         return this.authService.getProfile(req.user.uid);
     }
 
-    // PATCHs password of logged in user
-    @UseGuards(JwtAuthGuard) // Requires JWT authentication
+    @UseGuards(JwtAuthGuard)
     @Patch('change-password')
     async changePassword(@Request() req, @Body() body: { oldPassword: string, newPassword: string } ) {
         return this.authService.changePassword(req.user.uid, body.oldPassword, body.newPassword);
@@ -62,10 +58,10 @@ export class AuthController {
         res.cookie('access_token', tokenResponse.accessToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
         });
 
-        res.redirect(`http://localhost:5173/home`);
+        res.redirect(`${process.env.FRONTEND_URL}/home`);
     }
 
     @Post('logout')

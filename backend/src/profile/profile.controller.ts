@@ -55,7 +55,7 @@ export class ProfileController {
         
         return {
             message: 'Profile picture uploaded successfully.',
-            imageUrl: `http://localhost:9000/raketnow/${newKey}`,
+            imageUrl: `${process.env.PICTURE_URL}/raketnow/${newKey}`,
             imageKey: newKey,
             user: [
                 userId,
@@ -71,8 +71,8 @@ export class ProfileController {
         const user = await this.userService.findOne(req.user.uid);
         return {
             profilePicture: user?.profilePicture
-                ? `http://localhost:9000/raketnow/${user.profilePicture}`
-                : 'http://localhost:9000/raketnow/user-profile-pictures/default_profile.jpg',
+                ? `${process.env.PICTURE_URL}/raketnow/${user.profilePicture}`
+                : `${process.env.PICTURE_URL}/raketnow/user-profile-pictures/default_profile.jpg`,
         };
     }
 }

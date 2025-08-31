@@ -9,7 +9,7 @@ interface PaginationOptions {
   page: number;
   limit: number;
 }
-const USER_PROFILE_PIC_BASE_URL = "http://localhost:9000/raketnow/";
+const USER_PROFILE_PIC_BASE_URL = `${process.env.PICTURE_URL}/raketnow/`;
 
 @Injectable()
 export class MessageService {
