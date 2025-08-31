@@ -4,7 +4,7 @@ export function useCurrentUser() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:3000/auth/me", {
+    fetch(`${process.env.VITE_API_URL}/auth/me`, {
       credentials: "include", // <- this ensures the cookie is sent
     })
       .then(async (res) => {
