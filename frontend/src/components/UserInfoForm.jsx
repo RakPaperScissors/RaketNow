@@ -1,17 +1,28 @@
 import React, { useState, useEffect } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import TOSModal from "./TOSModal";
-import ErrorModal from "./ErrorModal";
 import EmailVerificationModal from "./EmailVerificationModal";
+import { useEmailVerification } from "../hooks/useEmailVerification";
 
 function UserInfoForm({
   userType,
   formData,
   setFormData,
   onBack,
-  onSubmit,
-  message,
 }) {
+
+    const {
+    loading,
+    error,
+    message,
+    showVerificationModal,
+    setShowVerificationModal,
+    handleRegister,
+    handleVerify,
+    handleResend,
+    clearError,
+  } = useEmailVerification();
+
   // for password and validation stuff
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -58,28 +69,24 @@ function UserInfoForm({
       return;
     }
 
-    if (passwordValid.length && passwordValid.number && passwordValid.special) {
-      if (password === confirmPassword) {
-        // ✅ Instead of directly submitting, show verification modal
-        setShowVerification(true);
-      } else {
-        setErrorMessage("Passwords do not match.");
-      }
-    } else {
-      setErrorMessage(
-        "Password must:\n- Be at least 4 characters\n- Include at least one number\n- Include at least one special character"
-      );
+    if (!passwordValid.length || !passwordValid.number || !passwordValid.special) {
+      clearError("Password must meet all requirements.");
+      return;
     }
+    if (password !== confirmPassword) {
+      clearError("Passwords do not match.");
+      return;
+    }
+    handleRegister(formData);
   };
 
-  // callback for verification
   const handleVerifyCode = (code) => {
-    // TODO: connect to backend API to check code
-    console.log("User entered code:", code);
+    handleVerify(formData.email, code);
+  };
 
-    // if valid:
-    setShowVerification(false);
-    // onSubmit(); // call the original submit (uncomment when backend is ready)
+  // Callback for the resend button in the modal
+  const handleResendCode = () => {
+    handleResend(formData.email);
   };
 
   return (
@@ -89,17 +96,8 @@ function UserInfoForm({
           Complete Your Details
         </h2>
 
-        {message && (
-          <p
-            className={`mb-4 text-center font-medium ${
-              message.toLowerCase().includes("success")
-                ? "text-green-600"
-                : "text-red-600"
-            }`}
-          >
-            {message}
-          </p>
-        )}
+        {message && <p className="mb-4 text-center font-medium text-green-600">{message}</p>}
+        {error && <p className="mb-4 text-center font-medium text-red-600">{error}</p>}
 
         <form onSubmit={handleSubmit}>
           {userType === "organization" && (
@@ -225,9 +223,10 @@ function UserInfoForm({
             </button>
             <button
               type="submit"
+              disabled={loading}
               className="bg-[#ff7c2b] hover:bg-[#ff7c2b]/90 text-white px-4 py-2 rounded-xl font-semibold transition"
             >
-              Submit
+              {loading ? 'Submitting...' : 'Submit'}
             </button>
           </div>
         </form>
@@ -241,12 +240,15 @@ function UserInfoForm({
           onClose={() => setErrorMessage("")}
         />
       )}
-      {showVerification && (
+      {showVerificationModal && (
         <EmailVerificationModal
           email={formData.email}
           onVerify={handleVerifyCode}
-          onClose={() => setShowVerification(false)}
-          onResend={() => console.log("Resend code to:", formData.email)}
+          onClose={() => setShowVerificationModal(false)} // Use the setter from the hook
+          onResend={handleResendCode}
+          loading={loading}
+          message={message}
+          error={error}
         />
       )}
     </section>
