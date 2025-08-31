@@ -10,8 +10,7 @@ function UserInfoForm({
   setFormData,
   onBack,
 }) {
-
-    const {
+  const {
     loading,
     error,
     message,
@@ -23,7 +22,7 @@ function UserInfoForm({
     clearError,
   } = useEmailVerification();
 
-  // for password and validation stuff
+  // password visibility + validation
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [passwordValid, setPasswordValid] = useState({
@@ -37,9 +36,6 @@ function UserInfoForm({
 
   // error modal
   const [errorMessage, setErrorMessage] = useState("");
-
-  // email verification modal
-  const [showVerification, setShowVerification] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -60,7 +56,20 @@ function UserInfoForm({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const { password, confirmPassword } = formData;
+    const { organizationName, firstName, lastName, email, password, confirmPassword } = formData;
+
+    // check required fields
+    if (
+      (userType === "organization" && !organizationName) ||
+      !firstName ||
+      !lastName ||
+      !email ||
+      !password ||
+      !confirmPassword
+    ) {
+      setErrorMessage("Please fill out all required fields.");
+      return;
+    }
 
     if (!acceptedTOS) {
       setErrorMessage(
@@ -73,10 +82,12 @@ function UserInfoForm({
       clearError("Password must meet all requirements.");
       return;
     }
+
     if (password !== confirmPassword) {
       clearError("Passwords do not match.");
       return;
     }
+
     handleRegister(formData);
   };
 
@@ -84,7 +95,6 @@ function UserInfoForm({
     handleVerify(formData.email, code);
   };
 
-  // Callback for the resend button in the modal
   const handleResendCode = () => {
     handleResend(formData.email);
   };
@@ -107,6 +117,7 @@ function UserInfoForm({
               placeholder="Organization Name"
               value={formData.organizationName}
               onChange={handleChange}
+              required
               className="w-full p-3 mb-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-1 focus:ring-grey-300 transition"
             />
           )}
@@ -117,6 +128,7 @@ function UserInfoForm({
             placeholder="First Name"
             value={formData.firstName}
             onChange={handleChange}
+            required
             className="w-full p-3 mb-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-1 focus:ring-grey-300 transition"
           />
 
@@ -126,6 +138,7 @@ function UserInfoForm({
             placeholder="Last Name"
             value={formData.lastName}
             onChange={handleChange}
+            required
             className="w-full p-3 mb-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-1 focus:ring-grey-300 transition"
           />
 
@@ -135,6 +148,7 @@ function UserInfoForm({
             placeholder="Email"
             value={formData.email}
             onChange={handleChange}
+            required
             className="w-full p-3 mb-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-1 focus:ring-grey-300 transition"
           />
 
@@ -146,6 +160,7 @@ function UserInfoForm({
               placeholder="Password"
               value={formData.password}
               onChange={handleChange}
+              required
               className="w-full p-3 pr-10 border border-gray-300 rounded-xl focus:outline-none focus:ring-1 focus:ring-grey-300 transition"
             />
             <button
@@ -179,6 +194,7 @@ function UserInfoForm({
               placeholder="Confirm Password"
               value={formData.confirmPassword}
               onChange={handleChange}
+              required
               className="w-full p-3 pr-10 border border-gray-300 rounded-xl focus:outline-none focus:ring-1 focus:ring-grey-300 transition"
             />
             <button
@@ -198,6 +214,7 @@ function UserInfoForm({
               id="tos"
               checked={acceptedTOS}
               onChange={(e) => setAcceptedTOS(e.target.checked)}
+              required
               className="mr-2 w-4 h-4 text-[#ff7c2b] focus:ring-[#ff7c2b] border-gray-300 rounded"
             />
             <label htmlFor="tos" className="text-gray-600">
@@ -226,7 +243,7 @@ function UserInfoForm({
               disabled={loading}
               className="bg-[#ff7c2b] hover:bg-[#ff7c2b]/90 text-white px-4 py-2 rounded-xl font-semibold transition"
             >
-              {loading ? 'Submitting...' : 'Submit'}
+              {loading ? "Submitting..." : "Submit"}
             </button>
           </div>
         </form>
@@ -244,7 +261,7 @@ function UserInfoForm({
         <EmailVerificationModal
           email={formData.email}
           onVerify={handleVerifyCode}
-          onClose={() => setShowVerificationModal(false)} // Use the setter from the hook
+          onClose={() => setShowVerificationModal(false)}
           onResend={handleResendCode}
           loading={loading}
           message={message}
