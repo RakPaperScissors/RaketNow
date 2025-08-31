@@ -4,7 +4,7 @@ export const MinioClientProvider = {
     provide: 'MINIO_CLIENT',
     useFactory: async () => {
         return new S3({
-            endpoint: 'http://localhost:9000',
+            endpoint: `${process.env.PICTURE_URL}`,
             accessKeyId: 'raketnow',
             secretAccessKey: 'raketnowadmin_2345',
             s3ForcePathStyle: true,

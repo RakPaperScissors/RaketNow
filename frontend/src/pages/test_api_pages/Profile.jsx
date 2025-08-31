@@ -55,12 +55,12 @@ function Profile() {
                     src={
                         selectedImageFile
                             ? URL.createObjectURL(selectedImageFile)
-                            : user?.profilePicture || "http://localhost:9000/raketnow/user-profile-pictures/default_profile.jpg"
+                            : user?.profilePicture || `${process.env.PICTURE_URL}/raketnow/user-profile-pictures/default_profile.jpg`
                     }
                     alt="Profile"
                     className="w-24 h-24 rounded-full object-cover border-2 border-indigo-300 shadow-md mb-4"
                     onError={(e) => {
-                        e.target.src = 'http://localhost:9000/raketnow/user-profile-pictures/default_profile.jpg';
+                        e.target.src = `${process.env.PICTURE_URL}/raketnow/user-profile-pictures/default_profile.jpg`;
                     }}
                 />
                 {/* Profile picture input visible only when editing */}

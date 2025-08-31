@@ -1,7 +1,7 @@
 import React from "react";
 
 function GoogleLoginButton() {
-  const googleLoginUrl = "http://localhost:3000/auth/google/callback"
+  const googleLoginUrl = `${process.env.BACKEND_URL}/auth/google/callback`
 
   return (
     <a href={googleLoginUrl}>
