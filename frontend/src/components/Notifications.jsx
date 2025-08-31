@@ -1,32 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { fetchNotifications, markNotificationAsRead } from "../api/notifications";
 import { useNavigate } from "react-router-dom";
-
-// const mockNotifications = [
-//   {
-//     id: 1,
-//     name: "Juan Dela Cruz",
-//     message: "Juan Dela Cruz has applied to your raket",
-//     timestamp: "July 22, 2025",
-//     profilePic: "https://i.pravatar.cc/150?img=1",
-//     status: "Unread",
-//   },
-//   {
-//     id: 2,
-//     name: "Jane Smith",
-//     message: "Jane Smith has sent you a message",
-//     timestamp: "July 21, 2025",
-//     profilePic: "https://i.pravatar.cc/150?img=2",
-//     status: "Read",
-//   },
-//   {
-//     id: 3,
-//     name: "System",
-//     message: "Your profile was successfully verified",
-//     timestamp: "July 20, 2025",
-//     profilePic: "https://i.pravatar.cc/150?img=3",
-//     status: "Read",
-//   
+import System from "../assets/images/raketnow-logo.png";
 
 const API_URL = import.meta.env.VITE_API_URL;
 const UserNotifications = () => {
