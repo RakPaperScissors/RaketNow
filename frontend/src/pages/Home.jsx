@@ -64,6 +64,7 @@ const Home = () => {
         {/* Top Banner */}
         <div className="relative z-10">
           <WelcomeBanner
+            userCreatedAt={user.createdAt}
             firstName={user?.firstName}
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}

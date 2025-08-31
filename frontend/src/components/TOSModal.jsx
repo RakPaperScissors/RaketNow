@@ -176,7 +176,7 @@ export default function TOSModal({ onClose }) {
           <p>
             For questions or concerns about these Terms, please contact us at:
             <br />
-            <strong>Email:</strong> RakPaperScissor@gmail.com
+            <strong>Email:</strong> rakpaperscissors@raketnow.ip-ddns.com
             <br />
             <strong>Address:</strong> UP Mindanao, Mintal
           </p>
