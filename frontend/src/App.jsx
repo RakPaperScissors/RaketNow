@@ -1,7 +1,5 @@
 import React, { Suspense } from "react";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-
-
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import LoadingSpinner from "./components/LoadingSpinner";
@@ -10,7 +8,7 @@ import BottomNav from "./components/BottomNav";
 
 import { AuthProvider } from "./context/AuthContext";
 import { useAuth } from "./context/AuthContext";
-// import { useTrackVisit } from "./hooks/useAdmin";
+import { useTrackVisit } from "./hooks/useAdmin";
 
 
 // Pages
@@ -27,9 +25,9 @@ import UserNotifications from "./pages/Notifications";
 import BecomeRaketista from "./pages/BecomeRaketista";
 import UserRakets from "./pages/MyRakets";
 import BoostPost from "./pages/Boost";
-// import AdminDashboard from "./pages/AdminDashboard";
+import AdminDashboard from "./pages/AdminDashboard";
 import MyApplications from "./pages/Applications";
-// import AdminUsersTable from "./pages/AdminUsersTable";
+import AdminUsersTable from "./pages/AdminUsersTable";
 import ProfileDisplayCard from "./components/ProfileDisplayCard";
 import ViewProfile from "./pages/ViewProfile";
 import { View, WifiOff, LogOut } from "lucide-react";
@@ -144,7 +142,6 @@ function AppContent() {
   // will see footer on these pages
   const showFooter = ["/", "/about"].includes(currentPath);
 
-
   // will see bottom nav on these pages (authenticated pages)
   const showBottomNav = [
     "/home",
@@ -207,8 +204,8 @@ function AppContent() {
 
 
           {/* admin page */}
-          {/* <Route path="/admin-dashboard" element={<AdminGate> <AdminDashboard /> </AdminGate>} />
-          <Route path="/admin-users-table" element={<AdminGate> <AdminUsersTable /> </AdminGate>} /> */}
+          <Route path="/admin-dashboard" element={<AdminGate> <AdminDashboard /> </AdminGate>} />
+          <Route path="/admin-users-table" element={<AdminGate> <AdminUsersTable /> </AdminGate>} />
         </Routes>
 
 
@@ -221,7 +218,7 @@ function AppContent() {
 
 
 function App() {
-  // useTrackVisit();
+  useTrackVisit();
   return (
     <BrowserRouter>
       <AuthProvider>
