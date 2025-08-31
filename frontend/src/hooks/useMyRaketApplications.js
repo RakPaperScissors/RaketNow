@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export function useMyRaketApplications() {
   const [apps, setApps] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -7,7 +9,7 @@ export function useMyRaketApplications() {
 
   const refetch = useCallback(() => {
     setLoading(true);
-    fetch(`${process.env.VITE_API_URL}/raket-application/my-applications`, {
+    fetch(`${API_URL}/raket-application/my-applications`, {
       credentials: "include",
     })
       .then(async (res) => {

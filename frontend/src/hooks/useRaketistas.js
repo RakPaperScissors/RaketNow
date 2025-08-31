@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { fetchRaketistas } from "../api/users";
 import { getAllSkills } from "../api/skills";
 
+const PICTURE_URL = import.meta.env.VITE_PICTURE_URL;
+
 export function useRaketistas() {
     const [raketistas, setRaketistas] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -24,8 +26,8 @@ export function useRaketistas() {
                         totalReviews: r.totalReviews ?? 0,
                         skills: [],
                         img: r.profilePicture
-                            ? `${process.env.PICTURE_URL}/raketnow/${r.profilePicture}`
-                            : `${process.env.PICTURE_URL}/raketnow/default_profile.jpg`,
+                            ? `${PICTURE_URL}/raketnow/${r.profilePicture}`
+                            : `${PICTURE_URL}/raketnow/default_profile.jpg`,
                         email: r.email,
                     };
                 }

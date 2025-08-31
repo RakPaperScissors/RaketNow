@@ -9,8 +9,9 @@ import BottomNav from "./BottomNav";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const DEFAULT_AVATAR = "/default_profile.jpg";
+const PICTURE_URL = import.meta.env.VITE_PICTURE_URL;
 const USER_PROFILE_PIC_BASE_URL =
-  `${process.env.PICTURE_URL}/raketnow/`; //recheck sa future
+  `${PICTURE_URL}/raketnow/`; //recheck sa future
 
 function Message() {
   const location = useLocation();
