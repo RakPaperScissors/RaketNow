@@ -7,7 +7,7 @@ export function useMyRaketApplications() {
 
   const refetch = useCallback(() => {
     setLoading(true);
-    fetch("http://localhost:3000/raket-application/my-applications", {
+    fetch(`${process.env.VITE_API_URL}/raket-application/my-applications`, {
       credentials: "include",
     })
       .then(async (res) => {
