@@ -22,7 +22,7 @@ export class EmailService {
       subject: 'Welcome to RaketNow! Please Verify Your Email',
       html: `
         <div style="font-family: Arial, sans-serif; text-align: center; color: #333;">
-          <h2>Welcome to RacketNow, ${user.firstName}!</h2>
+          <h2>Welcome to RaketNow, ${user.firstName}!</h2>
           <p>Please use the following code to verify your email address:</p>
           <p style="font-size: 24px; font-weight: bold; letter-spacing: 5px;">
             ${code}

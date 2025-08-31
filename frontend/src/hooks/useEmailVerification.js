@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { signUp, verifyEmail, resendVerificationCode } from '../api/auth';
 
 export function useEmailVerification() {
@@ -42,7 +42,7 @@ export function useEmailVerification() {
         }
     };
 
-    const handleResend = async (email) => {
+    const handleResend = useCallback(async (email) => {
         setLoading(true);
         setError(null);
         setMessage(null);
@@ -54,7 +54,7 @@ export function useEmailVerification() {
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
 
     return {
         loading,
