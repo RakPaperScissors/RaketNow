@@ -28,7 +28,7 @@ import { useNavigate } from "react-router-dom";
 //     status: "Read",
 //   
 
-
+const API_URL = import.meta.env.VITE_API_URL;
 const UserNotifications = () => {
   const [notifications, setNotifications] = useState([]);
   const [activeTab, setActiveTab] = useState("Unread");
@@ -74,7 +74,7 @@ const UserNotifications = () => {
   const handleNotificationClick = async (notif) => {
     if (!notif.isRead) {
       try {
-        await fetch(`${process.env.VITE_API_URL}/notification/${notif.id}/read`, {
+        await fetch(`${API_URL}/notification/${notif.id}/read`, {
           method: "PATCH",
           credentials: "include",
           headers: { "Content-Type": "application/json" },

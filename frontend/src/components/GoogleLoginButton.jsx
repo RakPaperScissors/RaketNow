@@ -1,7 +1,9 @@
 import React from "react";
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
 function GoogleLoginButton() {
-  const googleLoginUrl = `${process.env.BACKEND_URL}/auth/google/callback`
+  const googleLoginUrl = `${BACKEND_URL}/auth/google/callback`
 
   return (
     <a href={googleLoginUrl}>
