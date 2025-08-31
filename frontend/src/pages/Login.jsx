@@ -8,23 +8,47 @@ import GoogleLoginButton from "../components/GoogleLoginButton";
 import logo from "../assets/images/raketnow-logo.png";
 
 import { useLoginForm } from "../hooks/useLoginForm";
-import { useAuth } from "../context/AuthContext";
+import EmailVerificationModal from "../components/EmailVerificationModal";
+import { useEmailVerification } from "../hooks/useEmailVerification";
 
 function Login() {
   const navigate = useNavigate();
   const { email, password, setEmail, setPassword, message, messageType, handleLogin } = useLoginForm();
-  const { login } = useAuth();
+  const {
+    loading: verificationLoading,
+    error: verificationError,
+    message: verificationMessage,
+    showVerificationModal,
+    setShowVerificationModal,
+    handleVerify,
+    handleResend,
+  } = useEmailVerification();
 
-  const handleSubmit = (e) => {
-    handleLogin(e, async () => {
-      const user = await login();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+        try {
+          const user = await handleLogin(e);
+          setTimeout(() => {
+            if (user?.role === "admin") {
+              window.location.href = "/admin-dashboard";
+            } else {
+              window.location.href = "/home";
+            }
+          }, 500);
 
-      if (user?.role === "admin") {
-        window.location.href = "/admin-dashboard";
-      } else {
-        window.location.href = "/home";
-      }
-    });
+        } catch (err) {
+          if (err.message === "Please verify your email before logging in.") {
+            setShowVerificationModal(true);
+          }
+        }
+  };
+
+  const handleVerifyCode = (code) => {
+    handleVerify(email, code);
+  };
+  
+  const handleResendCode = () => {
+    handleResend(email);
   };
 
   return (
@@ -106,6 +130,19 @@ function Login() {
           </button>
         </div>
       </div>
+
+      {/* EmailVerificationModal */}
+      {showVerificationModal && (
+        <EmailVerificationModal
+          email={email} // Pass the email the user tried to log in with
+          onVerify={handleVerifyCode}
+          onClose={() => setShowVerificationModal(false)}
+          onResend={handleResendCode}
+          loading={verificationLoading}
+          message={verificationMessage}
+          error={verificationError}
+        />
+      )}
     </section>
   );
 }
