@@ -24,8 +24,8 @@ export function useRaketistas() {
                         totalReviews: r.totalReviews ?? 0,
                         skills: [],
                         img: r.profilePicture
-                            ? `http://localhost:9000/raketnow/${r.profilePicture}`
-                            : "http://localhost:9000/raketnow/default_profile.jpg",
+                            ? `${process.env.PICTURE_URL}/raketnow/${r.profilePicture}`
+                            : `${process.env.PICTURE_URL}/raketnow/default_profile.jpg`,
                         email: r.email,
                     };
                 }

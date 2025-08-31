@@ -12,21 +12,19 @@ const formatDate = (dateString) => {
   return date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
 };
 
-function ProfileDisplayCard() { // Remove the 'userId' prop here, it comes from useParams
-  // 2. Use useParams to get URL parameters
-  const { userId: routeUserId } = useParams(); // Rename to avoid confusion with internal state
+function ProfileDisplayCard() {
+  const { userId: routeUserId } = useParams();
 
   const [profileUser, setProfileUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // 3. Use the ID from the URL parameters
-    const displayUid = Number(routeUserId); // Convert to number, as UIDs are numbers
+    const displayUid = Number(routeUserId);
 
-    if (isNaN(displayUid) || !displayUid) { // Check if it's a valid number
+    if (isNaN(displayUid) || !displayUid) {
       setLoading(false);
-      setError("Invalid User ID provided in URL."); // More specific error
+      setError("Invalid User ID provided in URL."); 
       return;
     }
 
@@ -34,7 +32,7 @@ function ProfileDisplayCard() { // Remove the 'userId' prop here, it comes from 
       setLoading(true);
       setError(null);
       try {
-        const data = await getPublicUserProfile(displayUid); // Use the numeric UID
+        const data = await getPublicUserProfile(displayUid);
         setProfileUser(data);
       } catch (err) {
         setError(err.message || "Failed to fetch user profile.");
@@ -45,7 +43,7 @@ function ProfileDisplayCard() { // Remove the 'userId' prop here, it comes from 
     };
 
     fetchUserProfile();
-  }, [routeUserId]); // Depend on routeUserId from URL params
+  }, [routeUserId]);
 
   if (loading) return <LoadingSpinner />;
   if (error) return <div className="text-center p-6 text-red-500">Error: {error}</div>;
@@ -53,7 +51,7 @@ function ProfileDisplayCard() { // Remove the 'userId' prop here, it comes from 
 
   const isRaketista = profileUser.type === "Raketista"; 
 
-  const fullProfilePictureUrl = `http://localhost:9000/raketnow/${profileUser.profilePicture}` || `http://localhost:9000/raketnow/default_profile.jpg`;
+  const fullProfilePictureUrl = `${process.env.PICTURE_URL}/raketnow/${profileUser.profilePicture}` || `${process.env.PICTURE_URL}/raketnow/default_profile.jpg`;
   return (
     <div className="bg-white shadow-md rounded-xl p-6 max-w-xl mx-auto my-10 border">
       {/* HEADER SECTION */}

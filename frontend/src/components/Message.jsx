@@ -8,7 +8,7 @@ import LoadingSpinner from "./LoadingSpinner";
 
 const DEFAULT_AVATAR = "/default_profile.jpg";
 const USER_PROFILE_PIC_BASE_URL =
-  "http://localhost:9000/raketnow/"; //recheck sa future
+  `${process.env.PICTURE_URL}/raketnow/`; //recheck sa future
 
 function Message() {
   const { user: currentUser, loading: userLoading } = useUser();

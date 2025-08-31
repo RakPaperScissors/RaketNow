@@ -74,7 +74,7 @@ const UserNotifications = () => {
   const handleNotificationClick = async (notif) => {
     if (!notif.isRead) {
       try {
-        await fetch(`http://localhost:3000/notification/${notif.id}/read`, {
+        await fetch(`${process.env.VITE_API_URL}/notification/${notif.id}/read`, {
           method: "PATCH",
           credentials: "include",
           headers: { "Content-Type": "application/json" },
