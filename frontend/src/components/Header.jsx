@@ -1,36 +1,30 @@
 import logo from "../assets/images/raketnow-blue-logo.png";
 import {
-  UserRound,
-  ChevronDown,
-  ChevronUp,
   Menu,
   X,
   ArrowRight,
 } from "lucide-react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
-function Header() {
+function Header({ onCategoriesClick }) {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const categories = [
-    "Maintenance & Repair",
-    "Tech & Electronics",
-    "Personal & Home Care",
-    "Events & Entertainment",
-    "Food & Beverage",
-    "Education & Tutoring",
-    "Graphic & Digital Design",
-    "Business & Professional Service",
-    "Automotive Services",
-    "Moving & Delivery Services",
-  ];
+  const handleCategoriesClick = () => {
+    if (location.pathname === "/") {
+      onCategoriesClick?.();
+    } else {
+      navigate("/", { state: { scrollToCategories: true } });
+    }
+  };
 
   return (
-    <header className="shadow-md bg-white">
-      <nav className="max-w-screen-xl mx-auto px-6 py-4 flex items-center justify-between">
-        {/* logo and nav Links */}
+    <header className=" bg-white w-full">
+      {/* FULL WIDTH NAV */}
+      <nav className="w-full px-6 lg:px-12 py-4 flex items-center justify-between">
+        {/* LEFT SIDE: Logo + Links */}
         <div className="flex items-center gap-10">
           <NavLink to="/">
             <img
@@ -40,7 +34,7 @@ function Header() {
             />
           </NavLink>
 
-          {/* DESKTOP VIEW */}
+          {/* DESKTOP LINKS */}
           <ul className="hidden md:flex items-center gap-8 text-sm font-medium text-gray-900">
             <li>
               <NavLink to="/" className="hover:text-orange-500">
@@ -52,42 +46,18 @@ function Header() {
                 About
               </NavLink>
             </li>
-            <li className="relative">
+            <li>
               <button
-                onClick={() => setDropdownOpen(!isDropdownOpen)}
                 className="flex items-center gap-1 hover:text-orange-500"
+                onClick={handleCategoriesClick}
               >
-                Categories{" "}
-                {isDropdownOpen ? (
-                  <ChevronUp size={16} />
-                ) : (
-                  <ChevronDown size={16} />
-                )}
+                Categories
               </button>
-
-              <div
-                className={`absolute top-full left-0 mt-2 w-64 bg-white shadow-md rounded-md z-10 transform transition-all duration-300 ease-in-out origin-top ${
-                  isDropdownOpen
-                    ? "opacity-100 scale-y-100"
-                    : "opacity-0 scale-y-0 pointer-events-none"
-                }`}
-              >
-                <ul>
-                  {categories.map((category) => (
-                    <li
-                      key={category}
-                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm"
-                    >
-                      {category}
-                    </li>
-                  ))}
-                </ul>
-              </div>
             </li>
           </ul>
         </div>
 
-        {/* sign in & login */}
+        {/* RIGHT SIDE: Auth buttons */}
         <div className="hidden md:flex items-center gap-3">
           <NavLink
             to="/login"
@@ -103,7 +73,7 @@ function Header() {
           </NavLink>
         </div>
 
-        {/* hamburger deets */}
+        {/* MOBILE BURGER */}
         <button
           className="md:hidden text-blue-900"
           onClick={() => setMobileMenuOpen(!isMobileMenuOpen)}
@@ -112,7 +82,7 @@ function Header() {
         </button>
       </nav>
 
-      {/* MOBILE VIEW */}
+      {/* MOBILE MENU */}
       {isMobileMenuOpen && (
         <div className="md:hidden px-6 pb-4 flex flex-col items-center">
           <ul className="flex flex-col gap-4 text-blue-900 font-medium text-sm items-center">
@@ -128,35 +98,14 @@ function Header() {
             </li>
             <li>
               <button
-                onClick={() => setDropdownOpen(!isDropdownOpen)}
-                className="flex items-center gap-1 hover:text-orange-500"
+                onClick={() => {
+                  handleCategoriesClick();
+                  setMobileMenuOpen(false);
+                }}
+                className="flex gap-1 hover:text-orange-500"
               >
-                Categories{" "}
-                {isDropdownOpen ? (
-                  <ChevronUp size={16} />
-                ) : (
-                  <ChevronDown size={16} />
-                )}
+                Categories
               </button>
-
-              <div
-                className={`transition-all duration-300 ease-in-out transform origin-top w-full ${
-                  isDropdownOpen
-                    ? "scale-y-100 opacity-100 h-auto"
-                    : "scale-y-0 opacity-0 h-0 overflow-hidden"
-                } bg-white border rounded-md shadow-sm mt-2`}
-              >
-                <ul>
-                  {categories.map((category) => (
-                    <li
-                      key={category}
-                      className="px-4 py-2 hover:bg-gray-100 text-sm text-center"
-                    >
-                      {category}
-                    </li>
-                  ))}
-                </ul>
-              </div>
             </li>
             <li>
               <NavLink
@@ -169,7 +118,7 @@ function Header() {
             <li>
               <NavLink
                 to="/signup"
-                className="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600"
+                className="bg-orange-500 text-white px-4 py-2 rounded-md text-sm hover:bg-orange-600"
               >
                 Get Started
               </NavLink>

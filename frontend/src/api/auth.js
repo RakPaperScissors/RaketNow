@@ -48,3 +48,31 @@ export async function signUp(formData) {
         throw err;
     }
 }
+
+export async function verifyEmail(email, code) {
+    const response = await fetch(`${API_URL}/auth/verify-email`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, code }),
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+        throw new Error(data.message || 'Verification failed. Please try again.');
+    }
+    return data;
+}
+
+export async function resendVerificationCode(email) {
+    const response = await fetch(`${API_URL}/auth/resend-verification`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+        throw new Error(data.message || 'Failed to resend code.');
+    }
+    return data;
+}

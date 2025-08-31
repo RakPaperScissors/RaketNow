@@ -1,8 +1,28 @@
 import React, { useState, useEffect } from "react";
 import { Eye, EyeOff } from "lucide-react";
+import TOSModal from "./TOSModal";
+import EmailVerificationModal from "./EmailVerificationModal";
+import { useEmailVerification } from "../hooks/useEmailVerification";
 
-function UserInfoForm({ userType, formData, setFormData, onBack, onSubmit, message }) {
-  // for password and validation stuff
+function UserInfoForm({
+  userType,
+  formData,
+  setFormData,
+  onBack,
+}) {
+  const {
+    loading,
+    error,
+    message,
+    showVerificationModal,
+    setShowVerificationModal,
+    handleRegister,
+    handleVerify,
+    handleResend,
+    clearError,
+  } = useEmailVerification();
+
+  // password visibility + validation
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [passwordValid, setPasswordValid] = useState({
@@ -10,6 +30,12 @@ function UserInfoForm({ userType, formData, setFormData, onBack, onSubmit, messa
     number: false,
     special: false,
   });
+
+  const [acceptedTOS, setAcceptedTOS] = useState(false);
+  const [showTOS, setShowTOS] = useState(false);
+
+  // error modal
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -28,20 +54,49 @@ function UserInfoForm({ userType, formData, setFormData, onBack, onSubmit, messa
     });
   }, [formData.password]);
 
-  const handleSubmit = () => {
-    const { password, confirmPassword } = formData;
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const { organizationName, firstName, lastName, email, password, confirmPassword } = formData;
 
-    if (passwordValid.length && passwordValid.number && passwordValid.special) {
-      if (password === confirmPassword) {
-        onSubmit();
-      } else {
-        alert("Passwords do not match.");
-      }
-    } else {
-      alert(
-        "Password must:\n- Be at least 4 characters\n- Include at least one number\n- Include at least one special character"
-      );
+    // check required fields
+    if (
+      (userType === "organization" && !organizationName) ||
+      !firstName ||
+      !lastName ||
+      !email ||
+      !password ||
+      !confirmPassword
+    ) {
+      setErrorMessage("Please fill out all required fields.");
+      return;
     }
+
+    if (!acceptedTOS) {
+      setErrorMessage(
+        "Please read and agree to our Terms & Conditions before signing up."
+      );
+      return;
+    }
+
+    if (!passwordValid.length || !passwordValid.number || !passwordValid.special) {
+      clearError("Password must meet all requirements.");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      clearError("Passwords do not match.");
+      return;
+    }
+
+    handleRegister(formData);
+  };
+
+  const handleVerifyCode = (code) => {
+    handleVerify(formData.email, code);
+  };
+
+  const handleResendCode = () => {
+    handleResend(formData.email);
   };
 
   return (
@@ -51,19 +106,10 @@ function UserInfoForm({ userType, formData, setFormData, onBack, onSubmit, messa
           Complete Your Details
         </h2>
 
-        {message && (
-          <p
-            className={`mb-4 text-center font-medium ${
-              message.toLowerCase().includes("success")
-                ? "text-green-600"
-                : "text-red-600"
-            }`}
-          >
-            {message}
-          </p>
-        )}
+        {message && <p className="mb-4 text-center font-medium text-green-600">{message}</p>}
+        {error && <p className="mb-4 text-center font-medium text-red-600">{error}</p>}
 
-        <form onSubmit={(e) => e.preventDefault()}>
+        <form onSubmit={handleSubmit}>
           {userType === "organization" && (
             <input
               type="text"
@@ -71,7 +117,8 @@ function UserInfoForm({ userType, formData, setFormData, onBack, onSubmit, messa
               placeholder="Organization Name"
               value={formData.organizationName}
               onChange={handleChange}
-              className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+              required
+              className="w-full p-3 mb-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-1 focus:ring-grey-300 transition"
             />
           )}
 
@@ -81,7 +128,8 @@ function UserInfoForm({ userType, formData, setFormData, onBack, onSubmit, messa
             placeholder="First Name"
             value={formData.firstName}
             onChange={handleChange}
-            className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+            required
+            className="w-full p-3 mb-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-1 focus:ring-grey-300 transition"
           />
 
           <input
@@ -90,7 +138,8 @@ function UserInfoForm({ userType, formData, setFormData, onBack, onSubmit, messa
             placeholder="Last Name"
             value={formData.lastName}
             onChange={handleChange}
-            className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+            required
+            className="w-full p-3 mb-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-1 focus:ring-grey-300 transition"
           />
 
           <input
@@ -99,10 +148,11 @@ function UserInfoForm({ userType, formData, setFormData, onBack, onSubmit, messa
             placeholder="Email"
             value={formData.email}
             onChange={handleChange}
-            className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+            required
+            className="w-full p-3 mb-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-1 focus:ring-grey-300 transition"
           />
 
-          {/* PASSWORD STUFF */}
+          {/* PASSWORD */}
           <div className="relative mb-2">
             <input
               type={showPassword ? "text" : "password"}
@@ -110,7 +160,8 @@ function UserInfoForm({ userType, formData, setFormData, onBack, onSubmit, messa
               placeholder="Password"
               value={formData.password}
               onChange={handleChange}
-              className="w-full p-3 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+              required
+              className="w-full p-3 pr-10 border border-gray-300 rounded-xl focus:outline-none focus:ring-1 focus:ring-grey-300 transition"
             />
             <button
               type="button"
@@ -122,7 +173,7 @@ function UserInfoForm({ userType, formData, setFormData, onBack, onSubmit, messa
             </button>
           </div>
 
-          {/* REQSSS */}
+          {/* REQUIREMENTS */}
           <ul className="text-sm text-gray-600 mb-4 pl-5 list-disc">
             <li className={passwordValid.length ? "text-green-600" : ""}>
               At least 4 characters
@@ -135,7 +186,7 @@ function UserInfoForm({ userType, formData, setFormData, onBack, onSubmit, messa
             </li>
           </ul>
 
-          {/* CONFIRM */}
+          {/* CONFIRM PASSWORD */}
           <div className="relative mb-4">
             <input
               type={showConfirmPassword ? "text" : "password"}
@@ -143,7 +194,8 @@ function UserInfoForm({ userType, formData, setFormData, onBack, onSubmit, messa
               placeholder="Confirm Password"
               value={formData.confirmPassword}
               onChange={handleChange}
-              className="w-full p-3 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+              required
+              className="w-full p-3 pr-10 border border-gray-300 rounded-xl focus:outline-none focus:ring-1 focus:ring-grey-300 transition"
             />
             <button
               type="button"
@@ -155,24 +207,67 @@ function UserInfoForm({ userType, formData, setFormData, onBack, onSubmit, messa
             </button>
           </div>
 
-          <div className="flex justify-between items-center mt-6">
+          {/* TERMS & CONDITIONS */}
+          <div className="flex items-center mb-6 text-sm">
+            <input
+              type="checkbox"
+              id="tos"
+              checked={acceptedTOS}
+              onChange={(e) => setAcceptedTOS(e.target.checked)}
+              required
+              className="mr-2 w-4 h-4 text-[#ff7c2b] focus:ring-[#ff7c2b] border-gray-300 rounded"
+            />
+            <label htmlFor="tos" className="text-gray-600">
+              I agree to the{" "}
+              <button
+                type="button"
+                className="text-[#ff7c2b] underline"
+                onClick={() => setShowTOS(true)}
+              >
+                Terms & Conditions
+              </button>
+            </label>
+          </div>
+
+          {/* BUTTONS */}
+          <div className="flex justify-between items-center">
             <button
               type="button"
               onClick={onBack}
-              className="text-gray-500 hover:text-blue-500 transition font-medium"
+              className="text-gray-500 hover:text-gray-700 transition-colors duration-200 font-medium"
             >
               ← Back
             </button>
             <button
               type="submit"
-              onClick={handleSubmit}
-              className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-xl font-semibold transition"
+              disabled={loading}
+              className="bg-[#ff7c2b] hover:bg-[#ff7c2b]/90 text-white px-4 py-2 rounded-xl font-semibold transition"
             >
-              Submit
+              {loading ? "Submitting..." : "Submit"}
             </button>
           </div>
         </form>
       </div>
+
+      {/* MODALS */}
+      {showTOS && <TOSModal onClose={() => setShowTOS(false)} />}
+      {errorMessage && (
+        <ErrorModal
+          message={errorMessage}
+          onClose={() => setErrorMessage("")}
+        />
+      )}
+      {showVerificationModal && (
+        <EmailVerificationModal
+          email={formData.email}
+          onVerify={handleVerifyCode}
+          onClose={() => setShowVerificationModal(false)}
+          onResend={handleResendCode}
+          loading={loading}
+          message={message}
+          error={error}
+        />
+      )}
     </section>
   );
 }

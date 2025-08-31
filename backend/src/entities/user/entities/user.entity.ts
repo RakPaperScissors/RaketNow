@@ -23,10 +23,10 @@ export class Users {
     @Column({ type: 'varchar', length: 255, nullable: true})
     password: string;
 
-    @Column({ type: 'varchar', length: 255, nullable: true })
+    @Column({ type: 'varchar', length: 255, nullable: false })
     firstName: string;
 
-    @Column({ type: 'varchar', length: 255, nullable: true })
+    @Column({ type: 'varchar', length: 255, nullable: false })
     lastName: string;
 
     // Main role of the user
@@ -60,4 +60,13 @@ export class Users {
 
     @OneToMany(() => Message, message => message.sender)
     messages: Message[];
+
+    @Column({ name: 'is_email_verified', type: 'boolean', default: false })
+    isEmailVerified: boolean;
+
+    @Column({ name: 'verification_code', type: 'varchar', length: 6, nullable: true })
+    verificationCode: string;
+
+    @Column({ name: 'verification_code_expires_at', type: 'timestamptz', nullable: true })
+    verificationCodeExpiresAt: Date;
 }

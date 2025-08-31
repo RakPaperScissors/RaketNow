@@ -28,7 +28,7 @@ export class RaketApplicationService {
   async create(dto: CreateRaketApplicationDto, user: Users) {
     const raketista = await this.usersRepository.findOne({ where: { uid: user.uid } });
 
-    if (!raketista || raketista.role !== 'raketista') {
+    if (!raketista || raketista.type !== 'Raketista') {
       throw new BadRequestException('Only raketistas can apply to rakets.');
     }
 
@@ -64,8 +64,14 @@ export class RaketApplicationService {
 
     const savedApplication = await this.raketApplicationRepository.save(newApplication);
 
+    const raketOwner = await this.usersRepository.findOne({
+      where: { uid: raket.user.uid },
+    });
+
+    if (!raketOwner) throw new BadRequestException('Raket owner not found');
+
     await this.notificationRepository.save({
-      user: raket.user,
+      user: raketOwner,
       message: `A raketista has applied to your raket "${raket.title}".`,
       isRead: false,
       actionable: true,

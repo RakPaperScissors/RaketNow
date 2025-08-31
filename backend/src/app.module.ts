@@ -28,10 +28,14 @@ import { RaketApplicationModule } from './entities/raket-application/raket-appli
 import { NotificationModule } from './entities/notification/notification.module';
 import { ProfileModule } from './profile/profile.module';
 import { RatingModule } from './entities/rating/rating.module';
+import { VisitsModule } from './entities/visits/visits.module';
+import { EmailModule } from './entities/email/email.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({isGlobal: true}),
+    ConfigModule.forRoot({
+      envFilePath: '.env', 
+      isGlobal: true}),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST,
@@ -65,7 +69,9 @@ import { RatingModule } from './entities/rating/rating.module';
     NotificationModule,
     MessageModule,
     ProfileModule,
-    RatingModule
+    RatingModule,
+    VisitsModule,
+    EmailModule
   ],
   controllers: [AppController],
   providers: [AppService],

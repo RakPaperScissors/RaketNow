@@ -1,14 +1,32 @@
 @import "tailwindcss";
 body {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
 }
 
 .scrollbar-hide {
-  -ms-overflow-style: none;  
-  scrollbar-width: none;     
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 .scrollbar-hide::-webkit-scrollbar {
-  display: none;            
+  display: none;
 }
 
+/* Slim scrollbar */
+::-webkit-scrollbar {
+  width: 6px; /* slim width */
+  height: 6px; /* slim height for horizontal */
+}
+
+::-webkit-scrollbar-track {
+  background: transparent; /* or a light gray if you want */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1; /* Tailwind's gray-300 */
+  border-radius: 9999px; /* fully rounded */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #94a3b8; /* Tailwind's gray-400 */
+}

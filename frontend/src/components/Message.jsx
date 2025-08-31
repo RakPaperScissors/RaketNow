@@ -5,6 +5,8 @@ import { useUser } from "../hooks/useUsers";
 import JobInfoBanner from "../components/JobInfoBanner";
 import ViewProfileLink from "./ViewProfileLink";
 import LoadingSpinner from "./LoadingSpinner";
+import BottomNav from "./BottomNav";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const DEFAULT_AVATAR = "/default_profile.jpg";
 const PICTURE_URL = import.meta.env.VITE_PICTURE_URL;
@@ -12,6 +14,8 @@ const USER_PROFILE_PIC_BASE_URL =
   `${PICTURE_URL}/raketnow/`; //recheck sa future
 
 function Message() {
+  const location = useLocation();
+  const navigate = useNavigate();
   const { user: currentUser, loading: userLoading } = useUser();
   const {
     conversations,
@@ -106,6 +110,12 @@ function Message() {
     }
   }, [handleScroll]);
 
+  // useEffect(() => {
+  //   if (location.pathname === "/message") {
+  //     setSelectedConversation(null);
+  //   }
+  // }, [location]);
+
   // --- Loading and Error States ---
   if (userLoading) {
     return (
@@ -152,7 +162,7 @@ function Message() {
     <div className="flex flex-1 flex-col md:flex-row gap-4 p-4 min-h-[calc(100vh-5rem)] bg-[#f9fafb]">
       {/* CONVERSATION LIST SIDEBAR */}
       <div
-        className={`w-full md:w-1/3 bg-white rounded-2xl shadow p-4 flex flex-col h-[calc(100vh-7rem)] ${
+        className={`w-full md:w-1/3 bg-white rounded-2xl shadow p-6 flex flex-col h-[calc(100vh-5rem)] ${
           showChatPanel ? "hidden md:flex" : "flex"
         }`}
       >
@@ -216,7 +226,7 @@ function Message() {
                   <div
                     key={conv.id}
                     onClick={() => handleSelectConversation(conv)}
-                    className={`flex items-center gap-3 px-4 py-3 cursor-pointer transition-all mb-2 rounded-md ${
+                    className={`flex items-center gap-3 px-4 py-3 z-50 cursor-pointer transition-all mb-2 rounded-md ${
                       selectedConversation?.id === conv.id
                         ? "bg-[#FFF6F2] border-l-4 border-[#FF7C2B]"
                         : "hover:bg-gray-100"
@@ -248,7 +258,7 @@ function Message() {
 
       {/* CHAT PANEL */}
       <div
-        className={`w-full md:w-2/3 bg-white rounded-2xl shadow flex flex-col h-[calc(100vh-7rem)] ${
+        className={`w-full md:w-2/3 bg-white rounded-2xl shadow flex flex-col h-[calc(100vh-5rem)] ${
           selectedConversation && showChatPanel
             ? "flex"
             : selectedConversation
@@ -262,7 +272,7 @@ function Message() {
             <div className="p-4 border-b border-gray-100 flex items-center gap-3">
               <button
                 className="md:hidden text-gray-500"
-                onClick={() => setShowChatPanel(false)}
+                onClick={() => {setShowChatPanel(false); navigate(0);}}
               >
                 <ArrowLeft size={20} />
               </button>
@@ -362,7 +372,7 @@ function Message() {
                     
                     {/* MESSAGE BUBBLE */}
                     <div
-                      className={`p-3 rounded-2xl text-sm shadow flex-1 ${
+                      className={`p-3 rounded-2xl text-sm shadow flex-1 break-words whitespace-pre-wrap ${
                         isMyMessage
                           ? "bg-[#FF7C2B] text-white"
                           : "bg-white text-gray-900"
@@ -371,12 +381,12 @@ function Message() {
                       {/* SENDER NAME */}
                       {!isMyMessage && (
                         <ViewProfileLink userId={msg.sender.id}>
-                        <p className="font-medium text-xs mb-1 text-gray-600 cursor-pointer">
-                          {msg.sender.firstName || msg.sender.name}
-                        </p>
+                          <p className="font-medium text-xs mb-1 text-gray-600 cursor-pointer">
+                            {msg.sender.firstName || msg.sender.name}
+                          </p>
                         </ViewProfileLink>
                       )}
-                      <p>{msg.text}</p>
+                      <p className="break-all whitespace-pre-wrap">{msg.text}</p>
                       {msg.images && msg.images.length > 0 && (
                         <div className="mt-2 grid grid-cols-2 gap-2">
                           {msg.images.map((imgUrl, idx) => (
@@ -471,6 +481,8 @@ function Message() {
           </div>
         )}
       </div>
+
+      {!selectedConversation && <BottomNav />}
     </div>
   );
 }

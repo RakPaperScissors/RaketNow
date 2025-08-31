@@ -58,8 +58,8 @@ const RaketFeed = ({ searchTerm }) => {
     //   : rakets.filter((raket) => selectedCategories.includes(raket.category));
 
   return (
-    <main className="bg-[#F9FAFB] min-h-screen py-8 px-4">
-      <div className="max-w-2xl mx-auto space-y-6">
+    <main className="bg-[#F9FAFB] min-h-screen py-12 px-6">
+      <div className="max-w-3xl mx-auto space-y-6">
 
         {/* Header */}
         <div className="flex justify-between items-center mb-4">
@@ -158,7 +158,7 @@ const RaketFeed = ({ searchTerm }) => {
             images={
               raket.pictures?.length > 0
                 ? raket.pictures.map(p => p.imageUrl)
-                : ["/default_profile.jpg"]
+                : []
             }
             title={raket.title || "Untitled Raket"}
             description={raket.description || "No description provided."}
