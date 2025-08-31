@@ -1,7 +1,6 @@
 #backend
 backend/node_modules
 backend/dist
-backend/.env
 
 # Logs
 logs
@@ -12,14 +11,11 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-# Dependency directory
+#frontend
 frontend/node_modules
-
-# Build output
 frontend/dist
 frontend/dist-ssr
 frontend/*.local
-frontend/.env
 
 # Editor directories and files
 .vscode/*
@@ -32,4 +28,14 @@ frontend/.env
 *.sln
 *.sw?
 
+# environment variables
 .env
+frontend/.env
+backend/.env
+
+#admin
+frontend/src/pages/AdminDashboard.jsx
+frontend/src/pages/AdminUsersTable.jsx
+frontend/src/components/AdminDashboard.jsx
+frontend/src/hooks/useAdmin.js
+frontend/src/api/admin.js
