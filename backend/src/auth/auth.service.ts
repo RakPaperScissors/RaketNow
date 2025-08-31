@@ -269,4 +269,38 @@ export class AuthService {
       access_token: this.jwtService.sign(payload),
     };
   }
+
+  async resendVerificationEmail(email: string): Promise<{ message: string }> {
+    const user = await this.usersRepo.findOne({ where: { email } });
+
+    if (!user) {
+      return { message: 'If an account with that email exists, a new verification code has been sent.' };
+    }
+
+    if (user.isEmailVerified) {
+      throw new BadRequestException('This email address has already been verified.');
+    }
+
+    if (user.verificationCodeExpiresAt && new Date() < user.verificationCodeExpiresAt) {
+      const now = new Date();
+      const expiration = user.verificationCodeExpiresAt;
+      const minutesRemaining = Math.ceil((expiration.getTime() - now.getTime()) / 60000);
+
+      if (minutesRemaining > 2) { 
+        throw new BadRequestException(`Please wait a few minutes before requesting a new code.`);
+      }
+    }
+
+    const newVerificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+    const newExpiresAt = new Date();
+    newExpiresAt.setMinutes(newExpiresAt.getMinutes() + 15);
+
+    user.verificationCode = newVerificationCode;
+    user.verificationCodeExpiresAt = newExpiresAt;
+    await this.usersRepo.save(user);
+
+    await this.emailService.sendVerificationEmail(user, newVerificationCode);
+
+    return { message: 'A new verification code has been sent to your email address.' };
+  }
 }
