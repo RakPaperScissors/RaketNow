@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import logo from '../assets/images/raketnow-white-logo.png';
+import TOSModal from './TOSModal';
 
 function Footer() {
     const [open, setOpen] = useState({
@@ -11,6 +12,8 @@ function Footer() {
     const toggle = (section) => {
         setOpen((prev) => ({ ...prev, [section]: !prev[section] }));
     };
+
+    const [showTOS, setShowTOS] = useState(false);
 
     return (
         <footer className="bg-[#0C2C57] text-sm text-white ">
@@ -63,12 +66,9 @@ function Footer() {
                             className={`space-y-2 text-gray-300 ${open.support ? 'block' : 'hidden'
                                 } md:block`}
                         >
-                            <li><a href="/Faqs"className="hover:text-white transition-colors duration-200">Help Center</a></li>
                             <li><a href="/Faqs"className="hover:text-white transition-colors duration-200">FAQs</a></li>
-                            <li><a href="#"className="hover:text-white transition-colors duration-200">Terms of Service</a></li>
-                            <li><a href="#"className="hover:text-white transition-colors duration-200">Privacy Policy</a></li>
-                            <li><a href="#"className="hover:text-white transition-colors duration-200">Data Privacy</a></li>
-                            <li><a href="#"className="hover:text-white transition-colors duration-200">Report a Problem</a></li>
+                            <li><button onClick={() => setShowTOS(true)} className="hover:text-white transition-colors duration-200">Terms of Service</button></li>
+                            {showTOS && <TOSModal onClose={() => setShowTOS(false)} />}
                         </ul>
                     </div>
 
