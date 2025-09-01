@@ -16,11 +16,11 @@ import {
 
 const categories = [
   { icon: Hammer, label: 'Home Repairs & Maintenance', link: '' },
-  { icon: MonitorSmartphone, label: 'Tech & Electronics Support', link: '' },
+  { icon: MonitorSmartphone, label: 'Tech & Electronics', link: '' },
   { icon: Heart, label: 'Personal & Home Care', link: '' },
   { icon: PartyPopper, label: 'Events & Entertainment', link: '' },
   { icon: Utensils, label: 'Food & Beverage', link: '' },
-  { icon: GraduationCap, label: 'Education & Tutoring', link: '' },
+  { icon: GraduationCap, label: 'Education and Tutoring', link: '' },
   { icon: Paintbrush, label: 'Graphic & Digital Design', link: '' },
   { icon: Briefcase, label: 'Business & Professional Services', link: '' },
   { icon: Car, label: 'Automotive Services', link: '' },
