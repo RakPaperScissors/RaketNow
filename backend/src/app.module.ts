@@ -44,9 +44,9 @@ import { EmailModule } from './entities/email/email.module';
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
       entities: [Users, Organization, Raketista, Raket, RaketPictures, RaketistaSkill, Skills, Message, Conversation],
-      // ssl: process.env.DB_SSL === 'true'
-      // ? { rejectUnauthorized: false }
-      // : false,
+      // ssl: {
+      //   rejectUnauthorized: false,
+      // }, // for initializing seed-skills
       ssl:
         process.env.NODE_ENV === 'production'
           ? { rejectUnauthorized: false } 

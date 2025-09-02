@@ -12,7 +12,7 @@ const categoryColors = {
   "Personal & Home Care": "bg-pink-100 text-pink-800",
   "Events & Entertainment": "bg-purple-100 text-purple-800",
   "Food & Beverage": "bg-red-100 text-red-800",
-  "Education & Tutoring": "bg-green-100 text-green-800",
+  "Education and Tutoring": "bg-green-100 text-green-800",
   "Graphic & Digital Design": "bg-indigo-100 text-indigo-800",
   "Business & Professional Services": "bg-orange-100 text-orange-800",
   Automotive: "bg-gray-200 text-gray-800",

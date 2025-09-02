@@ -1,4 +1,5 @@
-import { Raket } from 'src/entities/rakets/entities/raket.entity';
+import { Raket } from "../../rakets/entities/raket.entity";
+
 import {
   Entity,
   Column,

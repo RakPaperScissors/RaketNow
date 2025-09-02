@@ -41,11 +41,11 @@ function Footer() {
                         >
                             
                             <li className="hover:text-white transition-colors duration-200 cursor-pointer">Home Repairs & Maintenance</li>
-                            <li className="hover:text-white transition-colors duration-200 cursor-pointer">Tech & Electronics Support</li>
+                            <li className="hover:text-white transition-colors duration-200 cursor-pointer">Tech & Electronics</li>
                             <li className="hover:text-white transition-colors duration-200 cursor-pointer">Personal & Home Care</li>
                             <li className="hover:text-white transition-colors duration-200 cursor-pointer">Events & Entertainment</li>
                             <li className="hover:text-white transition-colors duration-200 cursor-pointer">Food & Beverage</li>
-                            <li className="hover:text-white transition-colors duration-200 cursor-pointer">Education & Tutoring</li>
+                            <li className="hover:text-white transition-colors duration-200 cursor-pointer">Education and Tutoring</li>
                             <li className="hover:text-white transition-colors duration-200 cursor-pointer">Graphic & Digital Design</li>
                             <li className="hover:text-white transition-colors duration-200 cursor-pointer">Business & Professional Services</li>
                             <li className="hover:text-white transition-colors duration-200 cursor-pointer">Automotive Services</li>
